@@ -42,8 +42,11 @@ async function postData () {
             console.log(error.message)
         }
     }
+    window.location = "index.html";
+
+    
 }
- 
+
 
 // (async function postData(){
     
