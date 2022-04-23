@@ -22,27 +22,32 @@
         </div>
         <div class="form">
             <form method="POST" action="">
-                <div class="form-group">
-                    <div>
-                        <input type="text" id="inputName" class="form-control" placeholder="Name" name="name">
-                    </div>
+
+
+                <div class="title">Welcome</div>
+                <div class="subtitle">Let's create your account!</div>
+                <div class="input-container ic1">
+                    <input type="text" id="inputName" class="input" type="text" placeholder=" " />
+                    <div class="cut"></div>
+                    <label for="firstname" class="placeholder">First name</label>
                 </div>
-                <div class="form-group">
-                    <div>
-                        <input type="text" id="inputLanme" class="form-control" placeholder="Last name" name="lname" >
-                    </div>
+                <div class="input-container ic2">
+                    <input type="text" id="inputLanme" class="input"  placeholder=" " />
+                    <div class="cut"></div>
+                    <label for="lastname" class="placeholder">Last name</label>
                 </div>
-                <div class="form-group">
-                    <div>
-                        <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="pass" >
-                    </div>
+                <div class="input-container ic2">
+                    <input type="text" id="inputEmail" class="input" placeholder=" " />
+                    <div class="cut cut-short"></div>
+                    <label for="email" class="placeholder">Email</>
                 </div>
-                <div class="form-group">
-                    <div>
-                        <input type="text" id="inputEmail" class="form-control" name="email" >
-                    </div>
+                <div class="input-container ic2">
+                    <input type="text" id="inputPassword" class="input" placeholder=" " />
+                    <div class="cut"></div>
+                    <label for="password" class="placeholder">Password</>
                 </div>
-                <button type="button" class="btn btn-primary btn-block fas fa-key" onclick="postData()">Prijavi se</button>
+                
+                <button type="button" class="submit" onclick="postData()">Prijavi se</button>
             </form>
         </div>
         
