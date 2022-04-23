@@ -6,5 +6,5 @@ class RegisterForm(BaseModel):
     UserLastName: str
     UserPassword: str
     # UserNumber: int
-    UserEmal: str
+    UserEmail: str
     # Terms: bool

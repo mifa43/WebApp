@@ -1,24 +1,50 @@
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8" />
-        <script src="script.js"></script>
+        <link rel="stylesheet" href="css/styles.css">
+        <script src="scripts/script.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <title>My WebApp V-0.1</title>
     </head>
     <body>
-        <div>
-            <textarea id="messages" name="messages" rows="10" cols="50">Messages</textarea><br/>
+    
+            <!-- <textarea id="messages" name="messages" rows="10" cols="50">Messages</textarea><br/>
             <input type="button" value="Get v1" onclick="onGet('v1')"/><br/>
-            <form id="form1">
-                <input type="text" class="UserName" id="UserName" placeholder="Your username">
-                <input type="text" class="UserLastName" id="UserLastName" placeholder="Your lastname">
-                <input type="text" class="UserNumber" id="UserNumber" placeholder="Your phone number">
-                <input type="email" class="UserEmal" id="UserEmail" placeholder="Your email">
-                
-                <input type="checkbox" class="Terms" id="Terms" >
-                <p>text</p>
-                <input type="submit" class="FormSubmit" id="FormSubmit" placeholder="Submit">
-                
+             -->
+        
+
+        <div class="BackgroundImage" id="BackgroundImage">
+        </div>
+        <div class="form">
+            <form method="POST" action="">
+                <div class="form-group">
+                    <div>
+                        <input type="text" id="inputName" class="form-control" placeholder="Name" name="name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <input type="text" id="inputLanme" class="form-control" placeholder="Last name" name="lname" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="pass" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <input type="text" id="inputEmail" class="form-control" name="email" >
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-block fas fa-key" onclick="postData()">Prijavi se</button>
             </form>
         </div>
+        
     </body>
 </html>
