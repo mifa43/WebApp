@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 import logging, uvicorn
 from fastapi.middleware.cors import CORSMiddleware
-
+from models import *
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -30,7 +30,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["*","post"],
     allow_headers=["*"],
 )
 # https://fastapi.tiangolo.com/tutorial/cors/
@@ -39,6 +39,11 @@ app.add_middleware(
 async def helth_check():
     logger.info("{Health : OK}, 200")
     return {"Health": "OKAY"}
+
+@app.post("/register-user")
+async def register_user(model: RegisterForm):
+    logger.info("{User Created: %s }, 200"%(model.UserName))
+    return {"User Created": model.UserName}
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
