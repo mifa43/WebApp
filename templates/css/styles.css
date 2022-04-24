@@ -18,7 +18,7 @@ body {
   position: fixed;
   border-radius: 20px;
   box-sizing: border-box;
-  height: 740px;
+  height: 790px;
   padding: 20px;
   width: 400px;
 }
@@ -52,6 +52,10 @@ body {
 .ic2 {
   margin-top: 30px;
 }
+.ic3 {
+  margin-top: 0px;
+  
+}
 
 .input {
   background-color: #303245;
@@ -78,6 +82,7 @@ body {
   width: 76px;
 }
 
+
 .cut-short {
   width: 50px;
 }
@@ -98,7 +103,17 @@ body {
   transition: transform 200ms, color 200ms;
   top: 20px;
 }
-
+.placeholderoutput {
+  color: #dc2f55;
+  font-family: sans-serif;
+  left: 20px;
+  line-height: 14px;
+  pointer-events: none;
+  position: absolute;
+  transform-origin: 0 50%;
+  transition: transform 200ms, color 200ms;
+  top: 20px;
+}
 .input:focus ~ .placeholder,
 .input:not(:placeholder-shown) ~ .placeholder {
   transform: translateY(-30px) translateX(10px) scale(0.75);
