@@ -2,7 +2,9 @@ version: '3'
 
 volumes:
   fastapi_data:
-      driver: local
+    driver: local
+  db:
+    driver: local
 
 services:
   fastapi:
@@ -16,6 +18,20 @@ services:
       - 8081:8080
     networks:
       - fastapi_dev
+  db:
+    container_name: postgresDB
+    image: postgres:14.1-alpine
+    restart: always
+    
+    environment:
+      - POSTGRES_USER=mifa43
+      - POSTGRES_PASSWORD=koliko43
+      - POSTGRES_DB=userService
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+
 
 networks:
   fastapi_dev:
