@@ -23,12 +23,12 @@
                 <div class="subtitle">Let's create your account!</div>
                 <div class="input-container ic1">
                     <input type="text" id="inputName" class="input" maxlength="28" type="text" placeholder=" " />
-                    <div class="cut"></div>
+                    <div class="cut" style="width: 85px;"></div>
                     <label for="firstname" class="placeholder">First name</label>
                 </div>
                 <div class="input-container ic2">
                     <input type="text" id="inputLanme" class="input" maxlength="38" placeholder=" " />
-                    <div class="cut"></div>
+                    <div class="cut" style="width: 80px;"></div>
                     <label for="lastname" class="placeholder">Last name</label>
                 </div>
                 <div class="input-container ic2">
@@ -37,12 +37,25 @@
                     <label for="email" class="placeholder">Email</>
                 </div>
                 <div class="input-container ic2">
-                    <input type="text" id="inputPassword" class="input" maxlength="12" placeholder=" " />
-                    <div class="cut"></div>
+                    <input type="text" id="phonNumber" class="input" maxlength="15" placeholder=" " />
+                    <div class="cut cut-short" style="width: 55px;"></div>
+                    <label for="Phone" class="placeholder">Phone</>
+                </div>
+                <div class="input-container ic2">
+                    <input type="password" id="inputPassword" class="input" maxlength="12" placeholder=" " />
+                    <div class="cut" style="width: 80px;"></div>
                     <label for="password" class="placeholder">Password</>
                 </div>
-                
+                <div class="input-container ic2">
+                    <input type="password" id="inputRePassword" class="input" maxlength="12" placeholder=" " />
+                    <div class="cut" style="width: 130px;"></div>
+                    <label for="password" class="placeholder">Repeat Password</>
+                </div>
                 <button type="button" class="submit" onclick="validate()">Register</button>
+
+                <div class="input-container ic3" id="outputMessage">
+                    <h6 class="placeholderoutput"></h4>
+                </div>
             </form>
         </div>
         
