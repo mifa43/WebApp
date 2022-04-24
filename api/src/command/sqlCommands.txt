@@ -1,6 +1,6 @@
 docker exec -it postgresDB psql -U mifa43 -W mifa43 komanda da se udje u psql postgres container
 
-\c postgresDB  konektuj se na userservice bazu
+\c postgresDB  konektuj se na userservice bazu 
 
 CREATE TABLE IF NOT EXISTS registration (
     id SERIAL PRIMARY KEY,
