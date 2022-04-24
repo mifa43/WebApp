@@ -2,6 +2,7 @@ docker exec -it postgresDB psql -U mifa43 -W mifa43 komanda da se udje u psql po
 
 \c postgresDB  konektuj se na userservice bazu 
 
+# create table
 CREATE TABLE IF NOT EXISTS registration (
     id SERIAL PRIMARY KEY,
     name varchar(45) NOT NULL,
@@ -11,5 +12,9 @@ CREATE TABLE IF NOT EXISTS registration (
     password varchar(15) NOT NULL
 );
 
+# insert user
 INSERT INTO registration (name, lastName, mail, phoneNumber, password)
 VALUES ('Milos', 'Zlatkovic', 'mifa43kotez@gmail.com', '0600977458', 'koliko1212');
+
+#select user
+SELECT * FROM registration;
