@@ -2,6 +2,10 @@ from fastapi import FastAPI, HTTPException
 import logging, uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from models import *
+# from crud import *
+# import psycopg2 
+# import os
+# from tableStructur import User
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -18,7 +22,6 @@ ch.setFormatter(formatter)
 
 # dodaj consol-u logger
 logger.addHandler(ch)
-
 app = FastAPI()
 
 origins = [
@@ -42,8 +45,9 @@ async def helth_check():
 
 @app.post("/register-user")
 async def register_user(model: RegisterForm):
-    logger.info("{User Created: %s }, 200"%(model.UserName))
-    return {"User Created": model.UserName}
+
+    return {"data": "OEKY"}
+
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
