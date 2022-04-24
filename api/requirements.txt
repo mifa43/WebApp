@@ -2,3 +2,4 @@ fastapi==0.63.0
 uvicorn==0.13.4
 typing == 3.7.4.3
 pydantic==1.8.2
+psycopg2-binary==2.9.3 
