@@ -7,4 +7,3 @@ class UserModel(BaseModel):
     UserEmail: str
     UserNumber: str
     UserPassword: str
-    UserRepassword: str
