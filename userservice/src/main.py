@@ -30,7 +30,8 @@ async def helth_check():
 
 @app.post("/insert-user")
 async def insert_user(model: UserModel):
-
+    """Hvatanje requesta i slanje u insert funkciju"""
+    
     data = Postgres().insert(model.UserName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword)
     
     logger.info({"InsertUser": data["UserInserted"], "tableName": data["tableName"]})
