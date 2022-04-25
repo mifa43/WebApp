@@ -45,7 +45,7 @@ async def helth_check():
 
 @app.post("/register-user")
 async def register_user(model: RegisterForm):
-
+    print(model.UserEmail)
     return {"data": "OEKY"}
 
 
