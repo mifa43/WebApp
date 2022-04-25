@@ -30,9 +30,12 @@ async def helth_check():
 
 @app.post("/insert-user")
 async def insert_user(model: UserModel):
-    dat = Postgres().insert(model.UserName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword)
-    logger.info("{Insert user : OK}, 200")
-    return {"Insert user": dat["UserInserted"]}
+
+    data = Postgres().insert(model.UserName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword)
+    
+    logger.info({"InsertUser": data["UserInserted"], "tableName": data["tableName"]})
+
+    return {"InsertUser": data["UserInserted"], "tableName": data["tableName"]}
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
