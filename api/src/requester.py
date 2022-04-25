@@ -2,10 +2,16 @@ from urllib import response
 import requests
 
 class SendRequest():
-    """Slanje Requesta na userservice"""
+
     def userService(name: str, lastName: str, mail: str, phoneNumber: int, password: str):
-        
+        """Slanje Requesta na userservice"""
+
+        #docker container ce biti u env variabli
+
         url = 'http://fastapi_userservice:8080/insert-user'
+
+        # request body
+
         data = {
             "UserName" : name,
             "UserLastName" : lastName,
