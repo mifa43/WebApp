@@ -20,5 +20,5 @@ class Postgres():
         return {"func": table1}
 
     def insertUser(self):
-        data = User().insert()
+        data = User().insert("Mifa43","Kotez", "some@.com", 121312312, "123445")
         return {"insert": data}
