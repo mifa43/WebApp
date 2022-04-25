@@ -7,18 +7,37 @@ from tableModel import User
 
 class Postgres():
     def __init__(self):
-        self.engine = engine = create_engine(
-            "postgresql+psycopg2://mifa43:koliko43@user-service-postgres-dev/userservice",
-            isolation_level="SERIALIZABLE", echo=True
-        )
-        self.db = db = scoped_session(sessionmaker(bind=self.engine))
-        self.base = Base = declarative_base()
-
-    def createTable(self):
-        table1 = User().registerTable()
+        self.engine = create_engine(
+                    "postgresql+psycopg2://mifa43:koliko43@user-service-postgres-dev/userservice",
+                    isolation_level="SERIALIZABLE", echo=True)
+        self.Base = declarative_base()
+        self.Base = User()
+        self.Base.metadata.create_all(bind=self.engine)
         
-        return {"func": table1}
+    def insert(self, name: str, lastName: str, mail: str, phoneNumber: int, password: str):
+        """ ## Upisivanje korisnika u bazu
+            - ``name``
+            - ``lastName``
+            - ``mail``
+            - ``phoneNumber``
+            - ``password``
 
-    def insertUser(self):
-        data = User().insert("Mifa43","Kotez", "some@.com", 121312312, "123445")
-        return {"insert": data}
+        Koristi User klasu, poziva atribute i dodeljuje vrednosti. Insert
+        """
+
+        Seassion = sessionmaker(bind=self.engine)
+        seassion = Seassion()
+        
+        user = User()
+        user.name = f"{name}"
+        user.lastName = f"{lastName}"
+        user.mail = f"{mail}"
+        user.phoneNumber = int(phoneNumber)
+        user.password = f"{password}"
+
+
+        seassion.add(user)
+        seassion.commit()
+        print("user inserted")
+        seassion.close()
+        return {"UserInserted": "User inserted"}
