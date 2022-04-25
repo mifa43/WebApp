@@ -3,6 +3,7 @@ from typing import AsyncContextManager
 from fastapi import FastAPI, HTTPException
 import logging, uvicorn
 from crud import Postgres
+from models import *
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -27,12 +28,11 @@ async def helth_check():
     logger.info("{Health : OK}, 200")
     return {"Health": "OK"}
 
-@app.get("/insert-user")
+@app.post("/insert-user")
 async def insert_user():
-    var = Postgres().createTable()
-    dat = Postgres().insertUser()
+    dat = Postgres().insert("Mifa43","Kotez", "some@.com", 121312312, "123445")
     logger.info("{Insert user : OK}, 200")
-    return {"Insert user": "OK"}
+    return {"Insert user": dat["UserInserted"]}
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
