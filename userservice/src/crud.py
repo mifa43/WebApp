@@ -37,9 +37,8 @@ class Postgres():
         user.phoneNumber = phoneNumber
         user.password = password
 
-
         seassion.add(user)
         seassion.commit()
-        print("user inserted")
+
         seassion.close()
-        return {"UserInserted": name}
+        return {"UserInserted": name, "tableName": User.__tablename__}
