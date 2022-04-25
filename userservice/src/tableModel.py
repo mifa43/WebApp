@@ -27,7 +27,7 @@ class User(Base):
 
         return {"TableName": "Table created"}
 
-    def insert(self):
+    def insert(self, name, lastName, mail, phoneNumber, password):
         """Upisivanje korisnika u bazu 
         Koristi User klasu, poziva atribute i dodeljuje vrednosti
         """
@@ -35,11 +35,11 @@ class User(Base):
         seassion = Seassion()
 
         user = User()
-        user.name = "milos"
-        user.lastName = "milos"
-        user.mail = "milos"
-        user.phoneNumber = 132313
-        user.password = "milos"
+        user.name = f"{name}"
+        user.lastName = f"{lastName}"
+        user.mail = f"{mail}"
+        user.phoneNumber = int(phoneNumber)
+        user.password = f"{password}"
 
 
         seassion.add(user)
