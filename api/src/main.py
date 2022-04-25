@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 import logging, uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from models import *
+from requester import SendRequest
 # from crud import *
 # import psycopg2 
 # import os
@@ -46,6 +47,7 @@ async def helth_check():
 @app.post("/register-user")
 async def register_user(model: RegisterForm):
     print(model.UserEmail)
+    req = SendRequest.userService(model.UserName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword)
     return {"data": "OEKY"}
 
 
