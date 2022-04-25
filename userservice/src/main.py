@@ -29,8 +29,8 @@ async def helth_check():
     return {"Health": "OK"}
 
 @app.post("/insert-user")
-async def insert_user():
-    dat = Postgres().insert("Mifa43","Kotez", "some@.com", 121312312, "123445")
+async def insert_user(model: UserModel):
+    dat = Postgres().insert(model.UserName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword)
     logger.info("{Insert user : OK}, 200")
     return {"Insert user": dat["UserInserted"]}
 
