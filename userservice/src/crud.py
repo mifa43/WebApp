@@ -14,30 +14,32 @@ class Postgres():
         self.Base = User()
         self.Base.metadata.create_all(bind=self.engine)
         
-    def insert(self, name: str, lastName: str, mail: str, phoneNumber: int, password: str):
-        """ ## Upisivanje korisnika u bazu
+    def insert(self, name: str, lastName: str, mail: str, phoneNumber: str, password: str):
+        
+        """ ## Insert
+            ## Upisivanje korisnika u bazu
             - ``name``
             - ``lastName``
             - ``mail``
             - ``phoneNumber``
             - ``password``
 
-        Koristi User klasu, poziva atribute i dodeljuje vrednosti. Insert
+            ### Koristi User klasu, poziva atribute i dodeljuje vrednosti.
         """
 
         Seassion = sessionmaker(bind=self.engine)
         seassion = Seassion()
         
         user = User()
-        user.name = f"{name}"
-        user.lastName = f"{lastName}"
-        user.mail = f"{mail}"
-        user.phoneNumber = int(phoneNumber)
-        user.password = f"{password}"
+        user.name = name
+        user.lastName = lastName
+        user.mail = mail
+        user.phoneNumber = phoneNumber
+        user.password = password
 
 
         seassion.add(user)
         seassion.commit()
         print("user inserted")
         seassion.close()
-        return {"UserInserted": "User inserted"}
+        return {"UserInserted": name}
