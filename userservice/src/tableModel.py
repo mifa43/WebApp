@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker, relationship
 Base = declarative_base()
 
 class User(Base):
-    """Model tabele"""
+    """Model tabele koja ce da se kreira u bazi"""
     
     __tablename__= "registration"   #ime tabele
      
