@@ -42,14 +42,16 @@ app.add_middleware(
 @app.get("/")
 async def helth_check():
     logger.info("{Health : OK}, 200")
-    return {"Health": "OKAY"}
+    return {"Health": "OK"}
 
 @app.post("/register-user")
 async def register_user(model: RegisterForm):
-    print(model.UserEmail)
-    req = SendRequest.userService(model.UserName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword)
-    return {"data": "OEKY"}
 
+    req = SendRequest.userService(model.UserName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword)
+
+    logger.info({"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]})
+
+    return {"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]}
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
