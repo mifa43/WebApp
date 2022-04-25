@@ -1,3 +1,4 @@
+from urllib import response
 import requests
 
 class SendRequest():
@@ -12,6 +13,6 @@ class SendRequest():
             "UserNumber" : phoneNumber,
             "UserPassword" : password
             }
-        requests.post(url, json = data)
+        response = requests.post(url, json = data)
 
-        return {"POST request send on": url}    # url se brise ovo je za test fazu, lakse dizanje excep-a, debug i loggove
+        return {"PostRequestSendOn": url, "Response": response.json()}    # url se brise ovo je za test fazu, lakse dizanje excep-a, debug i loggove
