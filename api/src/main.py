@@ -43,7 +43,8 @@ async def helth_check():
 
 @app.post("/register-user")
 async def register_user(model: RegisterForm):
-
+    """Hvatanje requesta i slanje na userservice"""
+    
     req = SendRequest.userService(model.UserName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword)
 
     logger.info({"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]})
