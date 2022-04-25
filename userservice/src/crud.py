@@ -14,8 +14,7 @@ class Postgres():
         self.Base = User()
         self.Base.metadata.create_all(bind=self.engine)
         
-    def insert(self, name: str, lastName: str, mail: str, phoneNumber: str, password: str):
-        
+    def insert(self, name: str, lastName: str, mail: str, phoneNumber: str, password: str) -> dict:
         """ ## Insert
             ## Upisivanje korisnika u bazu
             - ``name``
@@ -29,7 +28,8 @@ class Postgres():
 
         Seassion = sessionmaker(bind=self.engine)
         seassion = Seassion()
-        
+
+        #Dodeljivanje vrednosti
         user = User()
         user.name = name
         user.lastName = lastName
@@ -37,8 +37,11 @@ class Postgres():
         user.phoneNumber = phoneNumber
         user.password = password
 
+        #Izvrsavanje 
         seassion.add(user)
         seassion.commit()
 
+        #Zatvaranje seassi-e
         seassion.close()
+
         return {"UserInserted": name, "tableName": User.__tablename__}
