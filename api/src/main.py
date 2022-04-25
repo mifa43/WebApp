@@ -3,10 +3,7 @@ import logging, uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from models import *
 from requester import SendRequest
-# from crud import *
-# import psycopg2 
-# import os
-# from tableStructur import User
+
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
