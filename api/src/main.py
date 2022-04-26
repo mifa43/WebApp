@@ -49,10 +49,15 @@ async def register_user(model: RegisterForm):
     lower = checkNameAndEmail(model.UserName, model.UserEmail)
 
     req = SendRequest.userService(lower["name"], model.UserLastName, lower["email"], model.UserNumber, model.UserPassword)
+    
+    handler = req["Response"]
+    if "detail" in handler:
+        logger.error({"409": "Username or email already exists"})
+        raise HTTPException(status_code = 409, detail = "Username or email already exists")
+    else:
+        logger.info({"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]})
 
-    logger.info({"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]})
-
-    return {"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]}
+        return {"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]}
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
