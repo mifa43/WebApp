@@ -13,6 +13,6 @@ class User(Base):
     id = Column("id", Integer, primary_key=True, autoincrement=True)
     name = Column("username", String)
     lastName = Column("lastname",String)
-    mail = Column("mail",String)
+    mail = Column("mail",String, unique=True)
     phoneNumber = Column("phonenumber", String)
     password = Column("password",String)
