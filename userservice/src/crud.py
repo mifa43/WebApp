@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship
 from sqlalchemy import create_engine, Integer, String, ForeignKey, Column
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.exc import SQLAlchemyError
 from tableModel import User
 
 class Postgres():
@@ -25,23 +26,25 @@ class Postgres():
 
             ### Koristi User klasu, poziva atribute i dodeljuje vrednosti.
         """
+        try:
+            Seassion = sessionmaker(bind=self.engine)
+            seassion = Seassion()
 
-        Seassion = sessionmaker(bind=self.engine)
-        seassion = Seassion()
+            #Dodeljivanje vrednosti
+            user = User()
+            user.name = name
+            user.lastName = lastName
+            user.mail = mail
+            user.phoneNumber = phoneNumber
+            user.password = password
 
-        #Dodeljivanje vrednosti
-        user = User()
-        user.name = name
-        user.lastName = lastName
-        user.mail = mail
-        user.phoneNumber = phoneNumber
-        user.password = password
+            #Izvrsavanje 
+            seassion.add(user)
+            seassion.commit()
 
-        #Izvrsavanje 
-        seassion.add(user)
-        seassion.commit()
+            #Zatvaranje seassi-e
+            seassion.close()
+        except SQLAlchemyError as e:
+            return {"postgresError": e, "error": True}
 
-        #Zatvaranje seassi-e
-        seassion.close()
-
-        return {"UserInserted": name, "tableName": User.__tablename__}
+        return {"UserInserted": name, "tableName": User.__tablename__, "error": False}
