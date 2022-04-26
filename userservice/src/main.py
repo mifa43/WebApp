@@ -33,10 +33,14 @@ async def insert_user(model: UserModel):
     """Hvatanje requesta i slanje u insert funkciju"""
     
     data = Postgres().insert(model.UserName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword)
-    
-    logger.info({"InsertUser": data["UserInserted"], "tableName": data["tableName"]})
+    if data["error"] == True:
+        logger.error(data["postgresError"])
+        raise HTTPException(status_code = 409, detail = "Username or email already exists")
+    else:
+        logger.info({"InsertUser": data["UserInserted"], "tableName": data["tableName"]})
 
-    return {"InsertUser": data["UserInserted"], "tableName": data["tableName"]}
+        return {"InsertUser": data["UserInserted"], "tableName": data["tableName"]}
+    # return {"status": "200"}
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
