@@ -45,6 +45,7 @@ class Postgres():
             #Zatvaranje seassi-e
             seassion.close()
         except SQLAlchemyError as e:
+            #hvata exception ako pokusa da se upise korisnik sa istim emailom jer je polje unique
             return {"postgresError": e, "error": True}
 
         return {"UserInserted": name, "tableName": User.__tablename__, "error": False}
