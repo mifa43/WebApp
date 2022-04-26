@@ -92,7 +92,7 @@ function validate() {
     // else: input je dovoljno dugacak
     // pozivamo funkciju i saljemo request
     postData()
-    window.alert("bravooo")
+    window.alert("Uspesno registrovan korisnik")
     window.location = "index.html";
     return true;
    }
