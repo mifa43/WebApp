@@ -3,6 +3,7 @@ import logging, uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from models import *
 from requester import SendRequest
+from helpers import checkNameAndEmail
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
@@ -44,8 +45,10 @@ async def helth_check():
 @app.post("/register-user")
 async def register_user(model: RegisterForm):
     """Hvatanje requesta i slanje na userservice"""
-    
-    req = SendRequest.userService(model.UserName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword)
+
+    lower = checkNameAndEmail(model.UserName, model.UserEmail)
+
+    req = SendRequest.userService(lower["name"], model.UserLastName, lower["email"], model.UserNumber, model.UserPassword)
 
     logger.info({"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]})
 
