@@ -24,7 +24,6 @@
 // }
 // funkcija za slanje post requesta na register-user endpoint
 async function postData () {
-    let header = document.querySelector("h6");
     // async funkcija za slanje requesta na api endpoint sa json body-em
     let user = {
         UserName: document.getElementById("inputName").value,
@@ -41,7 +40,6 @@ async function postData () {
         console.log(user)
     } catch (error) {
         if (error.response) {
-            header.innerText = `Username or email already exists`;
             console.log(error)
         } else {
             console.log(error.message)
