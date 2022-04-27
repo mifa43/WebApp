@@ -24,6 +24,7 @@
 // }
 // funkcija za slanje post requesta na register-user endpoint
 async function postData () {
+    let header = document.querySelector("h6");
     // async funkcija za slanje requesta na api endpoint sa json body-em
     let user = {
         UserName: document.getElementById("inputName").value,
@@ -40,7 +41,8 @@ async function postData () {
         console.log(user)
     } catch (error) {
         if (error.response) {
-            console.log(error.reponse.status)
+            header.innerText = `Username or email already exists`;
+            console.log(error)
         } else {
             console.log(error.message)
         }
@@ -88,13 +90,14 @@ function validate() {
       return false; // drzimo formu submitovanu
 
     }
-    
-    // else: input je dovoljno dugacak
-    // pozivamo funkciju i saljemo request
-    postData()
-    window.alert("Uspesno registrovan korisnik")
-    window.location = "index.html";
-    return true;
+    else {
+      // else: input je dovoljno dugacak
+      // pozivamo funkciju i saljemo request
+      postData()
+      window.alert("Uspesno registrovan korisnik")
+      window.location = "index.html";
+      return true;
+    }
    }
 
 
