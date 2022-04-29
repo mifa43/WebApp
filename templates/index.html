@@ -37,7 +37,7 @@
                     <label for="email" class="placeholder">Email</>
                 </div>
                 <div class="input-container ic2">
-                    <input type="text" id="phonNumber" class="input" maxlength="15" placeholder=" " />
+                    <input type="number" id="phonNumber" class="input" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" maxlength="15" placeholder=" " />
                     <div class="cut cut-short" style="width: 55px;"></div>
                     <label for="Phone" class="placeholder">Phone</>
                 </div>
