@@ -1,4 +1,4 @@
-from decoraters import InputMustBeLower
+from decoraters import InputMustBeLower, InputEmailIsEmail
 
 @InputMustBeLower
 def checkNameAndEmail(name, email):
@@ -11,3 +11,7 @@ def checkNameAndEmail(name, email):
         - :`email`
     """
     return {"name": name, "email": email}
+
+@InputEmailIsEmail
+def emailValidation(email):
+    return email
