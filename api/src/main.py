@@ -3,7 +3,7 @@ import logging, uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from models import *
 from requester import SendRequest
-from helpers import checkNameAndEmail
+from helpers import checkNameAndEmail, emailValidation
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
@@ -46,7 +46,9 @@ async def helth_check():
 async def register_user(model: RegisterForm):
     """Hvatanje requesta i slanje na userservice"""
 
-    lower = checkNameAndEmail(model.UserName, model.UserEmail)
+    email = emailValidation(model.UserEmail)
+
+    lower = checkNameAndEmail(model.UserName, email["EmailIsValid"])
 
     req = SendRequest.userService(lower["name"], model.UserLastName, lower["email"], model.UserNumber, model.UserPassword)
     
@@ -54,6 +56,11 @@ async def register_user(model: RegisterForm):
     if "detail" in handler:
         logger.error({"409": "Username or email already exists"})
         raise HTTPException(status_code = 409, detail = "Username or email already exists")
+
+    elif email["EmailIsValid"] == False:
+        logger.error({"422": "Email: Unprocessable entity"})
+        raise HTTPException(status_code = 422, detail = "Email: Unprocessable entity")
+        
     else:
         logger.info({"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]})
 
