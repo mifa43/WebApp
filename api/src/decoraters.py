@@ -25,3 +25,18 @@ class InputEmailIsEmail(object):
 
 		else: 
 			return {"EmailIsValid": False, "Email": None}
+
+class PasswordIsEqualToPassword(object):
+	def __init__(self, arg,):
+		self._arg = arg
+
+	def __call__(self, password1: str, password2: str):
+
+		if password1 == password2:
+			
+			return {"check": password1, "passwordIsValid": True}
+
+		else:
+			
+			return {"check": [password1, password2], "passwordIsValid": False}
+
