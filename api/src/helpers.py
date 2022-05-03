@@ -1,4 +1,4 @@
-from decoraters import InputMustBeLower, InputEmailIsEmail
+from decoraters import InputMustBeLower, InputEmailIsEmail, PasswordIsEqualToPassword
 
 @InputMustBeLower
 def checkNameAndEmail(name, email):
@@ -15,3 +15,7 @@ def checkNameAndEmail(name, email):
 @InputEmailIsEmail
 def emailValidation(email):
     return email
+
+@PasswordIsEqualToPassword
+def checkPassword(password1, password2):
+    return password1
