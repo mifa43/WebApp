@@ -25,6 +25,3 @@ class InputEmailIsEmail(object):
 
 		else: 
 			return {"EmailIsValid": False, "Email": None}
-
-		
-
