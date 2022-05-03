@@ -5,11 +5,12 @@ from sqlalchemy import create_engine, Integer, String, ForeignKey, Column
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import SQLAlchemyError
 from tableModel import User
+import os
 
 class Postgres():
     def __init__(self):
         self.engine = create_engine(
-                    "postgresql+psycopg2://mifa43:koliko43@user-service-postgres-dev/userservice",
+                    f"postgresql+psycopg2://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('POSTGRES_HOST')}/{os.getenv('POSTGRES_DB')}",
                     isolation_level="SERIALIZABLE", echo=True)
         self.Base = declarative_base()
         self.Base = User()
