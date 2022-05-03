@@ -9,3 +9,5 @@ class RegisterForm(BaseModel):
     UserEmail: str
     UserNumber: str
     UserPassword: str
+    UserRePassword: str
+    
