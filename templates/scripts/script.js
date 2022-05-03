@@ -31,7 +31,7 @@ async function postData () {
         UserEmail: document.getElementById("inputEmail").value,
         UserNumber: document.getElementById("phonNumber").value,
         UserPassword: document.getElementById("inputPassword").value,
-        UserRepassword: document.getElementById("inputRePassword").value
+        UserRePassword: document.getElementById("inputRePassword").value
 
     }
     // pokusaj slanja post requesta. py(try: except:)
