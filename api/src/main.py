@@ -3,7 +3,7 @@ import logging, uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from models import *
 from requester import SendRequest
-from helpers import checkNameAndEmail, emailValidation
+from helpers import checkNameAndEmail, emailValidation, checkPassword
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
@@ -48,9 +48,11 @@ async def register_user(model: RegisterForm):
 
     email = emailValidation(model.UserEmail)
 
+    password = checkPassword(model.UserPassword, model.UserRePassword)
+
     lower = checkNameAndEmail(model.UserName, model.UserEmail)
 
-    if email["EmailIsValid"] == True:
+    if email["EmailIsValid"] == True and password["passwordIsValid"] == True:
 
         req = SendRequest.userService(lower["name"], model.UserLastName, lower["email"], model.UserNumber, model.UserPassword)
 
@@ -65,6 +67,12 @@ async def register_user(model: RegisterForm):
         logger.info({"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]})
 
         return {"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]}
+
+    elif password["passwordIsValid"] == False:
+
+        logger.error({"406": "Password: Passwords do not match"})
+
+        raise HTTPException(status_code = 406, detail = "Passwords do not match")
 
     elif email["EmailIsValid"] == False:
 
