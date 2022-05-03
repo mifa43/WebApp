@@ -48,23 +48,35 @@ async def register_user(model: RegisterForm):
 
     email = emailValidation(model.UserEmail)
 
-    lower = checkNameAndEmail(model.UserName, email["EmailIsValid"])
+    lower = checkNameAndEmail(model.UserName, model.UserEmail)
 
-    req = SendRequest.userService(lower["name"], model.UserLastName, lower["email"], model.UserNumber, model.UserPassword)
-    
-    handler = req["Response"]
-    if "detail" in handler:
-        logger.error({"409": "Username or email already exists"})
-        raise HTTPException(status_code = 409, detail = "Username or email already exists")
+    if email["EmailIsValid"] == True:
 
-    elif email["EmailIsValid"] == False:
-        logger.error({"422": "Email: Unprocessable entity"})
-        raise HTTPException(status_code = 422, detail = "Email: Unprocessable entity")
-        
-    else:
+        req = SendRequest.userService(lower["name"], model.UserLastName, lower["email"], model.UserNumber, model.UserPassword)
+
+        handler = req["Response"]
+
+        if "detail" in handler:
+
+            logger.error({"409": "Username or email already exists"})
+
+            raise HTTPException(status_code = 409, detail = "Email already exists")
+
         logger.info({"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]})
 
         return {"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]}
 
+    elif email["EmailIsValid"] == False:
+
+        logger.error({"422": "Email: Unprocessable entity"})
+
+        raise HTTPException(status_code = 422, detail = "Email: Unprocessable entity")
+        
+    else:
+
+        logger.error({"500": "Something went wrong"})
+
+        raise HTTPException(status_code = 500, detail = "Something went wrong")
+        
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
