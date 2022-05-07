@@ -28,10 +28,18 @@ class InputEmailIsEmail(object):
 
 class PasswordIsEqualToPassword(object):
 	def __init__(self, arg,):
+		"""### dekorater za proveru passworda
+		
+			- : `password1`
+			- : `password2`
+
+			#### ako je pass1 jedank pass2 vracamo `passwordIsValid`: `True`
+
+		"""
 		self._arg = arg
 
 	def __call__(self, password1: str, password2: str):
-
+		
 		if password1 == password2:
 			
 			return {"check": password1, "passwordIsValid": True}
