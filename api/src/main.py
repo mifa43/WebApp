@@ -46,21 +46,21 @@ async def helth_check():
 async def register_user(model: RegisterForm):
     """Hvatanje requesta i slanje na userservice"""
 
-    email = emailValidation(model.UserEmail)
+    email = emailValidation(model.UserEmail)    # da li je email validan ? 
 
-    password = checkPassword(model.UserPassword, model.UserRePassword)
+    password = checkPassword(model.UserPassword, model.UserRePassword)  # da li se passwordi podudaraju ?
 
-    lower = checkNameAndEmail(model.UserName, model.UserEmail)
+    lower = checkNameAndEmail(model.UserName, model.UserEmail)  # vrati email i username malim slovima !
 
-    if email["EmailIsValid"] == True and password["passwordIsValid"] == True:
+    if email["EmailIsValid"] == True and password["passwordIsValid"] == True:   # da li su email i password validni True ?
 
-        req = SendRequest.userService(lower["name"], model.UserLastName, lower["email"], model.UserNumber, model.UserPassword)
+        req = SendRequest.userService(lower["name"], model.UserLastName, lower["email"], model.UserNumber, model.UserPassword)  # ako jesu salji request !
 
-        handler = req["Response"]
+        handler = req["Response"]   # email postoji u bazi ? 
 
-        if "detail" in handler:
+        if "detail" in handler: # postgres dize error i vraca kao response
 
-            logger.error({"409": "Username or email already exists"})
+            logger.error({"409": "Email already exists"})
 
             raise HTTPException(status_code = 409, detail = "Email already exists")
 
@@ -68,19 +68,19 @@ async def register_user(model: RegisterForm):
 
         return {"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]}
 
-    elif password["passwordIsValid"] == False:
+    elif password["passwordIsValid"] == False:  # passwordi se ne podudaraju vrati except
 
         logger.error({"406": "Password: Passwords do not match"})
 
         raise HTTPException(status_code = 406, detail = "Passwords do not match")
 
-    elif email["EmailIsValid"] == False:
+    elif email["EmailIsValid"] == False:    # email nije email vrati except
 
         logger.error({"422": "Email: Unprocessable entity"})
 
         raise HTTPException(status_code = 422, detail = "Email: Unprocessable entity")
         
-    else:
+    else:   # desilo se nesto neocekivano
 
         logger.error({"500": "Something went wrong"})
 
