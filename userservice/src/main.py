@@ -34,21 +34,21 @@ async def helth_check():
 async def insert_user(model: UserModel):
     """Hvatanje requesta i slanje u insert funkciju"""
     
-    data = Postgres().insert(model.UserName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword)
+    data = Postgres().insert(model.UserName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword)     # hvataj request body
     
-    if data["error"] == False:
+    if data["error"] == False:  # postgres je uspesno upisao u bazu
 
         logger.info({"InsertUser": data["UserInserted"], "tableName": data["tableName"]})
 
         return {"InsertUser": data["UserInserted"], "tableName": data["tableName"]}
 
-    if data["error"] == True:
+    if data["error"] == True:   # postgres je podigao gresku
 
         logger.error(data["postgresError"])
 
         raise HTTPException(status_code = 409, detail = "Username or email already exists")
 
-    else:
+    else:   # desilo se nesto neocekivano
 
         logger.error({"500": "Something went wrong"})
 
