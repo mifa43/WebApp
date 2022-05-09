@@ -4,6 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from models import *
 from requester import SendRequest
 from helpers import checkNameAndEmail, emailValidation, checkPassword
+from crud import CreateKeycloakUser
+from keycloak import KeycloakOpenID
+from keycloak import KeycloakAdmin
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
@@ -40,7 +43,18 @@ app.add_middleware(
 @app.get("/")
 async def helth_check():
     logger.info("{Health : OK}, 200")
+
+   
     return {"Health": "OK"}
+
+@app.post("/keycloak")
+async def keycloak():
+
+    s = CreateKeycloakUser().newUser("MIFA", "MIFA453", "MILOS", "BABADEDA", "secret")
+    logger.info("{Health : OK}, 200")
+
+    return {"Health": s}
+
 
 @app.post("/register-user")
 async def register_user(model: RegisterForm):
@@ -54,6 +68,8 @@ async def register_user(model: RegisterForm):
 
     if email["EmailIsValid"] == True and password["passwordIsValid"] == True:   # da li su email i password validni True ?
 
+        kc = CreateKeycloakUser().newUser(lower["email"], lower["name"], model.UserName, model.UserLastName, model.UserPassword) # kreiraj usera na keycloak-u
+
         req = SendRequest.userService(lower["name"], model.UserLastName, lower["email"], model.UserNumber, model.UserPassword)  # ako jesu salji request !
 
         handler = req["Response"]   # email postoji u bazi ? 
@@ -64,9 +80,16 @@ async def register_user(model: RegisterForm):
 
             raise HTTPException(status_code = 409, detail = "Email already exists")
 
-        logger.info({"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]})
+        logger.info({
+            "PostRequestSendOn": [req["PostRequestSendOn"],req["Response"]], 
+            "keycloak": [kc["clientID"], kc["userName"]]
+            })
 
-        return {"PostRequestSendOn": req["PostRequestSendOn"], "Response": req["Response"]}
+        return {
+            "PostRequestSendOn": req["PostRequestSendOn"], 
+            "Response": req["Response"], 
+            "keycloak": [kc["clientID"], kc["userName"]]
+            }
 
     elif password["passwordIsValid"] == False:  # passwordi se ne podudaraju vrati except
 
