@@ -47,13 +47,13 @@ async def helth_check():
    
     return {"Health": "OK"}
 
-@app.post("/keycloak")
-async def keycloak():
+# @app.post("/keycloak")
+# async def keycloak():
 
-    s = CreateKeycloakUser().newUser("MIFA", "MIFA453", "MILOS", "BABADEDA", "secret")
-    logger.info("{Health : OK}, 200")
+#     s = CreateKeycloakUser().newUser("MIFA", "MIFA453", "MILOS", "BABADEDA", "secret")
+#     logger.info("{Health : OK}, 200")
 
-    return {"Health": s}
+#     return {"Health": s}
 
 
 @app.post("/register-user")
@@ -68,9 +68,9 @@ async def register_user(model: RegisterForm):
 
     if email["EmailIsValid"] == True and password["passwordIsValid"] == True:   # da li su email i password validni True ?
 
-        kc = CreateKeycloakUser().newUser(lower["email"], lower["name"], model.UserName, model.UserLastName, model.UserPassword) # kreiraj usera na keycloak-u
-
-        req = SendRequest.userService(lower["name"], model.UserLastName, lower["email"], model.UserNumber, model.UserPassword)  # ako jesu salji request !
+        kc = CreateKeycloakUser().newUser(lower["email"], lower["name"], model.UserName, model.UserLastName, password["check"]) # kreiraj usera na keycloak-u
+        
+        req = SendRequest.userService(lower["name"], model.UserLastName, lower["email"], model.UserNumber, password["check"])  # ako jesu salji request !
 
         handler = req["Response"]   # email postoji u bazi ? 
 
