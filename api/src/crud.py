@@ -32,6 +32,7 @@ class CreateKeycloakUser():
             - `secret`
         """
         self.admin.realm_name = "demo"
+        
         data = self.admin.create_user({
             "email": email,
             "username": username,
@@ -45,5 +46,5 @@ class CreateKeycloakUser():
                 }
             ]
             })
-
+     
         return {"clientID": data, "userName": username}
