@@ -9,7 +9,7 @@ class SendRequest():
         #docker container ce biti u env variabli
 
         url = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/insert-user'
-        # http://fastapi_userservice:8080/insert-user
+
         # request body
 
         data = {
