@@ -1,6 +1,6 @@
 from keycloak import KeycloakOpenID
 from keycloak import KeycloakAdmin
-
+import os
 
 class CreateKeycloakUser():
     def __init__(self):
