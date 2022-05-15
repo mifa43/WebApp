@@ -1,4 +1,5 @@
-from decoraters import InputMustBeLower, InputEmailIsEmail, PasswordIsEqualToPassword
+import re
+from decoraters import InputMustBeLower, InputEmailIsEmail, PasswordIsEqualToPassword, CreateUserName
 
 @InputMustBeLower
 def checkNameAndEmail(name, email):
@@ -34,3 +35,16 @@ def checkPassword(password1, password2):
         - :`password2`
     """
     return password1
+
+@CreateUserName
+def createUserName(firstName, lastName):
+    """### Pomocna funkcija
+
+       #### Pre izvrsavanja funkcije dekorater uzima argumente, \
+        generise i vraca u funkciju spojene firstName i lastName
+    
+        - :`firstName`
+        - :`lastName`
+    """
+    return (firstName, lastName)
+
