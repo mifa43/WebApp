@@ -11,7 +11,8 @@ class User(Base):
      
     #kolone u tabeli i njihove karakteristike
     id = Column("id", Integer, primary_key=True, autoincrement=True)
-    name = Column("username", String)
+    name = Column("username", String, unique=True)
+    firstName = Column("firstname", String)
     lastName = Column("lastname",String)
     mail = Column("mail",String, unique=True)
     phoneNumber = Column("phonenumber", String)
