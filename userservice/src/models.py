@@ -5,6 +5,7 @@ from typing import List, Optional
 
 class UserModel(BaseModel):
     UserName: str
+    UserFirstName: str
     UserLastName: str
     UserEmail: str
     UserNumber: str
