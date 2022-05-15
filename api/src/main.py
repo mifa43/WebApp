@@ -3,7 +3,7 @@ import logging, uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from models import *
 from requester import SendRequest
-from helpers import checkNameAndEmail, emailValidation, checkPassword
+from helpers import checkNameAndEmail, emailValidation, checkPassword, createUserName
 from crud import CreateKeycloakUser
 from keycloak import KeycloakOpenID
 from keycloak import KeycloakAdmin
@@ -68,9 +68,11 @@ async def register_user(model: RegisterForm):
 
     if email["EmailIsValid"] == True and password["passwordIsValid"] == True:   # da li su email i password validni True ?
 
-        kc = CreateKeycloakUser().newUser(lower["email"], lower["name"], model.UserName, model.UserLastName, password["check"]) # kreiraj usera na keycloak-u
+        userName = createUserName(model.UserName, model.UserLastName)
+
+        kc = CreateKeycloakUser().newUser(lower["email"], userName, model.UserName, model.UserLastName, password["check"]) # kreiraj usera na keycloak-u
         
-        req = SendRequest.userService(lower["name"], model.UserLastName, lower["email"], model.UserNumber, password["check"])  # ako jesu salji request !
+        req = SendRequest.userService(userName, lower["name"] ,model.UserLastName, lower["email"], model.UserNumber, password["check"])  # ako jesu salji request !
 
         handler = req["Response"]   # email postoji u bazi ? 
 
