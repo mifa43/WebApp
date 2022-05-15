@@ -34,7 +34,7 @@ async def helth_check():
 async def insert_user(model: UserModel):
     """Hvatanje requesta i slanje u insert funkciju"""
     
-    data = Postgres().insert(model.UserName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword)     # hvataj request body
+    data = Postgres().insert(model.UserName, model.UserFirstName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword)     # hvataj request body
     
     if data["error"] == False:  # postgres je uspesno upisao u bazu
 
