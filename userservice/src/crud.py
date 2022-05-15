@@ -16,7 +16,7 @@ class Postgres():
         self.Base = User()
         self.Base.metadata.create_all(bind=self.engine)
         
-    def insert(self, name: str, lastName: str, mail: str, phoneNumber: str, password: str) -> dict:
+    def insert(self,userName: str, name: str, lastName: str, mail: str, phoneNumber: str, password: str) -> dict:
         """ ## Insert
             ## Upisivanje korisnika u bazu
             - ``name``
@@ -33,7 +33,8 @@ class Postgres():
 
             #Dodeljivanje vrednosti
             user = User()
-            user.name = name
+            user.name = userName
+            user.firstName = name
             user.lastName = lastName
             user.mail = mail
             user.phoneNumber = phoneNumber
