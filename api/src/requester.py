@@ -3,7 +3,7 @@ import requests, os
 
 class SendRequest():
 
-    def userService(name: str, lastName: str, mail: str, phoneNumber: str, password: str):
+    def userService(name: str, firstName: str, lastName: str, mail: str, phoneNumber: str, password: str):
         """Slanje Requesta na userservice"""
 
         #docker container ce biti u env variabli
@@ -14,6 +14,7 @@ class SendRequest():
 
         data = {
             "UserName" : name,
+            "UserFirstName" : firstName,
             "UserLastName" : lastName,
             "UserEmail" : mail,
             "UserNumber" : phoneNumber,
