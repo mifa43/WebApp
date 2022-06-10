@@ -48,3 +48,23 @@ class CreateKeycloakUser():
             })
      
         return {"clientID": data, "userName": username}
+
+    def getKeycloakUserID(self, username: str):
+        """### Uzmi keycloak user id 
+            - `username`
+        """
+        self.admin.realm_name = "demo"
+
+        keycloakUserID = self.admin.get_user_id(username)
+     
+        return {"ID": keycloakUserID, "keycloakUser": username}
+        
+
+    def sendVerifyEmail(self, keycloak_id: str):
+        """### Slanje email verifikacije nakon registracije
+            - `keycloak_id`
+        """
+        self.admin.realm_name = "demo"
+        sendEmail = self.admin.send_verify_email(user_id=keycloak_id)
+
+        return {"emailStatus": True, "emailSend": sendEmail}
