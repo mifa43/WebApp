@@ -1,0 +1,6 @@
+http://localhost:8084/auth/ - auth
+
+http://localhost:8084/auth/realms/demo/account - user auth
+
+https://pypi.org/project/python-keycloak/ - py keycloak docs
+
