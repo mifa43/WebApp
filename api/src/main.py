@@ -84,17 +84,23 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
             raise HTTPException(status_code = 409, detail = "Email already exists")
 
+        if verify["ID"] == False:
+
+            logger.error({"406": "UserID does not exist"})
+
+            raise HTTPException(status_code = 406, detail = "UserID does not exist")
+            
         logger.info({
             "PostRequestSendOn": [req["PostRequestSendOn"],req["Response"]], 
             "keycloak": [kc["clientID"], kc["userName"]],
-            "verifyEmail": verify["emailSend"]
+            "verifyEmail": verify["ID"]
             })
 
         return {
             "PostRequestSendOn": req["PostRequestSendOn"], 
             "Response": req["Response"], 
             "keycloak": [kc["clientID"], kc["userName"]],
-            "verifyEmail": verify["emailSend"]
+            "verifyEmail": verify["ID"]
             }
 
     elif password["passwordIsValid"] == False:  # passwordi se ne podudaraju vrati except
