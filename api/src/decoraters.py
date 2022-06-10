@@ -52,10 +52,10 @@ class CreateUserName(object):
 	def	__init__(self, arg):
 			"""### dekorater za proveru passworda
 		
-			- : `password1`
-			- : `password2`
+			- : `userFirestName`
+			- : `userLastName`
 
-			#### ako je pass1 jedank pass2 vracamo `passwordIsValid`: `True`
+			#### username je kombinacija first i last name-a
 
 		"""
 			self._arg = arg
