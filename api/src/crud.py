@@ -31,6 +31,9 @@ class CreateKeycloakUser():
             - `lastName` 
             - `secret`
         """
+        
+        # Ulazimo u realm demo kao admin
+
         self.admin.realm_name = "demo"
         
         data = self.admin.create_user({
@@ -64,7 +67,15 @@ class CreateKeycloakUser():
         """### Slanje email verifikacije nakon registracije
             - `keycloak_id`
         """
+        
         self.admin.realm_name = "demo"
+
         sendEmail = self.admin.send_verify_email(user_id=keycloak_id)
 
-        return {"emailStatus": True, "emailSend": sendEmail}
+        if keycloak_id == None:
+
+            return {"ID": False}
+
+        else: 
+
+            return {"emailStatus": True, "ID": keycloak_id}
