@@ -1,12 +1,11 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 import logging, uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from models import *
 from requester import SendRequest
 from helpers import checkNameAndEmail, emailValidation, checkPassword, createUserName
 from crud import CreateKeycloakUser
-from keycloak import KeycloakOpenID
-from keycloak import KeycloakAdmin
+
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
@@ -50,14 +49,15 @@ async def helth_check():
 # @app.post("/keycloak")
 # async def keycloak():
 
-#     s = CreateKeycloakUser().newUser("MIFA", "MIFA453", "MILOS", "BABADEDA", "secret")
+#     getKeycloakUsersID = CreateKeycloakUser().getKeycloakUserID("milos.zlatkovic")
+#     sendEmailVerify = CreateKeycloakUser().sendVerifyEmail(getKeycloakUsersID["ID"])
 #     logger.info("{Health : OK}, 200")
 
-#     return {"Health": s}
+#     return {"Health": "sendEmailVerify"}
 
 
 @app.post("/register-user")
-async def register_user(model: RegisterForm):
+async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
     """Hvatanje requesta i slanje na userservice"""
 
     email = emailValidation(model.UserEmail)    # da li je email validan ? 
@@ -70,9 +70,11 @@ async def register_user(model: RegisterForm):
 
         userName = createUserName(model.UserName, model.UserLastName)
 
-        kc = CreateKeycloakUser().newUser(lower["email"], userName, model.UserName, model.UserLastName, password["check"]) # kreiraj usera na keycloak-u
-        
         req = SendRequest.userService(userName, lower["name"] ,model.UserLastName, lower["email"], model.UserNumber, password["check"])  # ako jesu salji request !
+
+        kc = CreateKeycloakUser().newUser(lower["email"], userName, model.UserName, model.UserLastName, password["check"]) # kreiraj usera na keycloak-u
+
+        verify = CreateKeycloakUser().sendVerifyEmail(kc["clientID"])
 
         handler = req["Response"]   # email postoji u bazi ? 
 
@@ -84,13 +86,15 @@ async def register_user(model: RegisterForm):
 
         logger.info({
             "PostRequestSendOn": [req["PostRequestSendOn"],req["Response"]], 
-            "keycloak": [kc["clientID"], kc["userName"]]
+            "keycloak": [kc["clientID"], kc["userName"]],
+            "verifyEmail": verify["emailSend"]
             })
 
         return {
             "PostRequestSendOn": req["PostRequestSendOn"], 
             "Response": req["Response"], 
-            "keycloak": [kc["clientID"], kc["userName"]]
+            "keycloak": [kc["clientID"], kc["userName"]],
+            "verifyEmail": verify["emailSend"]
             }
 
     elif password["passwordIsValid"] == False:  # passwordi se ne podudaraju vrati except
