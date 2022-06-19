@@ -62,7 +62,7 @@ class CreateUserName(object):
 
 	def __call__(self, firstName: str, lastName: str):
 		
-		self._arg  = (firstName[0].upper() + firstName[1::] + "." + lastName[0].upper() + lastName[1::])
+		self._arg  = (firstName.lower() + "." + lastName.lower())
 		return self._arg
 		
 		
