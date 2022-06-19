@@ -35,22 +35,24 @@ class CreateKeycloakUser():
         # Ulazimo u realm demo kao admin
 
         self.admin.realm_name = "demo"
+        try:
+            data = self.admin.create_user({
+                "email": email,
+                "username": username,
+                "enabled": "True",
+                "firstName": firstName,
+                "lastName": lastName,
+                "credentials": [
+                    {
+                        "value": secret,
+                        "type": "password"
+                    }
+                ]
+                })
         
-        data = self.admin.create_user({
-            "email": email,
-            "username": username,
-            "enabled": "True",
-            "firstName": firstName,
-            "lastName": lastName,
-            "credentials": [
-                {
-                    "value": secret,
-                    "type": "password"
-                }
-            ]
-            })
-     
-        return {"clientID": data, "userName": username}
+            return {"clientID": data, "userName": username, "kcError":  False}
+        except:
+            return {"clientID": None, "userName": None, "kcError":  True}
 
     def getKeycloakUserID(self, username: str):
         """### Uzmi keycloak user id 
