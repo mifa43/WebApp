@@ -1,9 +1,10 @@
-from pydoc import doc
-from typing import AsyncContextManager
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 import logging, uvicorn
 from crud import Postgres
 from models import *
+from sqlalchemy.orm import Session
+from database import get_db
+
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -23,6 +24,10 @@ logger.addHandler(ch)
 
 app = FastAPI()
 
+# @app.get("/gettest")
+# async def get_by_id(id:int,db:Session=Depends(get_db)):
+#     return db.query(User).filter(User.id == id).first()
+
 @app.get("/")
 async def helth_check():
 
@@ -31,11 +36,11 @@ async def helth_check():
     return {"Health": "OK"}
 
 @app.post("/insert-user")
-async def insert_user(model: UserModel):
+async def insert_user(model: UserModel, db:Session=Depends(get_db)):
     """Hvatanje requesta i slanje u insert funkciju"""
     
-    data = Postgres().insert(model.UserName, model.UserFirstName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword)     # hvataj request body
-    
+    data = Postgres().insert(model.UserName, model.UserFirstName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword, db)     # hvataj request body
+
     if data["error"] == False:  # postgres je uspesno upisao u bazu
 
         logger.info({"InsertUser": data["UserInserted"], "tableName": data["tableName"]})
