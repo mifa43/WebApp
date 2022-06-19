@@ -15,6 +15,3 @@ class User(Base):
     phoneNumber = Column("phonenumber", String)
     password = Column("password",String)
 
-Base = User()
-# kreiranje tabele svaki put kada se pozove User - create table if table does not exist:
-Base.metadata.create_all(bind=engine)
