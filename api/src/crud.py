@@ -35,6 +35,7 @@ class CreateKeycloakUser():
         # Ulazimo u realm demo kao admin
 
         self.admin.realm_name = "demo"
+        
         try:
             data = self.admin.create_user({
                 "email": email,
@@ -51,7 +52,9 @@ class CreateKeycloakUser():
                 })
         
             return {"clientID": data, "userName": username, "kcError":  False}
+
         except:
+
             return {"clientID": None, "userName": None, "kcError":  True}
 
     def getKeycloakUserID(self, username: str):

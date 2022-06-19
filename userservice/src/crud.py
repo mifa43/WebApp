@@ -19,10 +19,13 @@ class Postgres():
 
             ### Koristi User klasu, poziva atribute i dodeljuje vrednosti.
         """
+        
         Base = User()
         # kreiranje tabele svaki put kada se pozove User - create table if table does not exist:
         Base.metadata.create_all(bind=engine)
+
         try:
+
             data = User(
                 name=userName,
                 firstName=name,
@@ -32,6 +35,7 @@ class Postgres():
                 password=password
             )
             db.add(data)
+
             db.commit()
 
         except SQLAlchemyError as e:

@@ -14,8 +14,13 @@ Base = declarative_base()
 
 def get_db():
     """Otvaramo seassi-u ka bazi"""
+
     db = SessionLocal()
+
     try:
+
         yield db
+
     except:
+        
         db.close()
