@@ -1,8 +1,5 @@
-from sqlalchemy import create_engine, Integer, String, ForeignKey, Column
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
-
-Base = declarative_base()
+from sqlalchemy import Integer, String, ForeignKey, Column
+from database import Base, engine
 
 class User(Base):
     """Model tabele koja ce da se kreira u bazi"""
@@ -17,3 +14,7 @@ class User(Base):
     mail = Column("mail",String, unique=True)
     phoneNumber = Column("phonenumber", String)
     password = Column("password",String)
+
+Base = User()
+# kreiranje tabele svaki put kada se pozove User - create table if table does not exist:
+Base.metadata.create_all(bind=engine)
