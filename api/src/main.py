@@ -68,13 +68,15 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
     if email["EmailIsValid"] == True and password["passwordIsValid"] == True:   # da li su email i password validni True ?
 
-        userName = createUserName(model.UserName, model.UserLastName)
+        userName = createUserName(model.UserName, model.UserLastName)   # username je kombinacija - str ime.prezime
 
         req = SendRequest.userService(userName, lower["name"] ,model.UserLastName, lower["email"], model.UserNumber, password["check"])  # ako jesu salji request !
 
         kc = CreateKeycloakUser().newUser(lower["email"], userName, model.UserName, model.UserLastName, password["check"]) # kreiraj usera na keycloak-u
 
-        verify = CreateKeycloakUser().sendVerifyEmail(kc["clientID"])
+        if kc["kcError"] == False:  # ako korisnik koji se registruje nema nalog(*username, *email, unique true) kc error je false i saljemo verifikaciju
+
+            verify = CreateKeycloakUser().sendVerifyEmail(kc["clientID"])
 
         handler = req["Response"]   # email postoji u bazi ? 
 
@@ -84,12 +86,19 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
             raise HTTPException(status_code = 409, detail = "Email already exists")
 
-        if verify["ID"] == False:
+        if verify["ID"] == False or verify["ID"] == None:   # korisnik nije pronadjen dizi exception i vrati response
 
             logger.error({"406": "UserID does not exist"})
 
             raise HTTPException(status_code = 406, detail = "UserID does not exist")
-            
+
+        if kc["kcError"] == True:   # korisnik koji se registruje uneo je vec iskorisceni email ili username
+    
+            logger.error({"409": "Username or email already exists"})
+
+            raise HTTPException(status_code = 409, detail = "Username or email already exists")
+        
+        # ako su sve unete vrednosti validne kreira se korisnik na kc i bazi
         logger.info({
             "PostRequestSendOn": [req["PostRequestSendOn"],req["Response"]], 
             "keycloak": [kc["clientID"], kc["userName"]],
