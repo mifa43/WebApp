@@ -82,9 +82,9 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
         if "detail" in handler: # postgres dize error i vraca kao response
 
-            logger.error({"409": "Email already exists"})
+            logger.error({"409": "Username or email already exists in db"})
 
-            raise HTTPException(status_code = 409, detail = "Email already exists")
+            raise HTTPException(status_code = 409, detail = "Username or email already exists in db")
 
         if verify["ID"] == False or verify["ID"] == None:   # korisnik nije pronadjen dizi exception i vrati response
 
@@ -94,9 +94,9 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
         if kc["kcError"] == True:   # korisnik koji se registruje uneo je vec iskorisceni email ili username
     
-            logger.error({"409": "Username or email already exists"})
+            logger.error({"409": "Username or email already exists in kc"})
 
-            raise HTTPException(status_code = 409, detail = "Username or email already exists")
+            raise HTTPException(status_code = 409, detail = "Username or email already exists in kc")
         
         # ako su sve unete vrednosti validne kreira se korisnik na kc i bazi
         logger.info({
