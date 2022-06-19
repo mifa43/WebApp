@@ -70,7 +70,7 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
         userName = createUserName(model.UserName, model.UserLastName)   # username je kombinacija - str ime.prezime
 
-        req = SendRequest.userService(userName, lower["name"] ,model.UserLastName, lower["email"], model.UserNumber, password["check"])  # ako jesu salji request !
+        req = SendRequest.userService(userName, model.UserName ,model.UserLastName, lower["email"], model.UserNumber, password["check"])  # ako jesu salji request !
 
         kc = CreateKeycloakUser().newUser(lower["email"], userName, model.UserName, model.UserLastName, password["check"]) # kreiraj usera na keycloak-u
 
