@@ -1,5 +1,5 @@
 from sqlalchemy.exc import SQLAlchemyError
-from tableModel import User
+from tableModel import *
 
 class Postgres():
     def __init__(self):
@@ -19,6 +19,9 @@ class Postgres():
 
             ### Koristi User klasu, poziva atribute i dodeljuje vrednosti.
         """
+        Base = User()
+        # kreiranje tabele svaki put kada se pozove User - create table if table does not exist:
+        Base.metadata.create_all(bind=engine)
         try:
             data = User(
                 name=userName,
