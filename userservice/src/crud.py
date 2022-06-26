@@ -37,6 +37,7 @@ class Postgres():
             db.add(data)
 
             db.commit()
+            db.refresh(data)
 
         except SQLAlchemyError as e:
             #hvata exception ako pokusa da se upise korisnik sa istim emailom jer je polje unique
