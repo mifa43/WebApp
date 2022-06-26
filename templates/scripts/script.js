@@ -40,6 +40,7 @@ async function postData () {
         console.log(user)
         let header = document.querySelector("h6");
         header.innerText = `Account created !`;
+        
         window.alert("You have successfully created an account and we will now send you to the login page!");
 
         window.location.href = 'index.html';
