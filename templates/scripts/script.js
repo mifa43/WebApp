@@ -38,11 +38,24 @@ async function postData () {
     try {
         const response = await axios.post("http://0.0.0.0:8081/register-user", user)
         console.log(user)
+        let header = document.querySelector("h6");
+        header.innerText = `Account created !`;
+        window.alert("You have successfully created an account and we will now send you to the login page!");
+
+        window.location.href = 'index.html';
+
+
+
     } catch (error) {
         if (error.response) {
-            console.log(error)
+            let header = document.querySelector("h6");
+            console.log(error.message);
+            header.innerText = error.response.data.detail;
+            
         } else {
-            console.log(error.message)
+            console.log(error.message);
+            header.innerText = error.response.data.detail;
+          
         }
     }
 }
@@ -92,8 +105,9 @@ function validate() {
       // else: input je dovoljno dugacak
       // pozivamo funkciju i saljemo request
       postData()
-      window.alert("Uspesno registrovan korisnik")
-      window.location = "index.html";
+
+      // window.alert("Uspesno registrovan korisnik")
+      // window.location = "index.html";
       return true;
     }
    }
