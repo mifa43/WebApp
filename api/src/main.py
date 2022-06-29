@@ -47,9 +47,24 @@ async def helth_check():
     return {"Health": "OK"}
 
 @app.post("/resend-email-verification")
-async def resend_email_verificatioin():
+async def resend_email_verificatioin(model: Verification):
 
-    return {"Health": "sendEmailVerify"}
+    userID = ResendVerifyEmail().getKeycloakUserID(model.UserName)  # da li user id postoji ?
+
+    if userID["exist"] == True: # ako postoji saljemo verifikaciju
+
+        verify = ResendVerifyEmail().sendVerification(userID["user_id_keycloak"])   # slanje verifikacije
+
+        logger.info({"EmailVerificationSend": [True, model.UserName, verify]})
+
+        return {"EmailVerificationSend": [True, model.UserName, verify]}
+
+    else: # desilo se nesto neocekivano
+
+        logger.error({"500": "Something went wrong"})
+
+        raise HTTPException(status_code = 500, detail = "Something went wrong")
+
 
 
 @app.post("/register-user")
