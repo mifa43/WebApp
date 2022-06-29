@@ -5,7 +5,7 @@ from models import *
 from requester import SendRequest
 from helpers import checkNameAndEmail, emailValidation, checkPassword, createUserName
 from crud import CreateKeycloakUser
-
+from resend_email_verfy import ResendVerifyEmail
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
