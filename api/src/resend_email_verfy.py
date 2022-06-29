@@ -25,16 +25,16 @@ class ResendVerifyEmail():
 
     def getKeycloakUserID(self, username):
         """
-        Uzmi Keycloak user id.
-        Parametri:
+        ### Uzmi Keycloak user id.
+        
         ---------------
-            user_id_keycloak -> username : None -> bool(False) - ako nema username
-            user_id_keycloak -> username : bool(True), user_id - ima username
+            - `user_id_keycloak` -> `username` : None -> bool(False) - ako nema username
+            - `user_id_keycloak` -> `username` : bool(True), user_id - ima username
         """
 
-        self.admin.realm_name = os.getenv('CLIENT_RELM_NAME')
+        self.admin.realm_name = "demo"
 
-        user_id_keycloak = self.admin.get_user_id(self.username)
+        user_id_keycloak = self.admin.get_user_id(username)
 
         if user_id_keycloak == None:
 
@@ -43,3 +43,13 @@ class ResendVerifyEmail():
         else:
 
             return {"exist" : True, "user_id_keycloak" : user_id_keycloak}
+
+    def sendVerification(self, user_id_keycloak):
+        """ ### Ponovo posalji email verifikaciju.
+            - `user_id_keycloak` -> param
+            - `send_verify_email` -> slanje verifikacije
+        """
+
+        self.admin.realm_name = "demo"
+        # user_id_keycloak dobijamo iz prethodne funkcije koju saljemo iz main fajla
+        self.admin.send_verify_email(user_id=user_id_keycloak)
