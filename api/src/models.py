@@ -11,3 +11,5 @@ class RegisterForm(BaseModel):
     UserPassword: str
     UserRePassword: str
     
+class Verification(BaseModel):
+    UserName: str
