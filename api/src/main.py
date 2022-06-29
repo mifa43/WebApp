@@ -29,7 +29,7 @@ origins = [
     "*",
     "http://0.0.0.0:8081/"
 ]
-
+# allow cors request
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
