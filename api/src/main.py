@@ -53,11 +53,11 @@ async def resend_email_verificatioin(model: Verification):
 
     if userID["exist"] == True: # ako postoji saljemo verifikaciju
 
-        verify = ResendVerifyEmail().sendVerification(userID["user_id_keycloak"])   # slanje verifikacije
+        verify = ResendVerifyEmail().sendVerification(userID["user_id_keycloak"])   # slanje verifikacije !
 
-        logger.info({"EmailVerificationSend": [True, model.UserName, verify]})
+        logger.info({"EmailVerificationSend": [True, model.UserName]})
 
-        return {"EmailVerificationSend": [True, model.UserName, verify]}
+        return {"EmailVerificationSend": [True, model.UserName]}
 
     else: # desilo se nesto neocekivano
 
