@@ -25,7 +25,7 @@ class Postgres():
         Base.metadata.create_all(bind=engine)
 
         try:
-
+            # kreiranje korisnika
             data = User(
                 name=userName,
                 firstName=name,
