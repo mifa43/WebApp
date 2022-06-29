@@ -8,13 +8,20 @@ class ResendVerifyEmail():
         # Kreiranje konekcije ka keycloak servisu
 
         self.admin = keycloak_admin = KeycloakAdmin(
-                server_url="http://keycloak_keycloak_1:8080/auth/",
-                username = "admin",
-                password = "Pa55w0rd",
-                realm_name = "master",
-                verify = True)
+            server_url="http://keycloak_keycloak_1:8080/auth/",
+            username = "admin",
+            password = "Pa55w0rd",
+            realm_name = "master",
+            verify = True)
 
-        # Konektovanje na realm kao klijent
+        # self.admin = keycloak_admin = KeycloakAdmin(
+        #         server_url= "http://{os.getenv('USERSERVICE_HOST')}:{os.getenv('USERSERVICE_PORT')}/auth/",
+        #         username = "{os.getenv('KEYCLOAK_USER')}",
+        #         password = "{os.getenv('KEYCLOAK_PASSWORD')}",
+        #         realm_name = "master",
+        #         verify = True)
+
+        # Konektovanje na realm kao klijent 
 
         self.openID = openID = KeycloakOpenID(
                 server_url = "http://keycloak_keycloak_1:8080/auth/",
