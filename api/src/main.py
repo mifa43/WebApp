@@ -46,14 +46,10 @@ async def helth_check():
    
     return {"Health": "OK"}
 
-# @app.post("/keycloak")
-# async def keycloak():
+@app.post("/resend-email-verification")
+async def resend_email_verificatioin():
 
-#     getKeycloakUsersID = CreateKeycloakUser().getKeycloakUserID("milos.zlatkovic")
-#     sendEmailVerify = CreateKeycloakUser().sendVerifyEmail(getKeycloakUsersID["ID"])
-#     logger.info("{Health : OK}, 200")
-
-#     return {"Health": "sendEmailVerify"}
+    return {"Health": "sendEmailVerify"}
 
 
 @app.post("/register-user")
