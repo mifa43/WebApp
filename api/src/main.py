@@ -5,7 +5,7 @@ from models import *
 from requester import SendRequest
 from helpers import checkNameAndEmail, emailValidation, checkPassword, createUserName
 from crud import CreateKeycloakUser
-
+from resend_email_verfy import ResendVerifyEmail
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
@@ -46,15 +46,30 @@ async def helth_check():
    
     return {"Health": "OK"}
 
-# @app.post("/keycloak")
-# async def keycloak():
+@app.post("/resend-email-verification")
+async def resend_email_verificatioin(model: Verification):
 
-#     getKeycloakUsersID = CreateKeycloakUser().getKeycloakUserID("milos.zlatkovic")
-#     sendEmailVerify = CreateKeycloakUser().sendVerifyEmail(getKeycloakUsersID["ID"])
-#     logger.info("{Health : OK}, 200")
+    userID = ResendVerifyEmail().getKeycloakUserID(model.UserName)  # da li user id postoji ?
 
-#     return {"Health": "sendEmailVerify"}
+    if userID["exist"] == True: # ako postoji saljemo verifikaciju
 
+        verify = ResendVerifyEmail().sendVerification(userID["user_id_keycloak"])   # slanje verifikacije !
+
+        logger.info({"EmailVerificationSend": [True, model.UserName]})
+
+        return {"EmailVerificationSend": [True, model.UserName]}
+
+    elif userID["exist"] == False:  # keycloak user id nije pronadjen dizemo error
+
+        logger.error({"406": "Keycloak userID does not exist"})
+
+        raise HTTPException(status_code = 406, detail = "Keycloak userID does not exist")
+
+    else: # desilo se nesto neocekivano
+
+        logger.error({"500": "Something went wrong"})
+
+        raise HTTPException(status_code = 500, detail = "Something went wrong")
 
 @app.post("/register-user")
 async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
