@@ -10,7 +10,7 @@ function checkForToken(){
     else {
         console.log("Token founded")
 
-        document.getElementById('authreq').innerHTML = '<li><a href="#"><i class="fa bi bi-power fa-2x"></i><span class="nav-text">Logout</span></a></li></ul>';
+        document.getElementById('authreq').innerHTML = '<li><a href="#" onclick="logout();"><i class="fa bi bi-power fa-2x"></i><span class="nav-text">Logout</span></a></li></ul>';
 
     }
 }
