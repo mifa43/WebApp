@@ -6,3 +6,6 @@ from typing import List, Optional
 class AuthCreaditional(BaseModel):
     UserEmail: str
     UserPassword: str
+
+class RefreshToken(BaseModel):
+    token: str
