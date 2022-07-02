@@ -71,8 +71,6 @@ async def resend_email_verificatioin(model: Verification):
 
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
-
-
 @app.post("/register-user")
 async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
     """Hvatanje requesta i slanje na userservice"""
