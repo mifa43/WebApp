@@ -59,6 +59,12 @@ async def resend_email_verificatioin(model: Verification):
 
         return {"EmailVerificationSend": [True, model.UserName]}
 
+    elif userID["exist"] == False:  # keycloak user id nije pronadjen dizemo error
+
+        logger.error({"406": "Keycloak userID does not exist"})
+
+        raise HTTPException(status_code = 406, detail = "Keycloak userID does not exist")
+
     else: # desilo se nesto neocekivano
 
         logger.error({"500": "Something went wrong"})
