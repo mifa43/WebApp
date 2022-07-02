@@ -1,3 +1,4 @@
+from lib2to3.pgen2 import token
 from keycloak import KeycloakOpenID
 from keycloak import KeycloakAdmin
 import os
@@ -24,16 +25,24 @@ class KeycloakAuth():
                 )
 
     def login(self, email: str, secret: str):
-        """### Kreiranje korisnika na Keycloak
+
+        """### Prijavljivanje (saljemo user creaditionale i dobijamo token)
             - `email`
-            - `username`
-            - `firstName`
-            - `lastName` 
             - `secret`
         """
-        
         # Ulazimo u realm demo kao admin
         token = self.openID.token(email, secret)
-        # permissions = self.openID.uma_permissions(token['access_token'])
 
         return token
+    def logout(self, token: str):
+    
+        """### Prijavljivanje (saljemo user creaditionale i dobijamo token)
+            - `token`
+        """
+        # Ulazimo u realm demo kao admin
+        refToken = self.openID.logout(token)
+
+        return refToken
+    
+
+    
