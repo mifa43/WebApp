@@ -43,13 +43,32 @@ async def helth_check():
     return {"Health": "OK"}
 @app.post("/login")
 async def login(model: AuthCreaditional):
-    auth = KeycloakAuth().login(model.UserEmail, model.UserPassword)
-    print(auth)
 
-    logger.info("{accessToken}: ",auth)
+    if model.UserEmail and model.UserPassword:  # da li postoji input ? da 
 
-   
-    return auth
+        auth = KeycloakAuth().login(model.UserEmail, model.UserPassword)    # login
+
+        logger.info("accessToken: ",auth)
+
+        return auth     # vrati access token
+
+    elif model.UserEmail and model.UserPassword == None:    # input je none dizi gresku
+
+        logger.error({"406": "The username or password is incorrect"})
+
+        raise HTTPException(status_code = 406, detail = "The username or password is incorrect")
+
+    elif len(model.UserEmail) <= 0 and len(model.UserPassword) <= 0:    # input je prazan str duzine 0
+    
+        logger.error({"406": "The fields are empty"})   
+
+        raise HTTPException(status_code = 406, detail = "The fields are empty") # dizi error
+
+    else: # desilo se nesto neocekivano
+
+        logger.error({"500": "Something went wrong"})
+
+        raise HTTPException(status_code = 500, detail = "Something went wrong")
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
