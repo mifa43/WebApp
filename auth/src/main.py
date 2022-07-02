@@ -79,5 +79,15 @@ async def login(model: AuthCreaditional):
 
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
+@app.post("/logout")
+async def logout(model: RefreshToken):
+
+    token = KeycloakAuth().logout(model.token)
+    
+    logger.info("accessToken: ",token)
+
+    return token     # vrati access token
+
+    
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
