@@ -23,7 +23,7 @@ app = FastAPI()
 
 origins = [
     "*",
-    "http://0.0.0.0:8081/"
+    "http://0.0.0.0:8083/"
 ]
 # allow cors request
 app.add_middleware(
@@ -46,10 +46,10 @@ async def login(model: AuthCreaditional):
     auth = KeycloakAuth().login(model.UserEmail, model.UserPassword)
     print(auth)
 
-    logger.info(auth)
+    logger.info("{accessToken}: ",auth)
 
    
-    return {"Health": "OK"}
+    return auth
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
