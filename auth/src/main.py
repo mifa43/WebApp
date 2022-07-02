@@ -1,7 +1,8 @@
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 import logging, uvicorn
 from fastapi.middleware.cors import CORSMiddleware
-
+from auth_methods import KeycloakAuth
+from models import *
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -37,6 +38,15 @@ app.add_middleware(
 @app.get("/")
 async def helth_check():
     logger.info("{Health : OK}, 200")
+
+   
+    return {"Health": "OK"}
+@app.post("/login")
+async def login(model: AuthCreaditional):
+    auth = KeycloakAuth().login(model.UserEmail, model.UserPassword)
+    print(auth)
+
+    logger.info(auth)
 
    
     return {"Health": "OK"}
