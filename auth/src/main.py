@@ -37,20 +37,29 @@ app.add_middleware(
 
 @app.get("/")
 async def helth_check():
+
     logger.info("{Health : OK}, 200")
 
-   
     return {"Health": "OK"}
+
 @app.post("/login")
 async def login(model: AuthCreaditional):
 
     if model.UserEmail and model.UserPassword:  # da li postoji input ? da 
 
-        auth = KeycloakAuth().login(model.UserEmail, model.UserPassword)    # login
+        try: # pokusaj login
 
-        logger.info("accessToken: ",auth)
+            auth = KeycloakAuth().login(model.UserEmail, model.UserPassword)    # login
 
-        return auth     # vrati access token
+            logger.info("accessToken: ",auth)
+
+            return auth     # vrati access token
+
+        except:  # ako nece input je pogresan ili korisnik nije registrovan
+
+            logger.error({"406": "The creaditionals are incorrect"})
+
+            raise HTTPException(status_code = 406, detail = "The creaditionals are incorrect")
 
     elif model.UserEmail and model.UserPassword == None:    # input je none dizi gresku
 
