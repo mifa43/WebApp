@@ -41,7 +41,7 @@ async function postData () {
         let header = document.querySelector("h6");
         header.innerText = `Account created !`;
         
-        window.alert("You have successfully created an account and we will now send you to the login page!");
+        window.alert("You have successfully created an account and now we will send you an email verification!");
 
         window.location.href = 'index.html';
 
