@@ -19,6 +19,9 @@ async function postData () {
         console.log(response.data.access_token);
 
         window.localStorage.setItem('access_token', response.data.access_token);
+
+        
+
         window.location.href = 'index.html';
 
 
