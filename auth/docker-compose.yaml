@@ -5,8 +5,8 @@ volumes:
     driver: local
 
 services:
-  fastapi:
-    container_name: fastapi
+  fastapi_auth:
+    container_name: fastapi_auth
     build:
       context: ./
       # args: 
