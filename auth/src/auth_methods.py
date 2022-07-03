@@ -26,7 +26,7 @@ class KeycloakAuth():
 
     def login(self, email: str, secret: str):
 
-        """### Prijavljivanje (saljemo user creaditionale i dobijamo token)
+        """### Login (saljemo user creaditionale i dobijamo token)
             - `email`
             - `secret`
         """
@@ -36,8 +36,8 @@ class KeycloakAuth():
         return token
     def logout(self, token: str):
     
-        """### Prijavljivanje (saljemo user creaditionale i dobijamo token)
-            - `token`
+        """### Logout (`refresh_token` zatvaramo session ka keycloak-u token vise nije validan )
+            - `token` == `refresh_token`
         """
         # Ulazimo u realm demo kao admin
         self.openID.logout(token)
