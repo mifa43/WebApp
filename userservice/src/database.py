@@ -21,6 +21,6 @@ def get_db():
 
         yield db
 
-    except:
+    finally:
         
         db.close()

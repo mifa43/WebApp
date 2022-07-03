@@ -1,0 +1,31 @@
+version: '3'
+
+volumes:
+  fastapi_data:
+    driver: local
+
+services:
+  fastapi_auth:
+    container_name: fastapi_auth
+    build:
+      context: ./
+      # args: 
+      #   TEST: Test
+    image: python
+    environment:
+      USERSERVICE_HOST: ${USERSERVICE_HOST_WEBAPP}
+      USERSERVICE_PORT: ${USERSERVICE_PORT_WEBAPP}
+      DB_DATABASE: ${KEYCLOAK_POSTGRESQL_DB}
+      DB_USER: ${KEYCLOAK_POSTGRESQL_USER}
+      DB_PASSWORD: ${KEYCLOAK_POSTGRESQL_PASS}
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASS}
+    ports:
+      - 8083:8080
+    networks:
+      - fastapi_dev
+
+networks:
+  fastapi_dev:
+    external:
+      name: fastapi_dev
