@@ -21,6 +21,7 @@ class Postgres():
         """
         
         Base = User()
+        
         # kreiranje tabele svaki put kada se pozove User - create table if table does not exist:
         Base.metadata.create_all(bind=engine)
 
@@ -34,10 +35,15 @@ class Postgres():
                 phoneNumber=phoneNumber,
                 password=password
             )
+            a1 = PasswordReset(
+                code="1234534535"
+            )
+            data.managePassword.append(a1)
             db.add(data)
 
             db.commit()
             db.refresh(data)
+            data
 
         except SQLAlchemyError as e:
             #hvata exception ako pokusa da se upise korisnik sa istim emailom jer je polje unique
