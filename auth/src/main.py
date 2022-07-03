@@ -51,7 +51,7 @@ async def login(model: AuthCreaditional):
 
             auth = KeycloakAuth().login(model.UserEmail, model.UserPassword)    # login
 
-            logger.info("accessToken: ",auth)
+            logger.info("accessToken: {0}".format(auth))
 
             return auth     # vrati access token
 
@@ -81,7 +81,8 @@ async def login(model: AuthCreaditional):
 
 @app.post("/logout")
 async def logout(model: RefreshToken):
-
+    # ref = model.token
+    # ref["access_token"]
     token = KeycloakAuth().logout(model.token)
     
     logger.info("accessToken: ",token)
