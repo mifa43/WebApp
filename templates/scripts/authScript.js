@@ -1,5 +1,5 @@
 
-async function postData () {
+async function postAuthData () {
     // async funkcija za slanje requesta na api endpoint sa json body-em
     let user = {
         UserEmail: document.getElementById("inputEmaill").value,
