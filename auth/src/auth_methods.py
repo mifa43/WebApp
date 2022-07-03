@@ -40,9 +40,9 @@ class KeycloakAuth():
             - `token`
         """
         # Ulazimo u realm demo kao admin
-        refToken = self.openID.logout(token)
+        self.openID.logout(token)
 
-        return refToken
+        return {"KeycloakAuthLogout": "The token was successfully submitted and the session was terminated"}
     
 
     

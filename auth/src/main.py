@@ -81,13 +81,32 @@ async def login(model: AuthCreaditional):
 
 @app.post("/logout")
 async def logout(model: RefreshToken):
-    # ref = model.token
-    # ref["access_token"]
-    token = KeycloakAuth().logout(model.token)
-    
-    logger.info("accessToken: ",token)
+    if model.token:
+        try:
 
-    return token     # vrati access token
+            token = KeycloakAuth().logout(model.token)
+            
+            logger.info("accessToken: ",token)
+
+            return {"message" :token["KeycloakAuthLogout"]}   # vrati access token
+        except:
+            logger.error({"406": "The token is invalid or expired"})
+
+            raise HTTPException(status_code = 406, detail = "The token is invalid or expired")
+
+
+    elif model.token == None or model.token == "":
+        logger.error({"406": "The entered value is not valid, a refsresh_token is required"})
+
+        raise HTTPException(status_code = 406, detail = "The entered value is not valid, a refsresh_token is required")
+
+    else: # desilo se nesto neocekivano
+
+        logger.error({"500": "Something went wrong"})
+
+        raise HTTPException(status_code = 500, detail = "Something went wrong")
+
+    
 
     
 if __name__ == "__main__":
