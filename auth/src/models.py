@@ -9,3 +9,6 @@ class AuthCreaditional(BaseModel):
 
 class RefreshToken(BaseModel):
     token: str
+
+class UserPasswordRestart(BaseModel):
+    UserEmail: str
