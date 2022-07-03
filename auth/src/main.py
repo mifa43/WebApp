@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, BackgroundTasks
 import logging, uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from auth_methods import KeycloakAuth
+from password_restart import KeycloakUserPasswordManage
 from models import *
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
@@ -81,6 +82,7 @@ async def login(model: AuthCreaditional):
 
 @app.post("/logout")
 async def logout(model: RefreshToken):
+
     if model.token:
         try:
 
@@ -89,13 +91,15 @@ async def logout(model: RefreshToken):
             logger.info("accessToken: ",token)
 
             return {"message" :token["KeycloakAuthLogout"]}   # vrati access token
+
         except:
+
             logger.error({"406": "The token is invalid or expired"})
 
             raise HTTPException(status_code = 406, detail = "The token is invalid or expired")
 
-
     elif model.token == None or model.token == "":
+
         logger.error({"406": "The entered value is not valid, a refsresh_token is required"})
 
         raise HTTPException(status_code = 406, detail = "The entered value is not valid, a refsresh_token is required")
@@ -106,7 +110,11 @@ async def logout(model: RefreshToken):
 
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
-    
+@app.post("/password-restart")
+async def password_restart(model: UserPasswordRestart):
+    userID = KeycloakUserPasswordManage().getKeycloakUserId(model.UserEmail)
+
+    return {"OK": "200"}
 
     
 if __name__ == "__main__":
