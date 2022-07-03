@@ -38,14 +38,18 @@ async def helth_check():
 @app.post("/insert-user")
 async def insert_user(model: UserModel, db:Session=Depends(get_db)):
     """Hvatanje requesta i slanje u insert funkciju"""
-    
-    data = Postgres().insert(model.UserName, model.UserFirstName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword, db)     # hvataj request body
+    try:
+        data = Postgres().insert(model.UserName, model.UserFirstName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword, db)     # hvataj request body
 
-    if data["error"] == False:  # postgres je uspesno upisao u bazu
+        if data["error"] == False:  # postgres je uspesno upisao u bazu
 
-        logger.info({"InsertUser": data["UserInserted"], "tableName": data["tableName"]})
+            logger.info({"InsertUser": data["UserInserted"], "tableName": data["tableName"]})
 
-        return {"InsertUser": data["UserInserted"], "tableName": data["tableName"]}
+            return {"InsertUser": data["UserInserted"], "tableName": data["tableName"]}
+    except:
+        logger.error(data["postgresError"])
+
+        raise HTTPException(status_code = 409, detail = "failed")
 
     if data["error"] == True:   # postgres je podigao gresku
 
