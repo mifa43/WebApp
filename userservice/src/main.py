@@ -47,6 +47,7 @@ async def insert_user(model: UserModel, db:Session=Depends(get_db)):
 
             return {"InsertUser": data["UserInserted"], "tableName": data["tableName"]}
     except:
+
         logger.error(data["postgresError"])
 
         raise HTTPException(status_code = 409, detail = "failed")
