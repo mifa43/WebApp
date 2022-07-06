@@ -10,3 +10,6 @@ class UserModel(BaseModel):
     UserEmail: str
     UserNumber: str
     UserPassword: str
+
+class RestartPasswordModel(BaseModel):
+    UserEmail: str
