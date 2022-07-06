@@ -4,6 +4,7 @@ from crud import Postgres
 from models import *
 from sqlalchemy.orm import Session
 from database import get_db
+from passRestart import RestartPasswordCode
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
@@ -63,6 +64,14 @@ async def insert_user(model: UserModel, db:Session=Depends(get_db)):
         logger.error({"500": "Something went wrong"})
 
         raise HTTPException(status_code = 500, detail = "Something went wrong")
-        
+
+@app.post("/password-restart")
+async def password_restart(model: RestartPasswordModel, db:Session=Depends(get_db)):
+    RestartPasswordCode().updateCode()
+
+    logger.info({"InsertUser": "ok", "tableName": "ok"})
+
+    return {"InsertUser": "ok", "tableName": "ok"}
+
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
