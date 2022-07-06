@@ -36,13 +36,17 @@ class Postgres():
                 password=password
             )
             a1 = PasswordReset(
-                code="1234534535"
+                code=None
             )
+
+            # u relaciuju upisujemo None vrednost jer kod se generise po requestu za restart pass
             data.managePassword.append(a1)
             db.add(data)
 
             db.commit()
             db.refresh(data)
+            db.refresh(a1)
+
             data
 
         except SQLAlchemyError as e:
