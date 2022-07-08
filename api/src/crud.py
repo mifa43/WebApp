@@ -32,6 +32,7 @@ class CreateKeycloakUser():
             - `secret`
         """
         
+        
         # Ulazimo u realm demo kao admin
 
         self.admin.realm_name = "demo"
