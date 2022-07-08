@@ -6,6 +6,8 @@ from requester import SendRequest
 from helpers import checkNameAndEmail, emailValidation, checkPassword, createUserName
 from crud import CreateKeycloakUser
 from resend_email_verfy import ResendVerifyEmail
+import datetime
+from fastapi_cprofile.profiler import CProfileMiddleware
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
@@ -23,7 +25,12 @@ ch.setFormatter(formatter)
 
 # dodaj consol-u logger
 logger.addHandler(ch)
+
 app = FastAPI()
+
+app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative')
+
+
 
 origins = [
     "*",
@@ -37,17 +44,19 @@ app.add_middleware(
     allow_methods=["*","post"],
     allow_headers=["*"],
 )
+
+
 # https://fastapi.tiangolo.com/tutorial/cors/
 
 @app.get("/")
-async def helth_check():
+def helth_check():
     logger.info("{Health : OK}, 200")
 
    
     return {"Health": "OK"}
 
 @app.post("/resend-email-verification")
-async def resend_email_verificatioin(model: Verification):
+def resend_email_verificatioin(model: Verification):
 
     userID = ResendVerifyEmail().getKeycloakUserID(model.UserName)  # da li user id postoji ?
 
@@ -56,8 +65,10 @@ async def resend_email_verificatioin(model: Verification):
         verify = ResendVerifyEmail().sendVerification(userID["user_id_keycloak"])   # slanje verifikacije !
 
         logger.info({"EmailVerificationSend": [True, model.UserName]})
+        
 
         return {"EmailVerificationSend": [True, model.UserName]}
+
 
     elif userID["exist"] == False:  # keycloak user id nije pronadjen dizemo error
 
@@ -72,9 +83,10 @@ async def resend_email_verificatioin(model: Verification):
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
 @app.post("/register-user")
-async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
+def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
+    logger.info(app.add_middleware(CProfileMiddleware, enable=True, server_app = app, filename='/tmp/output.pstats', strip_dirs = False, sort_by='cumulative'))
     """Hvatanje requesta i slanje na userservice"""
-
+    # start_time = datetime.datetime.now()
     email = emailValidation(model.UserEmail)    # da li je email validan ? 
 
     password = checkPassword(model.UserPassword, model.UserRePassword)  # da li se passwordi podudaraju ?
@@ -112,6 +124,11 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
             logger.error({"409": "Username or email already exists in kc"})
 
             raise HTTPException(status_code = 409, detail = "Username or email already exists in kc")
+
+        # end_time = datetime.datetime.now()
+        # print(end_time - start_time)
+
+        # logger.info({end_time - start_time})
         
         # ako su sve unete vrednosti validne kreira se korisnik na kc i bazi
         logger.info({
