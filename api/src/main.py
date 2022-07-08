@@ -28,9 +28,8 @@ logger.addHandler(ch)
 
 app = FastAPI()
 
-app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative')
-
-
+# testira api endpoint preformanse i vreme izvrsavanja
+app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
 
 origins = [
     "*",
@@ -84,7 +83,7 @@ def resend_email_verificatioin(model: Verification):
 
 @app.post("/register-user")
 def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
-    logger.info(app.add_middleware(CProfileMiddleware, enable=True, server_app = app, filename='/tmp/output.pstats', strip_dirs = False, sort_by='cumulative'))
+    # logger.info(app.add_middleware(CProfileMiddleware, enable=True, server_app = app, filename='/tmp/output.pstats', strip_dirs = False, sort_by='cumulative'))
     """Hvatanje requesta i slanje na userservice"""
     # start_time = datetime.datetime.now()
     email = emailValidation(model.UserEmail)    # da li je email validan ? 
