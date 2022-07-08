@@ -30,14 +30,14 @@ app = FastAPI()
 #     return db.query(User).filter(User.id == id).first()
 
 @app.get("/")
-async def helth_check():
+def helth_check():
 
     logger.info("{Health : OK}, 200")
     
     return {"Health": "OK"}
 
 @app.post("/insert-user")
-async def insert_user(model: UserModel, db:Session=Depends(get_db)):
+def insert_user(model: UserModel, db:Session=Depends(get_db)):
     """Hvatanje requesta i slanje u insert funkciju"""
     try:
         data = Postgres().insert(model.UserName, model.UserFirstName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword, db)     # hvataj request body
@@ -66,7 +66,7 @@ async def insert_user(model: UserModel, db:Session=Depends(get_db)):
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
 @app.post("/password-restart")
-async def password_restart(model: RestartPasswordModel, db:Session=Depends(get_db)):
+def password_restart(model: RestartPasswordModel, db:Session=Depends(get_db)):
     RestartPasswordCode().updateCode()
 
     logger.info({"InsertUser": "ok", "tableName": "ok"})

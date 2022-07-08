@@ -37,14 +37,14 @@ app.add_middleware(
 # https://fastapi.tiangolo.com/tutorial/cors/
 
 @app.get("/")
-async def helth_check():
+def helth_check():
 
     logger.info("{Health : OK}, 200")
 
     return {"Health": "OK"}
 
 @app.post("/login")
-async def login(model: AuthCreaditional):
+def login(model: AuthCreaditional):
 
     if model.UserEmail and model.UserPassword:  # da li postoji input ? da 
 
@@ -81,7 +81,7 @@ async def login(model: AuthCreaditional):
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
 @app.post("/logout")
-async def logout(model: RefreshToken):
+def logout(model: RefreshToken):
 
     if model.token:
         try:
@@ -111,7 +111,7 @@ async def logout(model: RefreshToken):
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
 @app.post("/password-restart")
-async def password_restart(model: UserPasswordRestart):
+def password_restart(model: UserPasswordRestart):
     userID = KeycloakUserPasswordManage().getKeycloakUserId(model.UserEmail)
 
     return {"OK": "200"}
