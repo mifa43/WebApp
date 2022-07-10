@@ -48,7 +48,7 @@ def helth_check():
     return {"Health": "OK"}
 
 @app.post("/login")
-def login(model: AuthCreaditional):
+async def login(model: AuthCreaditional):
 
     if model.UserEmail and model.UserPassword:  # da li postoji input ? da 
 
@@ -85,7 +85,7 @@ def login(model: AuthCreaditional):
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
 @app.post("/logout")
-def logout(model: RefreshToken):
+async def logout(model: RefreshToken):
 
     if model.token:
         try:
