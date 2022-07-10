@@ -1,3 +1,4 @@
+from re import A
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 import logging, uvicorn
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,6 +10,10 @@ from resend_email_verfy import ResendVerifyEmail
 import datetime
 from fastapi_cprofile.profiler import CProfileMiddleware
 
+import pytest, asyncio
+import requests_async
+from requests_async import ASGISession
+from callme import foo, bzz
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -57,7 +62,7 @@ def helth_check():
 @app.post("/resend-email-verification")
 def resend_email_verificatioin(model: Verification):
 
-    userID = ResendVerifyEmail().getKeycloakUserID(model.UserName)  # da li user id postoji ?
+    userID = asyncio.create_task(ResendVerifyEmail().getKeycloakUserID(model.UserName))  # da li user id postoji ?
 
     if userID["exist"] == True: # ako postoji saljemo verifikaciju
 
@@ -81,11 +86,14 @@ def resend_email_verificatioin(model: Verification):
 
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
+
 @app.post("/register-user")
-def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
+# @pytest.mark.anyio
+async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
     # logger.info(app.add_middleware(CProfileMiddleware, enable=True, server_app = app, filename='/tmp/output.pstats', strip_dirs = False, sort_by='cumulative'))
     """Hvatanje requesta i slanje na userservice"""
-    # start_time = datetime.datetime.now()
+
+    requests_async.ASGISession(app) #mock app
     email = emailValidation(model.UserEmail)    # da li je email validan ? 
 
     password = checkPassword(model.UserPassword, model.UserRePassword)  # da li se passwordi podudaraju ?
@@ -96,14 +104,20 @@ def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
         userName = createUserName(model.UserName, model.UserLastName)   # username je kombinacija - str ime.prezime
 
-        req = SendRequest.userService(userName, model.UserName ,model.UserLastName, lower["email"], model.UserNumber, password["check"])  # ako jesu salji request !
+          
+        
+        # kreiraj usera na keycloak-u async
+        # slnje rquesrta async
+        futures = [SendRequest.userService(userName, model.UserName ,model.UserLastName, lower["email"], model.UserNumber, password["check"]),
+        CreateKeycloakUser().newUser(lower["email"], userName, model.UserName, model.UserLastName, password["check"])]
+        
 
-        kc = CreateKeycloakUser().newUser(lower["email"], userName, model.UserName, model.UserLastName, password["check"]) # kreiraj usera na keycloak-u
-
+        req,kc = await asyncio.gather(*futures) #    Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
+        
+        
         if kc["kcError"] == False:  # ako korisnik koji se registruje nema nalog(*username, *email, unique true) kc error je false i saljemo verifikaciju
-
-            verify = CreateKeycloakUser().sendVerifyEmail(kc["clientID"])
-
+            logger.info("OK: WORKING ")
+            
         handler = req["Response"]   # email postoji u bazi ? 
 
         if "detail" in handler: # postgres dize error i vraca kao response
@@ -112,35 +126,32 @@ def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
             raise HTTPException(status_code = 409, detail = "Username or email already exists in db")
 
-        if verify["ID"] == False or verify["ID"] == None:   # korisnik nije pronadjen dizi exception i vrati response
+        if kc["ID"] == False or kc["ID"] == None:   # korisnik nije pronadjen dizi exception i vrati response
 
             logger.error({"406": "UserID does not exist"})
 
             raise HTTPException(status_code = 406, detail = "UserID does not exist")
 
-        if kc["kcError"] == True:   # korisnik koji se registruje uneo je vec iskorisceni email ili username
+        elif kc["kcError"] == True:   # korisnik koji se registruje uneo je vec iskorisceni email ili username
     
             logger.error({"409": "Username or email already exists in kc"})
 
             raise HTTPException(status_code = 409, detail = "Username or email already exists in kc")
+    
+        # ako su sve unete vrednosti validne kreira se korisnik na kc i bazi i salje email verify
+        asyncio.create_task(CreateKeycloakUser().sendVerifyEmail(kc["clientID"]))   # sync email verify
 
-        # end_time = datetime.datetime.now()
-        # print(end_time - start_time)
-
-        # logger.info({end_time - start_time})
-        
-        # ako su sve unete vrednosti validne kreira se korisnik na kc i bazi
         logger.info({
             "PostRequestSendOn": [req["PostRequestSendOn"],req["Response"]], 
             "keycloak": [kc["clientID"], kc["userName"]],
-            "verifyEmail": verify["ID"]
+            "verifyEmail": kc["ID"]
             })
 
         return {
             "PostRequestSendOn": req["PostRequestSendOn"], 
             "Response": req["Response"], 
             "keycloak": [kc["clientID"], kc["userName"]],
-            "verifyEmail": verify["ID"]
+            "verifyEmail": kc["ID"]
             }
 
     elif password["passwordIsValid"] == False:  # passwordi se ne podudaraju vrati except
