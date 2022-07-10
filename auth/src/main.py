@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from auth_methods import KeycloakAuth
 from password_restart import KeycloakUserPasswordManage
 from models import *
+from fastapi_cprofile.profiler import CProfileMiddleware
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -21,6 +22,9 @@ ch.setFormatter(formatter)
 # dodaj consol-u logger
 logger.addHandler(ch)
 app = FastAPI()
+
+app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
+
 
 origins = [
     "*",
