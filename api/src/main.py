@@ -60,7 +60,7 @@ def helth_check():
     return {"Health": "OK"}
 
 @app.post("/resend-email-verification")
-def resend_email_verificatioin(model: Verification):
+async def resend_email_verificatioin(model: Verification):
 
     userID = asyncio.create_task(ResendVerifyEmail().getKeycloakUserID(model.UserName))  # da li user id postoji ?
 
@@ -104,8 +104,6 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
         userName = createUserName(model.UserName, model.UserLastName)   # username je kombinacija - str ime.prezime
 
-          
-        
         # kreiraj usera na keycloak-u async
         # slnje rquesrta async
         futures = [SendRequest.userService(userName, model.UserName ,model.UserLastName, lower["email"], model.UserNumber, password["check"]),
@@ -117,6 +115,7 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
         
         if kc["kcError"] == False:  # ako korisnik koji se registruje nema nalog(*username, *email, unique true) kc error je false i saljemo verifikaciju
             logger.info("OK: WORKING ")
+            asyncio.create_task(CreateKeycloakUser().sendVerifyEmail(kc["clientID"]))   # sync email verify
             
         handler = req["Response"]   # email postoji u bazi ? 
 
@@ -139,7 +138,7 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
             raise HTTPException(status_code = 409, detail = "Username or email already exists in kc")
     
         # ako su sve unete vrednosti validne kreira se korisnik na kc i bazi i salje email verify
-        asyncio.create_task(CreateKeycloakUser().sendVerifyEmail(kc["clientID"]))   # sync email verify
+        
 
         logger.info({
             "PostRequestSendOn": [req["PostRequestSendOn"],req["Response"]], 
