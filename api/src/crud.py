@@ -1,7 +1,7 @@
 from keycloak import KeycloakOpenID
 from keycloak import KeycloakAdmin
 import os
-
+import asyncio
 class CreateKeycloakUser():
     def __init__(self):
 
@@ -23,7 +23,7 @@ class CreateKeycloakUser():
                 client_secret_key = "f550d47f-a4cd-41f3-ab0d-d72936b634af"
                 )
 
-    def newUser(self, email: str, username: str, firstName: str, lastName: str, secret: str):
+    async def newUser(self, email: str, username: str, firstName: str, lastName: str, secret: str):
         """### Kreiranje korisnika na Keycloak
             - `email`
             - `username`
@@ -34,10 +34,12 @@ class CreateKeycloakUser():
         
         
         # Ulazimo u realm demo kao admin
-
-        self.admin.realm_name = "demo"
         
+        self.admin.realm_name = "demo"
+        # await asyncio.sleep(5)
+
         try:
+
             data = self.admin.create_user({
                 "email": email,
                 "username": username,
@@ -51,31 +53,34 @@ class CreateKeycloakUser():
                     }
                 ]
                 })
-        
-            return {"clientID": data, "userName": username, "kcError":  False}
+           
+            # sendEmail = await self.admin.send_verify_email(user_id=data)
+           
+            return {"clientID": data, "userName": username, "kcError":  False,"emailStatus": True, "ID": data}
 
         except:
 
-            return {"clientID": None, "userName": None, "kcError":  True}
+            return {"clientID": None, "userName": None, "kcError":  True, "ID": False}
 
-    def getKeycloakUserID(self, username: str):
-        """### Uzmi keycloak user id 
-            - `username`
-        """
-        self.admin.realm_name = "demo"
+    # def getKeycloakUserID(self, username: str):
+    #     """### Uzmi keycloak user id 
+    #         - `username`
+    #     """
+    #     # await asyncio.sleep(0)
+    #     self.admin.realm_name = "demo"
 
-        keycloakUserID = self.admin.get_user_id(username)
+    #     keycloakUserID = self.admin.get_user_id(username)
      
-        return {"ID": keycloakUserID, "keycloakUser": username}
+    #     return {"ID": keycloakUserID, "keycloakUser": username}
         
 
-    def sendVerifyEmail(self, keycloak_id: str):
+    async def sendVerifyEmail(self, keycloak_id: str):
         """### Slanje email verifikacije nakon registracije
             - `keycloak_id`
         """
-        
+        # await asyncio.sleep(0)
         self.admin.realm_name = "demo"
-
+        
         sendEmail = self.admin.send_verify_email(user_id=keycloak_id)
 
         if keycloak_id == None:
@@ -83,5 +88,6 @@ class CreateKeycloakUser():
             return {"ID": False}
 
         else: 
-
+            
             return {"emailStatus": True, "ID": keycloak_id}
+    
