@@ -5,3 +5,4 @@ pydantic==1.8.2
 psycopg2-binary==2.9.3 
 SQLAlchemy==1.4.15
 alembic==1.8.0
+fastapi-cprofile==0.0.2 

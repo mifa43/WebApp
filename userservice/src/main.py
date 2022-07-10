@@ -5,6 +5,7 @@ from models import *
 from sqlalchemy.orm import Session
 from database import get_db
 from passRestart import RestartPasswordCode
+from fastapi_cprofile.profiler import CProfileMiddleware
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
@@ -24,6 +25,9 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 app = FastAPI()
+
+app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
+
 
 # @app.get("/gettest")
 # async def get_by_id(id:int,db:Session=Depends(get_db)):
