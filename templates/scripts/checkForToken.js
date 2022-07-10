@@ -1,4 +1,3 @@
-
 function checkForToken(){
     var token = window.localStorage.getItem("access_token");
     console.log(token)

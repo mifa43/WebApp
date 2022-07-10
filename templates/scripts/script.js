@@ -23,44 +23,45 @@
 //     });
 // }
 // funkcija za slanje post requesta na register-user endpoint
-async function postData () {
-    // async funkcija za slanje requesta na api endpoint sa json body-em
-    let user = {
-        UserName: document.getElementById("inputName").value,
-        UserLastName: document.getElementById("inputLanme").value,
-        UserEmail: document.getElementById("inputEmail").value,
-        UserNumber: document.getElementById("phonNumber").value,
-        UserPassword: document.getElementById("inputPassword").value,
-        UserRePassword: document.getElementById("inputRePassword").value
 
-    }
-    // pokusaj slanja post requesta. py(try: except:)
-    try {
-        const response = await axios.post("http://0.0.0.0:8081/register-user", user)
-        console.log(user)
-        let header = document.querySelector("h6");
-        header.innerText = `Account created !`;
+// function postData () {
+//     // async funkcija za slanje requesta na api endpoint sa json body-em
+//     let user = {
+//         UserName: document.getElementById("inputName").value,
+//         UserLastName: document.getElementById("inputLanme").value,
+//         UserEmail: document.getElementById("inputEmail").value,
+//         UserNumber: document.getElementById("phonNumber").value,
+//         UserPassword: document.getElementById("inputPassword").value,
+//         UserRePassword: document.getElementById("inputRePassword").value
+
+//     }
+//     // pokusaj slanja post requesta. py(try: except:)
+//     try {
+//         const response = axios.post("http://0.0.0.0:8081/register-user", user)
+//         console.log(user)
+//         let header = document.querySelector("h6");
+//         header.innerText = `Account created !`;
         
-        window.alert("You have successfully created an account and now we will send you an email verification!");
+//         window.alert("You have successfully created an account and now we will send you an email verification!");
 
-        window.location.href = 'index.html';
+//         window.location.href = 'index.html';
 
 
 
-    } catch (error) {
-        if (error.response) {
-            let header = document.querySelector("h6");
-            console.log(error.message);
-            header.innerText = error.response.data.detail;
+//     } catch (error) {
+//         if (error.response) {
+//             let header = document.querySelector("h6");
+//             console.log(error.message);
+//             header.innerText = error.response.data.detail;
             
-        } else {
-            console.log(error.message);
-            header.innerText = error.response.data.detail;
+//         } else {
+//             console.log(error.message);
+//             header.innerText = error.response.data.detail;
           
-        }
-    }
-}
-function validate() {
+//         }
+//     }
+// }
+async function validate() {
     // provera da li je input veci od 3
     let header = document.querySelector("h6");
         
@@ -105,11 +106,48 @@ function validate() {
     else {
       // else: input je dovoljno dugacak
       // pozivamo funkciju i saljemo request
-      postData()
+      // postData()
 
       // window.alert("Uspesno registrovan korisnik")
       // window.location = "index.html";
-      return true;
+      let user = {
+          UserName: document.getElementById("inputName").value,
+          UserLastName: document.getElementById("inputLanme").value,
+          UserEmail: document.getElementById("inputEmail").value,
+          UserNumber: document.getElementById("phonNumber").value,
+          UserPassword: document.getElementById("inputPassword").value,
+          UserRePassword: document.getElementById("inputRePassword").value
+
+      }
+      // pokusaj slanja post requesta. py(try: except:)
+      try {
+          const response = await axios.post("http://0.0.0.0:8081/register-user", user)
+          console.log(user)
+          if (response.status == '200'){
+            let header = document.querySelector("h6");
+            header.innerText = `Account created !`;
+            
+            window.alert(response.status);
+            // "You have successfully created an account and now we will send you an email verification!"
+
+            window.location.href = 'index.html';
+          }
+          
+
+
+
+      } catch (error) {
+          if (error.response) {
+              let header = document.querySelector("h6");
+              console.log(error.message);
+              header.innerText = error.response;
+              
+          } else {
+              console.log(error.message);
+              header.innerText = error.response;
+            
+          }
+      }
     }
    }
 

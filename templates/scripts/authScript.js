@@ -23,7 +23,7 @@ async function postAuthData () {
 
         
 
-        window.location.href = 'index.html';
+        window.location = 'index.html';
 
 
 

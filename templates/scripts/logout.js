@@ -1,5 +1,5 @@
 
-async function logout(){
+function logout(){
     // uzmi token iz local storage
     let refreshToken = {
         token: window.localStorage.getItem("refresh_token")
@@ -7,7 +7,7 @@ async function logout(){
     }
     // posalji refresh token na auth a;pi
     try {
-        const response = await axios.post("http://0.0.0.0:8083/logout", refreshToken);
+        const response = axios.post("http://0.0.0.0:8083/logout", refreshToken);
     
 
         // console.log(response.data.access_token.refresh_token);
