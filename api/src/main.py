@@ -174,3 +174,6 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
         
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
+
+
+# async preformanse sa 2s na 0.2 sec 
