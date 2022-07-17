@@ -11,10 +11,8 @@ import datetime
 from fastapi_cprofile.profiler import CProfileMiddleware
 
 import requests_async as asyncRequests
-import pytest, asyncio
-import requests_async
-from requests_async import ASGISession
-from callme import foo, bzz
+import asyncio
+
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -94,7 +92,7 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
     # logger.info(app.add_middleware(CProfileMiddleware, enable=True, server_app = app, filename='/tmp/output.pstats', strip_dirs = False, sort_by='cumulative'))
     """Hvatanje requesta i slanje na userservice"""
 
-    requests_async.ASGISession(app) #mock app
+  
     email = emailValidation(model.UserEmail)    # da li je email validan ? 
 
     password = checkPassword(model.UserPassword, model.UserRePassword)  # da li se passwordi podudaraju ?
