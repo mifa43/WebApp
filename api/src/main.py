@@ -10,6 +10,7 @@ from resend_email_verfy import ResendVerifyEmail
 import datetime
 from fastapi_cprofile.profiler import CProfileMiddleware
 
+import requests_async as asyncRequests
 import pytest, asyncio
 import requests_async
 from requests_async import ASGISession
@@ -106,18 +107,26 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
         # kreiraj usera na keycloak-u async
         # slnje rquesrta async
-        futures = [SendRequest.userService(userName, model.UserName ,model.UserLastName, lower["email"], model.UserNumber, password["check"]),
-        CreateKeycloakUser().newUser(lower["email"], userName, model.UserName, model.UserLastName, password["check"])]
-        
+        # SendRequest.userService(userName, model.UserName ,model.UserLastName, lower["email"], model.UserNumber, password["check"])
+        async with asyncRequests.Session() as session:  # saljemo async Request session
 
-        req,kc = await asyncio.gather(*futures) #    Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
-        
-        
+            job = SendRequest.userService(userName, model.UserName ,model.UserLastName, lower["email"], model.UserNumber, password["check"], session)   # arguument session
+
+            reqq = await asyncio.gather(*job["Response"]) # uzima corutine, Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
+
+            for resp in reqq:   # respose
+
+                req = resp.json()
+
+        kc = await CreateKeycloakUser().newUser(lower["email"], userName, model.UserName, model.UserLastName, password["check"])    # cekaj da se vrati keycloak user id
+   
         if kc["kcError"] == False:  # ako korisnik koji se registruje nema nalog(*username, *email, unique true) kc error je false i saljemo verifikaciju
-            logger.info("OK: WORKING ")
-            asyncio.create_task(CreateKeycloakUser().sendVerifyEmail(kc["clientID"]))   # sync email verify
-            
-        handler = req["Response"]   # email postoji u bazi ? 
+
+            logger.info("Email: Send ")
+
+            asyncio.create_task(CreateKeycloakUser().sendVerifyEmail(kc["clientID"]))   # async email verify
+
+        handler = req  # email postoji u bazi ? 
 
         if "detail" in handler: # postgres dize error i vraca kao response
 
@@ -141,14 +150,14 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
         
 
         logger.info({
-            "PostRequestSendOn": [req["PostRequestSendOn"],req["Response"]], 
+            "PostRequestSendOn": [job["PostRequestSendOn"], req], 
             "keycloak": [kc["clientID"], kc["userName"]],
             "verifyEmail": kc["ID"]
             })
 
         return {
-            "PostRequestSendOn": req["PostRequestSendOn"], 
-            "Response": req["Response"], 
+            "PostRequestSendOn": job["PostRequestSendOn"],
+            "Response": req, 
             "keycloak": [kc["clientID"], kc["userName"]],
             "verifyEmail": kc["ID"]
             }
