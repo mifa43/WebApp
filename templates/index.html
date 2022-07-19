@@ -6,14 +6,26 @@
         <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="css/navStyle.css">
         <link rel="stylesheet" href="css/formsHolder.css">
+        <link rel="stylesheet" href="css/restartPassword.css">
+
 
 
         <script src="scripts/script.js"></script>
         <script src="scripts/authScript.js"></script>
         <script src="scripts/checkForToken.js"></script>
         <script src="scripts/logout.js"></script>
+<<<<<<< HEAD
         <!-- <script src="scripts/registerFormValidation.js"></script> -->
 
+=======
+<<<<<<< Updated upstream
+=======
+        <script src="scripts/restartPasswordPopup.js"></script>
+
+        <!-- <script src="scripts/registerFormValidation.js"></script> -->
+
+>>>>>>> Stashed changes
+>>>>>>> 0ade1259a56e14201f7bb7b6ee8b8f59d794a98c
 
         <!-- <script src="scripts/nav.js"></script> -->
 
@@ -139,6 +151,7 @@
             <div class="login-html">
                 <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
                 <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
+                <!-- <input id="tab-3" type="radio" name="tab" class="sign-up"><label for="tab-3" class="tab">Forgot Password</label> -->
                 <div class="login-form">
                     <div class="sign-in-htm">
                         <form method="POST" action="">
@@ -179,11 +192,10 @@
                                 <h6 class="placeholderoutput"></h6>
                             </div>
                         </form>
-          
-
+        
                         <div class="hr"></div>
                         <div class="foot-lnk">
-                            <a href="#forgot">Forgot Password?</a>
+                            <label for="tab-2"><a>Already Member?</a></a>
                         </div>
                     </div> 
                     <div class="sign-up-htm">
@@ -209,11 +221,30 @@
                                 <h5 class="placeholderoutput"></h5>
                             </div>
                         </form>
-                        <div class="hr"></div>
-                        <div class="foot-lnk">
-                            <label for="tab-1">Already Member?</a>
+                        <div class="center">
+                   
+                            <div class="hrhr" id="hrhr"></div>
+                            <div class="foot-lnk">
+                                <label id="open-subscribe-form" onclick="putElem()"><a>Forgot your password?</a></a>
+                            </div>
+                            
+                            <!-- <button id="open-subscribe-form" onclick="putElem()">
+                                Forgot your password?
+                            </button> -->
+                            <!-- <img src="css/images/restart-password-img.jpg"> -->
                         </div>
+                        <div id="pop123">
+                            
+                        </div>
+                        
+                        
+                        
+       
                     </div>
+                             
+                      
+                
+                    
                 </div> 
             </div>
         </div>
