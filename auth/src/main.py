@@ -10,6 +10,7 @@ from fastapi_cprofile.profiler import CProfileMiddleware
 from helpers import *
 from codeGen import recoveryCodeGenerator
 from sendCodeEmail import EmailToSend
+from send_request_code import CreateCodeUserService
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -123,11 +124,18 @@ async def logout(model: RefreshToken):
 async def password_restart(model: RestartPassword):
 
     userID = KeycloakUserPasswordManage().getKeycloakUserId(model.UserEmail)
-    print(userID)
+    # print(userID)
     if userID["exist"] == True:
+
         code = recoveryCodeGenerator()
+
         sendCode = EmailToSend(model.UserEmail, code).send()
-        logger.info(code, sendCode)
+
+        sendCodeUserservice = CreateCodeUserService(model.UserEmail, code).sendCode()
+        
+        logger.info({
+            "sendCodeUserservice": [sendCodeUserservice["PostRequestSendOn"], sendCodeUserservice["response"]]
+            })
         # while model.password1 == str and model.password2 == str:
         # passwordCheck = checkPassword(model.password1, model.password2)
         
@@ -138,7 +146,7 @@ async def password_restart(model: RestartPassword):
         # if passwordCheck["passwordMustBeSent"] == True:
         #     logger.info(passwordCheck)
 
-        logger.info({"status": "User founded !"})
+        # logger.info({"status": "User founded !"})
         return {"status": "User founded !"}
 
 
