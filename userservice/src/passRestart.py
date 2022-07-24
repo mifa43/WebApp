@@ -5,9 +5,18 @@ class RestartPasswordCode():
     def __init__(self):
         pass
 
-    def updateCode(self, mail: str, db) -> dict:
-        pass
-        
+    def updateCode(self, mail: str, code: str, db) -> dict:
+
+        query = db.query(User).filter(User.mail == mail)    # uzmi userID *param email (select id from "table" where mail = mail)
+
+        userID = [row for row in query] # pretraga rezultata
+
+        codeUpdate = db.query(PasswordReset).filter(PasswordReset.owner_id == userID[0].id).update({'code': code})  # updejtuj code 
+
+        db.commit()
+
+        return {"code": True, "tableName": "managePassword"}
+
     def update(self, password: str, db) -> dict:
         """ ## Update
             ## Upisivanje korisnika u bazu
