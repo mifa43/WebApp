@@ -1,3 +1,5 @@
+import asyncio
+from operator import mod
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 import logging, uvicorn
 from fastapi.middleware.cors import CORSMiddleware
@@ -5,6 +7,9 @@ from auth_methods import KeycloakAuth
 from password_restart import KeycloakUserPasswordManage
 from models import *
 from fastapi_cprofile.profiler import CProfileMiddleware
+from helpers import *
+from codeGen import recoveryCodeGenerator
+from sendCodeEmail import EmailToSend
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -23,7 +28,7 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 app = FastAPI()
 
-app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
+# app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
 
 
 origins = [
@@ -115,11 +120,45 @@ async def logout(model: RefreshToken):
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
 @app.post("/password-restart")
-def password_restart(model: UserPasswordRestart):
+async def password_restart(model: RestartPassword):
+
     userID = KeycloakUserPasswordManage().getKeycloakUserId(model.UserEmail)
+    print(userID)
+    if userID["exist"] == True:
+        code = recoveryCodeGenerator()
+        sendCode = EmailToSend(model.UserEmail, code).send()
+        logger.info(code, sendCode)
+        # while model.password1 == str and model.password2 == str:
+        # passwordCheck = checkPassword(model.password1, model.password2)
+        
+        # if passwordCheck["passwordMustBeSent"] == False:
+        #     logger.error({"401 ": "Password not provided"})
+        #     raise HTTPException(status_code = 401 , detail = "Password not provided")
 
-    return {"OK": "200"}
+        # if passwordCheck["passwordMustBeSent"] == True:
+        #     logger.info(passwordCheck)
 
+        logger.info({"status": "User founded !"})
+        return {"status": "User founded !"}
+
+
+
+        
+    elif userID["exist"] == False:
+        
+        logger.error({"406": "The entered value is not valid, a refsresh_token is required"})
+        raise HTTPException(status_code = 406, detail = "Keylock user does not exist: *param: {0}".format(model.UserEmail))
+
+    else: # desilo se nesto neocekivano
+
+        logger.error({"500": "Something went wrong"})
+
+        raise HTTPException(status_code = 500, detail = "Something went wrong")
+
+
+    restartPassword = KeycloakUserPasswordManage().restartPassword(userID["user_id_keycloak"], password.password1)
+
+    
     
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
