@@ -123,16 +123,16 @@ async def logout(model: RefreshToken):
 @app.post("/password-restart")
 async def password_restart(model: RestartPassword):
 
-    userID = KeycloakUserPasswordManage().getKeycloakUserId(model.UserEmail)
-    # print(userID)
-    if userID["exist"] == True:
+    userID = KeycloakUserPasswordManage().getKeycloakUserId(model.UserEmail)    # dohavti KeycloakID ako postoji 
 
-        code = recoveryCodeGenerator()
+    if userID["exist"] == True: # user email postoji ?
 
-        sendCode = EmailToSend(model.UserEmail, code).send()
+        code = recoveryCodeGenerator()  # generisi kod 
 
-        sendCodeUserservice = CreateCodeUserService(model.UserEmail, code).sendCode()
-        
+        sendCode = EmailToSend(model.UserEmail, code).send()    # uzmi email i kod posalji na email adresu korisnika
+
+        sendCodeUserservice = CreateCodeUserService(model.UserEmail, code).sendCode()  # posalji kod i email na userservice
+
         logger.info({
             "sendCodeUserservice": [sendCodeUserservice["PostRequestSendOn"], sendCodeUserservice["response"]]
             })
@@ -149,12 +149,10 @@ async def password_restart(model: RestartPassword):
         # logger.info({"status": "User founded !"})
         return {"status": "User founded !"}
 
-
-
-        
-    elif userID["exist"] == False:
+    elif userID["exist"] == False:  # znaci da user email nije postojeci ? dizi exception
         
         logger.error({"406": "The entered value is not valid, a refsresh_token is required"})
+
         raise HTTPException(status_code = 406, detail = "Keylock user does not exist: *param: {0}".format(model.UserEmail))
 
     else: # desilo se nesto neocekivano
