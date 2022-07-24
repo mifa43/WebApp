@@ -13,3 +13,4 @@ class UserModel(BaseModel):
 
 class RestartPasswordModel(BaseModel):
     UserEmail: str
+    code: str
