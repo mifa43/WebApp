@@ -26,7 +26,7 @@ logger.addHandler(ch)
 
 app = FastAPI()
 
-app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
+# app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
 
 
 # @app.get("/gettest")
@@ -71,11 +71,12 @@ def insert_user(model: UserModel, db:Session=Depends(get_db)):
 
 @app.post("/password-restart")
 def password_restart(model: RestartPasswordModel, db:Session=Depends(get_db)):
-    RestartPasswordCode().updateCode()
 
-    logger.info({"InsertUser": "ok", "tableName": "ok"})
+    userCodeUpdate = RestartPasswordCode().updateCode(model.UserEmail, model.code, db)
 
-    return {"InsertUser": "ok", "tableName": "ok"}
+    logger.info({"codeUpdate": userCodeUpdate["code"], "tableName": userCodeUpdate["tableName"]})
+
+    return {"codeUpdate": userCodeUpdate["code"], "tableName": userCodeUpdate["tableName"]}
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
