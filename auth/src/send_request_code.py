@@ -1,15 +1,21 @@
 import requests
 import os
 
-class CreateUserUserService():
+class CreateCodeUserService():
 
-    def __init__(self, email, username):
+    def __init__(self, email, code):
 
         self.email = email
-        self.username = username
+        self.code = code
 
-    def create_user(self):
+    def sendCode(self):
+        url = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/password-restart'
 
-        url = '{0}/insert-user'.format(os.getenv('USER_SERVICE_URL'))
-        data = {"email" : self.email,"name" : self.firstName}
-        requests.post(url, json = data)
+        data = {
+            "UserEmail" : self.email,
+            "code" : self.code
+            }
+
+        r = requests.post(url, json = data)
+
+        return {"PostRequestSendOn": url, "code": self.code, "response": r.json()}
