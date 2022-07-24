@@ -72,7 +72,7 @@ def insert_user(model: UserModel, db:Session=Depends(get_db)):
 @app.post("/password-restart")
 def password_restart(model: RestartPasswordModel, db:Session=Depends(get_db)):
 
-    userCodeUpdate = RestartPasswordCode().updateCode(model.UserEmail, model.code, db)
+    userCodeUpdate = RestartPasswordCode().updateCode(model.UserEmail, model.code, db)  # email koristimo kao id i izvlacimo id i trazimo u relaciji owner_id updejtamo code polje
 
     logger.info({"codeUpdate": userCodeUpdate["code"], "tableName": userCodeUpdate["tableName"]})
 

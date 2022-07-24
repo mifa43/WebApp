@@ -2,10 +2,22 @@ from sqlalchemy.exc import SQLAlchemyError
 from tableModel import *
 
 class RestartPasswordCode():
+    """ ### Klasa za menjanje koda i passworda
+        - `updateCode` -> upisi novi kod koji stize na korisnikov zahtev
+
+    """
     def __init__(self):
         pass
 
     def updateCode(self, mail: str, code: str, db) -> dict:
+        """ ## Update
+            ## Upisivanje novi kod u bazu i updejta
+            - ``code``
+                - db == FastAPI(Session=Depends(get_db))
+                ##### osluskuje i otvara seassi-u
+
+            ### Koristi PasswordReset klasu, poziva atribute i dodeljuje vrednosti.
+        """
 
         query = db.query(User).filter(User.mail == mail)    # uzmi userID *param email (select id from "table" where mail = mail)
 
@@ -19,7 +31,7 @@ class RestartPasswordCode():
 
     def update(self, password: str, db) -> dict:
         """ ## Update
-            ## Upisivanje korisnika u bazu
+            ## Upisivanje password u bazu i updejta
             - ``password``
                 - db == FastAPI(Session=Depends(get_db))
                 ##### osluskuje i otvara seassi-u
