@@ -1,3 +1,4 @@
+import email
 from lib2to3.pgen2 import token
 from keycloak import KeycloakOpenID
 from keycloak import KeycloakAdmin
@@ -28,11 +29,11 @@ class KeycloakUserPasswordManage():
         
         self.admin.realm_name = "demo"
 
-        user_id_keycloak = self.admin.get_user_id(userEmail)
+        user_id_keycloak = self.admin.get_users({"email":f"{userEmail}"})
 
         if user_id_keycloak == None:
     
-            return {"exist" : False}
+            return {"exist" : False, "user_id_keycloak" : user_id_keycloak}
 
         else:
 
@@ -41,3 +42,4 @@ class KeycloakUserPasswordManage():
     def restartPassword(self, userID: str, userNewPassword: str):
 
         restart = self.admin.set_user_password(user_id=userID, password=userNewPassword, temporary=True)
+        return restart
