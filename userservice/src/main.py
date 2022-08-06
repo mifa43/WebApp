@@ -4,7 +4,7 @@ from crud import Postgres
 from models import *
 from sqlalchemy.orm import Session
 from database import get_db
-from passRestart import RestartPasswordCode
+# from passRestart import RestartPasswordCode
 from fastapi_cprofile.profiler import CProfileMiddleware
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
@@ -69,14 +69,14 @@ def insert_user(model: UserModel, db:Session=Depends(get_db)):
 
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
-@app.post("/password-restart")
-def password_restart(model: RestartPasswordModel, db:Session=Depends(get_db)):
+# @app.post("/password-restart")
+# def password_restart(model: RestartPasswordModel, db:Session=Depends(get_db)):
 
-    userCodeUpdate = RestartPasswordCode().updateCode(model.UserEmail, model.code, db)  # email koristimo kao id i izvlacimo id i trazimo u relaciji owner_id updejtamo code polje
+#     userCodeUpdate = RestartPasswordCode().updateCode(model.UserEmail, model.code, db)  # email koristimo kao id i izvlacimo id i trazimo u relaciji owner_id updejtamo code polje
 
-    logger.info({"codeUpdate": userCodeUpdate["code"], "tableName": userCodeUpdate["tableName"]})
+#     logger.info({"codeUpdate": userCodeUpdate["codeUpdated"], "tableName": userCodeUpdate["tableName"]})
 
-    return {"codeUpdate": userCodeUpdate["code"], "tableName": userCodeUpdate["tableName"]}
+#     return {"codeUpdate": userCodeUpdate["codeUpdated"], "tableName": userCodeUpdate["tableName"]}
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
