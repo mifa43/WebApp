@@ -30,4 +30,4 @@ class PasswordIsEqualToPassword(object):
 
         else:   # cekaj password
 
-            return {"check": "wait for password", "passwordMustBeSent": False}
+            return {"check": "wait for password","passwordIsValid": False, "passwordMustBeSent": False}
