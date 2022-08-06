@@ -15,16 +15,8 @@ async function restartPassword () {
 
         
         console.log(response.data.status);
-        if (response.data.status == "User founded !")
-            document.getElementById('lab1').innerHTML = '\
-                <label for="code">Your CODE</label>\
-                <input type="text" id="code" placeholder="#ab125h">\
-                '
-            document.getElementById('lab2').innerHTML = ' \
-            <button id="checkCode" onclick="checkCode();" >Check Code</button>\
-            '
 
-        // window.location = 'index.html';
+        window.location = 'index.html';
 
 
 
