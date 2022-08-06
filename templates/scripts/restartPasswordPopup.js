@@ -14,7 +14,7 @@ function putElem(){
                     <input type="email" id="email" placeholder="alex@gmail.com">\
                 </div>\
                 <div id="lab2" class="button">\
-                    <button id="restartPassword" onclick="restartPassword();" >Send code on email</button>\
+                    <button id="restartPassword" onclick="restartPassword();" >Restart Password</button>\
                 </div>\
             </div>\
         </div>\
