@@ -1,5 +1,4 @@
 import asyncio
-from operator import mod
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 import logging, uvicorn
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,9 +7,7 @@ from password_restart import KeycloakUserPasswordManage
 from models import *
 from fastapi_cprofile.profiler import CProfileMiddleware
 from helpers import *
-from codeGen import recoveryCodeGenerator
-from sendCodeEmail import EmailToSend
-from send_request_code import CreateCodeUserService
+from password_restart import KeycloakUserPasswordManage
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -48,6 +45,7 @@ app.add_middleware(
 
 @app.get("/")
 def helth_check():
+
 
     logger.info("{Health : OK}, 200")
 
@@ -121,33 +119,23 @@ async def logout(model: RefreshToken):
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
 @app.post("/password-restart")
-async def password_restart(model: RestartPassword):
+async def password_restart(model: UserPasswordRestart):
 
     userID = KeycloakUserPasswordManage().getKeycloakUserId(model.UserEmail)    # dohavti KeycloakID ako postoji 
+    if model.UserEmail == "" :
+        logger.error({"406": "The entered value is not valid, an empty value {0}, connot be processed.".format(model.UserEmail)})
+
+        raise HTTPException(status_code = 406, detail = "The entered value is not valid: *param: {0}".format(model.UserEmail))
+
 
     if userID["exist"] == True: # user email postoji ?
 
-        code = recoveryCodeGenerator()  # generisi kod 
+        # userID = KeycloakUserPasswordManage().getKeycloakUserId(model.UserEmail)
 
-        sendCode = EmailToSend(model.UserEmail, code).send()    # uzmi email i kod posalji na email adresu korisnika
+        kc = KeycloakUserPasswordManage().restartPassword(userID["user_id_keycloak"][0]["id"])
 
-        sendCodeUserservice = CreateCodeUserService(model.UserEmail, code).sendCode()  # posalji kod i email na userservice
-
-        logger.info({
-            "sendCodeUserservice": [sendCodeUserservice["PostRequestSendOn"], sendCodeUserservice["response"]]
-            })
-        # while model.password1 == str and model.password2 == str:
-        # passwordCheck = checkPassword(model.password1, model.password2)
-        
-        # if passwordCheck["passwordMustBeSent"] == False:
-        #     logger.error({"401 ": "Password not provided"})
-        #     raise HTTPException(status_code = 401 , detail = "Password not provided")
-
-        # if passwordCheck["passwordMustBeSent"] == True:
-        #     logger.info(passwordCheck)
-
-        # logger.info({"status": "User founded !"})
-        return {"status": "User founded !"}
+        return {"ok": 200}
+      
 
     elif userID["exist"] == False:  # znaci da user email nije postojeci ? dizi exception
         
