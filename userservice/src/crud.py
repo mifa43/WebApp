@@ -33,19 +33,16 @@ class Postgres():
                 lastName=lastName,
                 mail=mail,
                 phoneNumber=phoneNumber,
-                password=password
             )
-            a1 = PasswordReset(
-                code=None
-            )
+    
 
             # u relaciuju upisujemo None vrednost jer kod se generise po requestu za restart pass
-            data.managePassword.append(a1)
+            # data.managePassword.append(a1)
             db.add(data)
 
             db.commit()
             db.refresh(data)
-            db.refresh(a1)
+            # db.refresh(a1)
 
             data
 
