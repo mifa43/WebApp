@@ -1,13 +1,13 @@
-import asyncio
+import asyncio, logging, uvicorn
 from fastapi import FastAPI, HTTPException, BackgroundTasks
-import logging, uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from auth_methods import KeycloakAuth
-from password_restart import KeycloakUserPasswordManage
 from models import *
 from fastapi_cprofile.profiler import CProfileMiddleware
 from helpers import *
-from password_restart import KeycloakUserPasswordManage
+# Keycloak password manager imports
+from keycloakPasswordManager.keycloakID import GetKeycloakID
+from keycloakPasswordManager.keycloakRestartPassword import RestartPasswordKeycloak
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -120,9 +120,13 @@ async def logout(model: RefreshToken):
 
 @app.post("/password-restart")
 async def password_restart(model: UserPasswordRestart):
+   
+    userID = GetKeycloakID(model.UserEmail).user()  # dohavti KeycloakID ako postoji
 
-    userID = KeycloakUserPasswordManage().getKeycloakUserId(model.UserEmail)    # dohavti KeycloakID ako postoji 
+    logger.info(userID)
+
     if model.UserEmail == "" :
+
         logger.error({"406": "The entered value is not valid, an empty value {0}, connot be processed.".format(model.UserEmail)})
 
         raise HTTPException(status_code = 406, detail = "The entered value is not valid: *param: {0}".format(model.UserEmail))
@@ -130,9 +134,7 @@ async def password_restart(model: UserPasswordRestart):
 
     if userID["exist"] == True: # user email postoji ?
 
-        # userID = KeycloakUserPasswordManage().getKeycloakUserId(model.UserEmail)
-
-        kc = KeycloakUserPasswordManage().restartPassword(userID["user_id_keycloak"][0]["id"])
+        kc = RestartPasswordKeycloak(userID["user_id_keycloak"][0]["id"]).user()
 
         return {"ok": 200}
       
