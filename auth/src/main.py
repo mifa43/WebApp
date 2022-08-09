@@ -1,13 +1,16 @@
 import asyncio, logging, uvicorn
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
-from auth_methods import KeycloakAuth
-from models import *
 from fastapi_cprofile.profiler import CProfileMiddleware
+from models import *
 from helpers import *
 # Keycloak password manager imports
-from keycloakPasswordManager.keycloakID import GetKeycloakID
-from keycloakPasswordManager.keycloakRestartPassword import RestartPasswordKeycloak
+from keycloakManager.keycloakID import GetKeycloakID
+from keycloakManager.keycloakRestartPassword import RestartPasswordKeycloak
+# keycloak auth imports
+from keycloakManager.keycloakLogin import Login
+from keycloakManager.keycloakLogout import Logout
+
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -58,7 +61,8 @@ async def login(model: AuthCreaditional):
 
         try: # pokusaj login
 
-            auth = KeycloakAuth().login(model.UserEmail, model.UserPassword)    # login
+            auth = Login(model.UserEmail, model.UserPassword).getToken()
+            # auth = KeycloakAuth().login(model.UserEmail, model.UserPassword)    # login
 
             logger.info("accessToken: {0}".format(auth))
 
@@ -94,8 +98,8 @@ async def logout(model: RefreshToken):
     if model.token:
         try:
 
-            token = KeycloakAuth().logout(model.token)
-            
+            # token = KeycloakAuth().logout(model.token)
+            token = Logout(model.token).refToken()
             logger.info("accessToken: ",token)
 
             return {"message" :token["KeycloakAuthLogout"]}   # vrati access token
@@ -134,7 +138,7 @@ async def password_restart(model: UserPasswordRestart):
 
     if userID["exist"] == True: # user email postoji ?
 
-        kc = RestartPasswordKeycloak(userID["user_id_keycloak"][0]["id"]).user()
+        kc = RestartPasswordKeycloak(userID["user_id_keycloak"][0]["id"]).user()    # salji email zahtev na email sa linkom
 
         return {"ok": 200}
       
@@ -152,7 +156,7 @@ async def password_restart(model: UserPasswordRestart):
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
 
-    restartPassword = KeycloakUserPasswordManage().restartPassword(userID["user_id_keycloak"], password.password1)
+    # restartPassword = KeycloakUserPasswordManage().restartPassword(userID["user_id_keycloak"], password.password1)
 
     
     
