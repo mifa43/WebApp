@@ -14,24 +14,26 @@
         <script src="scripts/authScript.js"></script>
         <script src="scripts/checkForToken.js"></script>
         <script src="scripts/logout.js"></script>
-<<<<<<< Updated upstream
-=======
         <script src="scripts/restartPasswordPopup.js"></script>
+        <script src="scripts/restartPasswordScript.js"></script>
+        <script src="scripts/chechCodeForPassword.js"></script>
+        <script src="scripts/setNewUserPassword.js"></script>
+
+
+
 
         <!-- <script src="scripts/registerFormValidation.js"></script> -->
-
->>>>>>> Stashed changes
-
+        <!-- <script src="scripts/registerFormValidation.js"></script> -->
         <!-- <script src="scripts/nav.js"></script> -->
-
         <!-- <script id="replace_with_navbar" src="scripts/nav.js"></script> -->
+
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <title>My Registration V-0.2</title>
-       
+
        
     </head>
     <!-- <div id="includedContent" style="height: 100%; height: 50%;"></div> -->
@@ -181,7 +183,7 @@
                                 <div class="cut" style="width: 130px;"></div>
                                 <label for="password" class="placeholder">Repeat Password</>
                             </div>
-                            <button type="button" class="submit" id="btn" onclick="validate()">Register</button>
+                            <button type="button" class="submit" id="btn" onclick="validate();">Register</button>
             
                             <div class="input-container ic3" id="outputMessage">
                                 <h6 class="placeholderoutput"></h6>
@@ -220,7 +222,9 @@
                    
                             <div class="hrhr" id="hrhr"></div>
                             <div class="foot-lnk">
-                                <label id="open-subscribe-form" onclick="putElem()"><a>Forgot your password?</a></a>
+                                <label id="open-subscribe-form" onclick="putElem()">
+                                    <a >Forgot your password?</a>
+                                </label>
                             </div>
                             
                             <!-- <button id="open-subscribe-form" onclick="putElem()">
@@ -231,15 +235,8 @@
                         <div id="pop123">
                             
                         </div>
-                        
-                        
-                        
-       
+
                     </div>
-                             
-                      
-                
-                    
                 </div> 
             </div>
         </div>
