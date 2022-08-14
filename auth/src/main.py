@@ -99,10 +99,10 @@ async def logout(model: RefreshToken):
         try:
 
             # token = KeycloakAuth().logout(model.token)
-            token = await asyncio.create_task(Logout(model.token).refToken())
-            logger.info("message: ",token)
+            asyncio.create_task(Logout(model.token).refToken())
+            logger.info({"message: ": "The token was successfully submitted and the session was terminated"})
 
-            return {"message" :token["KeycloakAuthLogout"]}   # vrati access token
+            return {"message" : "The token was successfully submitted and the session was terminated"}   # vrati access token
 
         except:
 

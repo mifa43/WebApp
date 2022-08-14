@@ -21,4 +21,4 @@ class Logout(Connection):
             await asyncio.sleep(0)
             self.openID.logout(self.token)
 
-            return {"KeycloakAuthLogout": "The token was successfully submitted and the session was terminated"}
+            # return {"KeycloakAuthLogout": "The token was successfully submitted and the session was terminated"}
