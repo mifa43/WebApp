@@ -29,7 +29,7 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 app = FastAPI()
 
-# app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
+app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
 
 
 origins = [
@@ -125,7 +125,7 @@ async def logout(model: RefreshToken):
 @app.post("/password-restart")
 async def password_restart(model: UserPasswordRestart):
    
-    userID = GetKeycloakID(model.UserEmail).user()  # dohavti KeycloakID ako postoji
+    userID = await asyncio.create_task(GetKeycloakID(model.UserEmail).user())  # dohavti KeycloakID ako postoji
 
     logger.info(userID)
 
@@ -138,7 +138,7 @@ async def password_restart(model: UserPasswordRestart):
 
     if userID["exist"] == True: # user email postoji ?
 
-        kc = RestartPasswordKeycloak(userID["user_id_keycloak"][0]["id"]).user()    # salji email zahtev na email sa linkom
+        asyncio.create_task(RestartPasswordKeycloak(userID["user_id_keycloak"][0]["id"]).user())    # salji email zahtev na email sa linkom
 
         return {"ok": 200}
       
