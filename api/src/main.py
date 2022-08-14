@@ -116,7 +116,7 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
                 req = resp.json()
 
-        kc = await CreateKeycloakUser().newUser(lower["email"], userName, model.UserName, model.UserLastName, password["check"])    # cekaj da se vrati keycloak user id
+        kc = await asyncio.create_task(CreateKeycloakUser().newUser(lower["email"], userName, model.UserName, model.UserLastName, password["check"]))    # cekaj da se vrati keycloak user id
    
         if kc["kcError"] == False:  # ako korisnik koji se registruje nema nalog(*username, *email, unique true) kc error je false i saljemo verifikaciju
 
