@@ -61,7 +61,7 @@ async def login(model: AuthCreaditional):
 
         try: # pokusaj login
 
-            auth = Login(model.UserEmail, model.UserPassword).getToken()
+            auth = await asyncio.create_task(Login(model.UserEmail, model.UserPassword).getToken())
             # auth = KeycloakAuth().login(model.UserEmail, model.UserPassword)    # login
 
             logger.info("accessToken: {0}".format(auth))
@@ -99,8 +99,8 @@ async def logout(model: RefreshToken):
         try:
 
             # token = KeycloakAuth().logout(model.token)
-            token = Logout(model.token).refToken()
-            logger.info("accessToken: ",token)
+            token = await asyncio.create_task(Logout(model.token).refToken())
+            logger.info("message: ",token)
 
             return {"message" :token["KeycloakAuthLogout"]}   # vrati access token
 
