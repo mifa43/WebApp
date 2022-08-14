@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Depends
 import logging, uvicorn
-from crud import Postgres
+from crud import Postgres, asyncio
 from models import *
 from sqlalchemy.orm import Session
 from database import get_db
@@ -26,7 +26,7 @@ logger.addHandler(ch)
 
 app = FastAPI()
 
-# app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
+app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
 
 
 # @app.get("/gettest")
@@ -41,10 +41,10 @@ def helth_check():
     return {"Health": "OK"}
 
 @app.post("/insert-user")
-def insert_user(model: UserModel, db:Session=Depends(get_db)):
+async def insert_user(model: UserModel, db:Session=Depends(get_db)):
     """Hvatanje requesta i slanje u insert funkciju"""
     try:
-        data = Postgres().insert(model.UserName, model.UserFirstName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword, db)     # hvataj request body
+        data = await asyncio.create_task(Postgres().insert(model.UserName, model.UserFirstName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword, db))     # hvataj request body
 
         if data["error"] == False:  # postgres je uspesno upisao u bazu
 
@@ -77,6 +77,9 @@ def insert_user(model: UserModel, db:Session=Depends(get_db)):
 #     logger.info({"codeUpdate": userCodeUpdate["codeUpdated"], "tableName": userCodeUpdate["tableName"]})
 
 #     return {"codeUpdate": userCodeUpdate["codeUpdated"], "tableName": userCodeUpdate["tableName"]}
+
+
+#su - postgres && psql -U mifa43 userservice
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
