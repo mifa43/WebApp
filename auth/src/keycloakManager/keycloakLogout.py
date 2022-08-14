@@ -1,4 +1,5 @@
 from keycloakManager.keycloakConnection import Connection
+import asyncio
 
 class Logout(Connection):
     """### Logout (`refresh_token` zatvaramo session ka keycloak-u token vise nije validan )
@@ -11,12 +12,13 @@ class Logout(Connection):
 
         super().__init__()  # nasledjivanje parent klase
 
-    def refToken(self):
+    async def refToken(self):
         
             """### Logout (`refresh_token` zatvaramo session ka keycloak-u token vise nije validan )
                 - `token` == `refresh_token`
             """
             # Ulazimo u realm demo kao admin
+            await asyncio.sleep(0)
             self.openID.logout(self.token)
 
             return {"KeycloakAuthLogout": "The token was successfully submitted and the session was terminated"}
