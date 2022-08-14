@@ -36,8 +36,7 @@ class CreateKeycloakUser():
         # Ulazimo u realm demo kao admin
         
         self.admin.realm_name = "demo"
-        # await asyncio.sleep(5)
-
+        
         try:
 
             data = self.admin.create_user({
@@ -53,6 +52,8 @@ class CreateKeycloakUser():
                     }
                 ]
                 })
+            await asyncio.sleep(0)
+
            
             # sendEmail = await self.admin.send_verify_email(user_id=data)
            
@@ -78,7 +79,7 @@ class CreateKeycloakUser():
         """### Slanje email verifikacije nakon registracije
             - `keycloak_id`
         """
-        # await asyncio.sleep(0)
+        await asyncio.sleep(0)
         self.admin.realm_name = "demo"
         
         sendEmail = self.admin.send_verify_email(user_id=keycloak_id)
