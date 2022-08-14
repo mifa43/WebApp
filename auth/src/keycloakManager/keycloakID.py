@@ -1,5 +1,5 @@
 from keycloakManager.keycloakConnection import Connection
-
+import asyncio
 class GetKeycloakID(Connection):
     """### Ova klasa je child i nasledjuje objekte za konekciju od parnet klase i vraca keycloak userID 
     ______________________________________________
@@ -11,12 +11,14 @@ class GetKeycloakID(Connection):
 
         super().__init__()  # nasledjivanje parent klase
 
-    def user(self):
+    async def user(self):
         """### Uzmi keycloak userID 
         """
         
         user_id_keycloak = self.admin.get_users({"email":f"{self.userEmail}"})
-    
+
+        await asyncio.sleep(0)
+
         if user_id_keycloak[0]["id"] == None:
     
             return {"exist" : False, "user_id_keycloak" : user_id_keycloak}
