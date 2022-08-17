@@ -1,17 +1,18 @@
-from re import A
 from fastapi import FastAPI, HTTPException, BackgroundTasks
-import logging, uvicorn
+import logging, uvicorn, datetime, asyncio
 from fastapi.middleware.cors import CORSMiddleware
 from models import *
 from requester import SendRequest
 from helpers import checkNameAndEmail, emailValidation, checkPassword, createUserName
-from crud import CreateKeycloakUser
-from resend_email_verfy import ResendVerifyEmail
-import datetime
+
+from resend_email_verfy import ResendVerifyEmail 
 from fastapi_cprofile.profiler import CProfileMiddleware
 
 import requests_async as asyncRequests
-import asyncio
+
+from keycloakManager.keycloakRegister import CreateUser
+from keycloakManager.sendVerification import SendVerification
+from keycloakManager.KeycloakID import GetKeycloakID
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
@@ -61,7 +62,7 @@ def helth_check():
 @app.post("/resend-email-verification")
 async def resend_email_verificatioin(model: Verification):
 
-    userID = asyncio.create_task(ResendVerifyEmail().getKeycloakUserID(model.UserName))  # da li user id postoji ?
+    userID = ResendVerifyEmail().getKeycloakUserID(model.UserName)  # da li user id postoji ?
 
     if userID["exist"] == True: # ako postoji saljemo verifikaciju
 
@@ -116,13 +117,14 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
                 req = resp.json()
 
-        kc = await asyncio.create_task(CreateKeycloakUser().newUser(lower["email"], userName, model.UserName, model.UserLastName, password["check"]))    # cekaj da se vrati keycloak user id
+        kc = await asyncio.create_task(CreateUser(lower["email"], userName, model.UserName, model.UserLastName, password["check"]).new())  # cekaj da se vrati keycloak user id
    
         if kc["kcError"] == False:  # ako korisnik koji se registruje nema nalog(*username, *email, unique true) kc error je false i saljemo verifikaciju
 
             logger.info("Email: Send ")
 
-            asyncio.create_task(CreateKeycloakUser().sendVerifyEmail(kc["clientID"]))   # async email verify
+            # asyncio.create_task(CreateKeycloakUser().sendVerifyEmail(kc["clientID"]))   # async email verify
+            asyncio.create_task(SendVerification(kc["clientID"]).send())   # async email verify
 
         handler = req  # email postoji u bazi ? 
 
