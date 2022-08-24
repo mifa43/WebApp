@@ -11,6 +11,7 @@ from keycloakManager.keycloakRestartPassword import RestartPasswordKeycloak
 from keycloakManager.keycloakLogin import Login
 from keycloakManager.keycloakLogout import Logout
 
+from costumException.fastapiExceptions.fastapiExcepts import ValueInputException
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -111,7 +112,7 @@ async def logout(model: RefreshToken):
             raise HTTPException(status_code = 406, detail = "The token is invalid or expired")
 
     elif model.token == None or model.token == "":
-
+ 
         logger.error({"406": "The entered value is not valid, a refsresh_token is required"})
 
         raise HTTPException(status_code = 406, detail = "The entered value is not valid, a refsresh_token is required")
@@ -131,9 +132,9 @@ async def password_restart(model: UserPasswordRestart):
 
     if model.UserEmail == "" :
 
-        logger.error({"406": "The entered value is not valid, an empty value {0}, connot be processed.".format(model.UserEmail)})
+        logger.error({"406": ValueInputException(model.UserEmail, "An email from the user is expected !")})
 
-        raise HTTPException(status_code = 406, detail = "The entered value is not valid: *param: {0}".format(model.UserEmail))
+        raise HTTPException(status_code = 406, detail = ValueInputException(model.UserEmail, "An email from the user is expected !"))
 
 
     if userID["exist"] == True: # user email postoji ?
