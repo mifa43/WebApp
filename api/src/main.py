@@ -34,7 +34,7 @@ logger.addHandler(ch)
 app = FastAPI()
 
 # testira api endpoint preformanse i vreme izvrsavanja
-app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
+# app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
 
 origins = [
     "*",
