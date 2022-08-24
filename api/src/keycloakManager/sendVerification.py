@@ -13,7 +13,7 @@ class SendVerification(Connection):
         """### Slanje email verifikacije nakon registracije
             - `keycloak_id`
         """
-
+        self.admin.realm_name = "demo"
         
         # self.admin.realm_name = "demo"
         
