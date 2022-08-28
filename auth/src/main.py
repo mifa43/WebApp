@@ -134,7 +134,7 @@ async def password_restart(model: UserPasswordRestart):
 
         logger.error({"406": ValueInputException(model.UserEmail, "An email from the user is expected !")})
 
-        raise HTTPException(status_code = 406, detail = ValueInputException(model.UserEmail, "An email from the user is expected !"))
+        raise HTTPException(status_code = 406, detail = f"The entered value  is not valid and cannot be processed {model.UserEmail}")
 
 
     if userID["exist"] == True: # user email postoji ?

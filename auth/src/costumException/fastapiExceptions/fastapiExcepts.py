@@ -1,6 +1,4 @@
 
-
-
 class ValueInputException(Exception):
 
     def __init__(self, param: str, msg: str) -> None:
