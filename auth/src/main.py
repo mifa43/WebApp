@@ -11,6 +11,7 @@ from keycloakManager.keycloakRestartPassword import RestartPasswordKeycloak
 from keycloakManager.keycloakLogin import Login
 from keycloakManager.keycloakLogout import Logout
 
+from costumException.fastapiExceptions.fastapiExcepts import ValueInputException
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -29,7 +30,7 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 app = FastAPI()
 
-# app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
+app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
 
 
 origins = [
@@ -61,7 +62,7 @@ async def login(model: AuthCreaditional):
 
         try: # pokusaj login
 
-            auth = Login(model.UserEmail, model.UserPassword).getToken()
+            auth = await asyncio.create_task(Login(model.UserEmail, model.UserPassword).getToken())
             # auth = KeycloakAuth().login(model.UserEmail, model.UserPassword)    # login
 
             logger.info("accessToken: {0}".format(auth))
@@ -99,10 +100,10 @@ async def logout(model: RefreshToken):
         try:
 
             # token = KeycloakAuth().logout(model.token)
-            token = Logout(model.token).refToken()
-            logger.info("accessToken: ",token)
+            asyncio.create_task(Logout(model.token).refToken())
+            logger.info({"message: ": "The token was successfully submitted and the session was terminated"})
 
-            return {"message" :token["KeycloakAuthLogout"]}   # vrati access token
+            return {"message" : "The token was successfully submitted and the session was terminated"}   # vrati access token
 
         except:
 
@@ -111,7 +112,7 @@ async def logout(model: RefreshToken):
             raise HTTPException(status_code = 406, detail = "The token is invalid or expired")
 
     elif model.token == None or model.token == "":
-
+ 
         logger.error({"406": "The entered value is not valid, a refsresh_token is required"})
 
         raise HTTPException(status_code = 406, detail = "The entered value is not valid, a refsresh_token is required")
@@ -125,20 +126,20 @@ async def logout(model: RefreshToken):
 @app.post("/password-restart")
 async def password_restart(model: UserPasswordRestart):
    
-    userID = GetKeycloakID(model.UserEmail).user()  # dohavti KeycloakID ako postoji
+    userID = await asyncio.create_task(GetKeycloakID(model.UserEmail).user())  # dohavti KeycloakID ako postoji
 
     logger.info(userID)
 
     if model.UserEmail == "" :
 
-        logger.error({"406": "The entered value is not valid, an empty value {0}, connot be processed.".format(model.UserEmail)})
+        logger.error({"406": ValueInputException(model.UserEmail, "An email from the user is expected !")})
 
-        raise HTTPException(status_code = 406, detail = "The entered value is not valid: *param: {0}".format(model.UserEmail))
+        raise HTTPException(status_code = 406, detail = f"The entered value  is not valid and cannot be processed {model.UserEmail}")
 
 
     if userID["exist"] == True: # user email postoji ?
 
-        kc = RestartPasswordKeycloak(userID["user_id_keycloak"][0]["id"]).user()    # salji email zahtev na email sa linkom
+        asyncio.create_task(RestartPasswordKeycloak(userID["user_id_keycloak"][0]["id"]).user())    # salji email zahtev na email sa linkom
 
         return {"ok": 200}
       

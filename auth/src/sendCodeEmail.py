@@ -49,3 +49,4 @@ class EmailToSend():
         server.sendmail(from_addr, to, text)
         
         return {"email_sended": True}
+EmailToSend("milos.zlatkovic.it@gmail.com", "baba").send()

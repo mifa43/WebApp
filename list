@@ -14,3 +14,19 @@ https://stackoverflow.com/questions/48062821/axios-how-to-read-json-response - J
 # Send User Action
 response = keycloak_admin.send_update_account(user_id="user-id-keycloak",
                                               payload=json.dumps(['UPDATE_PASSWORD']))
+
+# SQLtool connection
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5000,
+            "driver": "PostgreSQL",
+            "name": "appDB",
+            "database": "userservice",
+            "username": "mifa43",
+            "password": "koliko43"
+        }
+    ]
+}

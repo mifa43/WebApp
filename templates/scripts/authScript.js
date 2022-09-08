@@ -13,7 +13,7 @@ async function postAuthData () {
         header.innerText = `Nice to see you are back`;
        
 
-        window.alert(response.data.refresh_token);
+        // window.alert(response.data.refresh_token);
 
         
         console.log(response.data.refresh_token	);

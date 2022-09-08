@@ -34,6 +34,8 @@ services:
       POSTGRES_PASSWORD: ${USER_SERVICE_DB_PASSWORD_WEBAPP}
       POSTGRES_HOST: ${POSTGRES_HOST_WEBAPP}
       POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - 5000:5432
     networks:
         - fastapi_dev
 

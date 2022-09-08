@@ -11,7 +11,7 @@ async function restartPassword () {
         // header.innerText = `password!!!!!!!!!!`;
        
 
-        window.alert(response.data.status);
+        // window.alert(response.data.status);
 
         
         console.log(response.data.status);

@@ -127,7 +127,7 @@ async function validate() {
             let header = document.querySelector("h6");
             header.innerText = `Account created !`;
             
-            window.alert(response.status);
+            // window.alert(response.status);
             // "You have successfully created an account and now we will send you an email verification!"
 
             window.location.href = 'index.html';
