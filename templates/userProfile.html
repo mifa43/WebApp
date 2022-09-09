@@ -5,6 +5,7 @@
         </title>
         <script src="scripts/userProfile.js"></script>
         <script src="scripts/checkForToken.js"></script>
+        <script src="scripts/userProfileEditField.js"></script>
         
 
         <link rel="stylesheet" href="css/userProfile.css">
@@ -126,7 +127,7 @@
             </ul> 
         </nav>
         <div class="container emp-profile">
-            <form method="post">
+            <!-- <form method="post"> -->
                 <div class="row">
                     <div class="col-md-4">
                         <div class="profile-img">
@@ -155,10 +156,10 @@
                                 </li>
                             </ul>
                         </div>
-                        
                     </div>
                     <div class="col-md-2">
-                        <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/>
+                        <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile" id="editBtn" onclick="editProfile()"/>
+                        <input type="submit" class="profile-edit-btn hide" name="btnAddMore" value="Save" id="saveBtn"  onclick="save()"/>
                     </div>
                 </div>
                 <div class="row">
@@ -179,12 +180,14 @@
                     <div class="col-md-8">
                         <div class="tab-content profile-tab" id="myTabContent">
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                    <form>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label>User Id</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>Kshiti123</p>
+                                                <p id="userID">Kshiti123</p>
+                                                <input type="text" value="" id="userIDInput" class="hide">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -192,7 +195,8 @@
                                                 <label>Name</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>Kshiti Ghelani</p>
+                                                <p id="userName">Kshiti Ghelani</p>
+                                                <input type="text" value="" id="userNameInput" class="hide">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -200,7 +204,8 @@
                                                 <label>Email</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>kshitighelani@gmail.com</p>
+                                                <p id="userEmail">kshitighelani@gmail.com</p>
+                                                <input type="text" value="" id="userEmailInput" class="hide">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -208,7 +213,8 @@
                                                 <label>Phone</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>123 456 7890</p>
+                                                <p id="userPhone">123 456 7890</p>
+                                                <input type="text" value="" id="userPhoneInput" class="hide">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -216,10 +222,18 @@
                                                 <label>Profession</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>Web Developer and Designer</p>
+                                                <p id="userProf">Web Developer and Designer</p>
+                                                <input type="text" value="" id="userProfInput" class="hide">
                                             </div>
                                         </div>
+                                        
+                                    </form>
                             </div>
+                            <!-- <form>
+                                <p class="userName" id="userName">Username</p>
+                                <input type="text" value="" id="userNameInput" class="hide">
+                                <input type="button" value="save" id="saveBtn" class="hide" onclick="save()">
+                            </form> -->
                             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                         <div class="row">
                                             <div class="col-md-6">
@@ -271,7 +285,7 @@
                         </div>
                     </div>
                 </div>
-            </form>           
+            <!-- </form>            -->
         </div>
     </body>
 </html>
