@@ -53,6 +53,14 @@ position:relative;
 display:block;
 width:250px;
 }
+.userProfile{
+  padding-left: 18px;
+  
+}
+.userProfileText{
+  padding-left: 13px;
+  
+}
 
 .main-menu li>a {
 position:relative;
@@ -92,6 +100,12 @@ position:absolute;
 left:0;
 bottom:0;
 }
+
+.main-menu>ul.profile {
+  position:absolute;
+  left:17px;
+  bottom:570px;
+  }
 .main-menu>ul.login {
   position:absolute;
   left: 0;
@@ -114,7 +128,6 @@ nav {
 -webkit-user-select:none;
 -moz-user-select:none;
 -ms-user-select:none;
--o-user-select:none;
 user-select:none;
 }
 

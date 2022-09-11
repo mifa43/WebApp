@@ -6,10 +6,15 @@
         <script src="scripts/userProfile.js"></script>
         <script src="scripts/checkForToken.js"></script>
         <script src="scripts/userProfileEditField.js"></script>
+        <script src="scripts/logout.js"></script>
         
 
         <link rel="stylesheet" href="css/userProfile.css">
         <link rel="stylesheet" href="css/navStyle.css">
+
+
+
+        
 
 
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -102,7 +107,13 @@
                         </span>
                     </a>
                 </li>
+                <li id="userProfile">
+                 
+                </li>
+            
             </ul>
+          
+ 
             
             <ul class="logout" id="authreq">
     
@@ -187,7 +198,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <p id="userID">Kshiti123</p>
-                                                <input type="text" value="" id="userIDInput" class="hide">
+                                                <input type="text" value="" id="userIDInput" class="form-control hide">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -196,7 +207,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <p id="userName">Kshiti Ghelani</p>
-                                                <input type="text" value="" id="userNameInput" class="hide">
+                                                <input type="text" value="" id="userNameInput" class="form-control hide">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -205,7 +216,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <p id="userEmail">kshitighelani@gmail.com</p>
-                                                <input type="text" value="" id="userEmailInput" class="hide">
+                                                <input type="text" value="" id="userEmailInput" class="form-control hide">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -214,7 +225,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <p id="userPhone">123 456 7890</p>
-                                                <input type="text" value="" id="userPhoneInput" class="hide">
+                                                <input type="text" value="" id="userPhoneInput" class="form-control hide">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -223,7 +234,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <p id="userProf">Web Developer and Designer</p>
-                                                <input type="text" value="" id="userProfInput" class="hide">
+                                                <input type="text" value="" id="userProfInput" class="form-control hide">
                                             </div>
                                         </div>
                                         
