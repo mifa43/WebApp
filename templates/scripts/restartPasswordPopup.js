@@ -3,7 +3,7 @@ function putElem(){
     document.getElementById('pop123').innerHTML = '\
     <div class="subscribe-form">\
         <div class="left">\
-            <img src="css/images/restart-password-img.jpg" alt="Forgot your password ilustration image " width="100%">\
+            <img src="restart-password-img.jpg" alt="Forgot your password ilustration image " width="100%">\
         </div>\
         <div class="right">\
             <h2>let us help you!</h2>\

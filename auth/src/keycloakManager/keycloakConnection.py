@@ -29,7 +29,7 @@ class Connection:
             server_url = "http://keycloak_keycloak_1:8080/auth/",
             client_id = "appuser",
             realm_name = "demo",
-            client_secret_key = "f550d47f-a4cd-41f3-ab0d-d72936b634af"
+            client_secret_key = "d5f642fb-bb77-4bb8-a01c-1b5b36f7e4c0"
             )
 
         # Budi siguran da si uvek na istom realm-u prilikom konektovanja
