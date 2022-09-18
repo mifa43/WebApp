@@ -10,7 +10,7 @@
   height: 90%;
   margin-right: 60%;
   position:absolute;
-  background-image: url("images/4-Usluga-povrata-poreza-na-dodatu-vrednost-Tax-Free-Planet-Tax-Free-Premier-Tax-Free.png");
+  background-image: url("4-Usluga-povrata-poreza-na-dodatu-vrednost-Tax-Free-Planet-Tax-Free-Premier-Tax-Free.png");
 }
 
 .form {
@@ -41,6 +41,11 @@
 
 .input-container {
   height: 50px;
+  position: relative;
+  width: 100%;
+}
+.input-container1{
+  height: 20px;
   position: relative;
   width: 100%;
 }
