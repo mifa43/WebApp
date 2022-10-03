@@ -2,7 +2,7 @@
 async function logout(){
     // uzmi token iz local storage
     let refreshToken = {
-        token: window.localStorage.getItem("refresh_token")
+        token: window.sessionStorage.getItem("refresh_token")
         
     }
     // posalji refresh token na auth a;pi
@@ -12,7 +12,7 @@ async function logout(){
 
         // console.log(response.data.access_token.refresh_token);
         // izbrisi token iz local storage
-        window.localStorage.clear();
+        window.sessionStorage.clear();
         
         console.log("You just logged out");
         

@@ -18,8 +18,8 @@ async function postAuthData () {
         
         console.log(response.data.refresh_token	);
 
-        window.localStorage.setItem('refresh_token', response.data.refresh_token);
-        window.localStorage.setItem('access_token', response.data.access_token);
+        window.sessionStorage.setItem('refresh_token', response.data.refresh_token);
+        window.sessionStorage.setItem('access_token', response.data.access_token);
 
         
 

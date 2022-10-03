@@ -1,5 +1,5 @@
 function checkForToken(){
-    var token = window.localStorage.getItem("access_token");
+    var token = window.sessionStorage.getItem("access_token");
     console.log(token)
     // da li token postoji local storage ? d
     if(token === null){
