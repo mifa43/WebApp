@@ -1,18 +1,37 @@
-/* body {
-  align-items: center;
-  background-color: #000;
-  display: flex;
-  justify-content: center;
-  height: 100vh;
-} */
+@media screen and (max-width: 1450px) {
+
+  .login-wrap .login-html .input-container {
+      height: 50px;
+      width: 40%;
+      display:inline-block;
+      
+  }
+  .login-wrap .login-html .submit{
+      width: 80%;
+  }
+}
+@media screen and (max-width: 600px) {
+
+  .login-wrap .login-html .input-container {
+      height: 30px;
+      width: 100%;
+      display:block;
+      
+  }
+  .login-wrap .login-html .submit{
+      width: 80%;
+  }
+  .login-wrap .login-html .input-container .placeholder{
+      top: 15px;
+  }
+}
 .BackgroundImage{
-  width: 50%;
+  width: 40%;
   height: 90%;
   margin-right: 60%;
   position:absolute;
   background-image: url("4-Usluga-povrata-poreza-na-dodatu-vrednost-Tax-Free-Planet-Tax-Free-Premier-Tax-Free.png");
 }
-
 .form {
   background-color: #15172b;
   position: fixed;
@@ -41,11 +60,6 @@
 
 .input-container {
   height: 50px;
-  position: relative;
-  width: 100%;
-}
-.input-container1{
-  height: 20px;
   position: relative;
   width: 100%;
 }
@@ -161,10 +175,3 @@ input[type=number] {
 .submit:active {
   background-color: #06b;
 }
-
-
-
-
-
-
-
