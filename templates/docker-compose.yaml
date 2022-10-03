@@ -9,8 +9,6 @@ services:
     container_name: nginx_FE
     build:
       context: ./
-      # args: 
-      #   TEST: Test
     image: our-server
     ports:
       - 8080:80
