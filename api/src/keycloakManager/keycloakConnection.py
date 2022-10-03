@@ -17,19 +17,19 @@ class Connection:
         # Konektovanje kao admin 
 
         self.admin = KeycloakAdmin(
-            server_url="http://keycloak_keycloak_1:8080/auth/",
-            username = "admin",
-            password = "Pa55w0rd",
+            server_url= f"http://{os.getenv('KEYCLOAK_HOST')}:{os.getenv('KEYCLOAK_PORT')}/auth/",
+            username = f"{os.getenv('KEYCLOAK_USER')}",
+            password = f"{os.getenv('KEYCLOAK_PASSWORD')}",
             realm_name = "master",
             verify = True)
 
         # Konektovanje na realm kao klijent
 
         self.openID = KeycloakOpenID(
-            server_url = "http://keycloak_keycloak_1:8080/auth/",
-            client_id = "appuser",
+            server_url = f"http://{os.getenv('KEYCLOAK_HOST')}:{os.getenv('KEYCLOAK_PORT')}/auth/",
+            client_id = f"{os.getenv('KEYCLOAK_CLIENT_ID')}",
             realm_name = "demo",
-            client_secret_key = "f550d47f-a4cd-41f3-ab0d-d72936b634af"
+            client_secret_key = f"{os.getenv('KEYCLOAK_CLIENT_SECRET_KEY')}"
             )
 
         # Budi siguran da si uvek na istom realm-u prilikom konektovanja
