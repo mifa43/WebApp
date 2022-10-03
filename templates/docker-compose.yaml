@@ -18,4 +18,3 @@ services:
 networks:
   fastapi_dev:
     external:
-      name: fastapi_dev

@@ -7,7 +7,7 @@ async function postAuthData () {
     }
     // pokusaj slanja post requesta. py(try: except:)
     try {
-        const response = await axios.post("http://0.0.0.0:8083/login", user);
+        const response = await axios.post("http://185.26.117.192:8083/login", user);
         console.log(user);
         let header = document.querySelector("h5");
         header.innerText = `Nice to see you are back`;
@@ -18,8 +18,8 @@ async function postAuthData () {
         
         console.log(response.data.refresh_token	);
 
-        window.localStorage.setItem('refresh_token', response.data.refresh_token);
-        window.localStorage.setItem('access_token', response.data.access_token);
+        window.sessionStorage.setItem('refresh_token', response.data.refresh_token);
+        window.sessionStorage.setItem('access_token', response.data.access_token);
 
         
 
