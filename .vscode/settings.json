@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5000,
+            "driver": "PostgreSQL",
+            "name": "appDB",
+            "database": "userservice",
+            "username": "mifa43",
+            "password": "koliko43"
+        }
+    ]
+}
