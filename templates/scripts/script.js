@@ -121,7 +121,7 @@ async function validate() {
       }
       // pokusaj slanja post requesta. py(try: except:)
       try {
-          const response = await axios.post("http://185.26.117.192:8081/register-user", user)
+          const response = await axios.post("http://0.0.0.0:8081/register-user", user)
           console.log(user)
           if (response.status == '200'){
             let header = document.querySelector("h6");

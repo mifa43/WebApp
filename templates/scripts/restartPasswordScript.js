@@ -5,7 +5,7 @@ async function restartPassword () {
     }
     // pokusaj slanja post requesta. py(try: except:)
     try {
-        const response = await axios.post("http://185.26.117.192:8083/password-restart", user);
+        const response = await axios.post("http://0.0.0.0:8083/password-restart", user);
         console.log(user);
         // let header = document.querySelector("h5");
         // header.innerText = `password!!!!!!!!!!`;
