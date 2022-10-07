@@ -1,0 +1,21 @@
+version: '3'
+
+volumes:
+  nginx_data:
+      driver: local
+
+services:
+  nginx_FE:
+    container_name: nginx_FE
+    build:
+      context: ./
+    image: our-server
+    ports:
+      - 8080:80
+    networks:
+      - fastapi_dev
+
+networks:
+  fastapi_dev:
+    external:
+      name: fastapi_dev

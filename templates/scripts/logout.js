@@ -7,7 +7,7 @@ async function logout(){
     }
     // posalji refresh token na auth a;pi
     try {
-        const response = await axios.post("http://0.0.0.0:8083/logout", refreshToken);
+        const response = await axios.post("http://185.26.117.192:8083/logout", refreshToken);
     
 
         // console.log(response.data.access_token.refresh_token);
