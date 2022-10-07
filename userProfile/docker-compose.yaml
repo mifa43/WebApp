@@ -1,0 +1,23 @@
+version: '3'
+
+volumes:
+  fastapi_data:
+    driver: local
+
+services:
+  fastapi_userProfile:
+    container_name: fastapi_userProfile
+    build:
+      context: ./
+      # args: 
+      #   TEST: Test
+    image: python
+    ports:
+      - 8085:8080
+    networks:
+      - fastapi_dev
+
+networks:
+  fastapi_dev:
+    external:
+      name: fastapi_dev
