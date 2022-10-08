@@ -113,7 +113,7 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
         async with asyncRequests.Session() as session:  # saljemo async Request session
 
-            job = SendRequest.userService(userName, model.UserName ,model.UserLastName, lower["email"], model.UserNumber, password["check"], session)   # arguument session
+            job = SendRequest.userService(userName, model.UserName ,model.UserLastName, lower["email"], model.UserNumber, kc["clientID"], session)   # arguument session
 
             reqq = await asyncio.gather(*job["Response"]) # uzima corutine, Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
 
