@@ -9,8 +9,8 @@ class UserModel(BaseModel):
     UserLastName: str
     UserEmail: str
     UserNumber: str
-    UserPassword: str
+    keycloakUserID: str
 
-class RestartPasswordModel(BaseModel):
-    UserEmail: str
-    code: str
+# class RestartPasswordModel(BaseModel):
+#     UserEmail: str
+#     code: str

@@ -6,7 +6,7 @@ class Postgres():
     def __init__(self):
         pass
         
-    async def insert(self,userName: str, name: str, lastName: str, mail: str, phoneNumber: str, password: str, db) -> dict:
+    async def insert(self,userName: str, name: str, lastName: str, mail: str, phoneNumber: str, keycloakUserID: str, db) -> dict:
         """ ## Insert
             ## Upisivanje korisnika u bazu
             - ``name``
@@ -34,6 +34,7 @@ class Postgres():
                 lastName=lastName,
                 mail=mail,
                 phoneNumber=phoneNumber,
+                keycloakUserID=keycloakUserID
             )
     
 
