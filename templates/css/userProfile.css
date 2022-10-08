@@ -94,6 +94,7 @@ body{
 }
 .profile-tab label{
   font-weight: 600;
+  padding: 5px;
 }
 .profile-tab p{
   font-weight: 600;
