@@ -13,7 +13,7 @@ function checkForToken(){
         console.log("Token founded")
         document.getElementById('userProfile').innerHTML = '<a href="userProfile.html" ><i class="bi bi-person-workspace fa-2x userProfile"></i><span class="nav-text userProfileText">Profile</span></a>';
 
-        document.getElementById('authreq').innerHTML = '<li><a href="#" onclick="logout();"><i class="fa bi bi-power fa-2x"></i><span class="nav-text">Logout</span></a></li>';
+        document.getElementById('authreq').innerHTML = '<a href="#" onclick="logout();"><i class="fa bi bi-power fa-2x"></i><span class="nav-text">Logout</span></a>';
 
     }
 }
