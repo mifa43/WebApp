@@ -61,7 +61,7 @@ async def get_user_profile(token: str):
 
     logger.info(req)
 
-    return {"Health": req}
+    return {"data": req}
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
