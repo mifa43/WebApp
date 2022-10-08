@@ -14,6 +14,7 @@ class User(Base):
     lastName = Column("lastname",String)
     mail = Column("mail",String, unique=True)
     phoneNumber = Column("phonenumber", String)
+    keycloakUserID = Column("keycloakUserID", String)
     # password = Column("password",String)
 
     # managePassword = relationship("PasswordReset",cascade="all, delete-orphan", passive_deletes=True)
