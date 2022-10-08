@@ -4,6 +4,7 @@ from crud import Postgres, asyncio
 from models import *
 from sqlalchemy.orm import Session
 from database import get_db
+from tableModel import User
 # from passRestart import RestartPasswordCode
 from fastapi_cprofile.profiler import CProfileMiddleware
 
@@ -26,12 +27,13 @@ logger.addHandler(ch)
 
 app = FastAPI()
 
-app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
+# app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
 
 
-# @app.get("/gettest")
-# async def get_by_id(id:int,db:Session=Depends(get_db)):
-#     return db.query(User).filter(User.id == id).first()
+@app.get("/get-user")
+async def get_user(keycloakUserID: str, db: Session=Depends(get_db)):
+    logger.info(keycloakUserID)
+    return db.query(User).filter(User.keycloakUserID == keycloakUserID).first()
 
 @app.get("/")
 def helth_check():
@@ -44,7 +46,7 @@ def helth_check():
 async def insert_user(model: UserModel, db:Session=Depends(get_db)):
     """Hvatanje requesta i slanje u insert funkciju"""
     try:
-        data = await asyncio.create_task(Postgres().insert(model.UserName, model.UserFirstName, model.UserLastName, model.UserEmail, model.UserNumber, model.UserPassword, db))     # hvataj request body
+        data = await asyncio.create_task(Postgres().insert(model.UserName, model.UserFirstName, model.UserLastName, model.UserEmail, model.UserNumber, model.keycloakUserID, db))     # hvataj request body
 
         if data["error"] == False:  # postgres je uspesno upisao u bazu
 
