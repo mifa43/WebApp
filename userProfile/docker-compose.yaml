@@ -12,6 +12,9 @@ services:
       # args: 
       #   TEST: Test
     image: python
+    environment:
+      USERSERVICE_HOST: ${USERSERVICE_HOST_WEBAPP}
+      USERSERVICE_PORT: ${USERSERVICE_PORT_WEBAPP}
     ports:
       - 8085:8080
     networks:
