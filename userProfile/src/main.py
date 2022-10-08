@@ -1,10 +1,12 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 import logging, uvicorn, asyncio
 from models import *
 import requests_async as asyncRequests
 from requester import SendRequest
 from tokenEncode import TokenData
+
+from cloudinaryDB import ImageDatabase
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -39,7 +41,6 @@ app.add_middleware(
 
 @app.get("/")
 async def helth_check():
-
     logger.info("{Health : OK}, 200")
 
     return {"Health": "OK"}
@@ -62,6 +63,17 @@ async def get_user_profile(token: str):
     logger.info(req)
 
     return {"data": req}
+
+@app.post("/user-profile-image/")
+async def user_profile_image(file: bytes = File(...)):
+    # endpoint je podesen da postuje slike na coludinary
+
+    data = ImageDatabase(file).uploadIMG()
+
+    logger.info("{Health : OK}, 200")
+
+    return {"Image uploaded": data}
+
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
