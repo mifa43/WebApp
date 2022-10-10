@@ -71,6 +71,16 @@ async def insert_user(model: UserModel, db:Session=Depends(get_db)):
 
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
+@app.post("/update-user-image")
+async def update_user(model: UpdateImage, db:Session=Depends(get_db)):
+    print(model.imageUrl, model.keycloakUserID)
+    updt = Postgres().updateDB(model.imageUrl, model.keycloakUserID, db)
+
+    logger.info({"user updated": updt})
+
+    return {"user updated": updt}
+
+    
 # @app.post("/password-restart")
 # def password_restart(model: RestartPasswordModel, db:Session=Depends(get_db)):
 

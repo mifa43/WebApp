@@ -11,6 +11,10 @@ class UserModel(BaseModel):
     UserNumber: str
     keycloakUserID: str
 
+class UpdateImage(BaseModel):
+    imageUrl: str
+    keycloakUserID: str
+    
 # class RestartPasswordModel(BaseModel):
 #     UserEmail: str
 #     code: str
