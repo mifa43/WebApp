@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Header
 from fastapi.middleware.cors import CORSMiddleware
 import logging, uvicorn, asyncio
 from models import *
@@ -29,7 +29,9 @@ app = FastAPI()
 origins = [
     "*",
     "http://0.0.0.0:8081/",
-    "http://0.0.0.0:8080/"
+    "http://0.0.0.0:8080/",
+    "http://0.0.0.0:8085/"
+
 ]
 # allow cors request
 app.add_middleware(
@@ -66,14 +68,33 @@ async def get_user_profile(token: str):
     return {"data": req}
 
 @app.post("/user-profile-image/")
-async def user_profile_image(file: bytes = File(...)):
-    # endpoint je podesen da postuje slike na coludinary
+async def user_profile_image(file: bytes = File(...), token: str = Header(default=None)):
+    # kako uploudati file i dobiti token
+    #1. file mora da bude byte jer ga i js pretvarau byte i salje kao forms data
+    #2. importovanje Header-a i setup za prihvatanje header-a u endpointu token: str = Header(default=None))
 
+
+    # endpoint je podesen da postuje slike na coludinary
     data = ImageDatabase(file).uploadIMG()
 
-    logger.info("{Health : OK}, 200")
+    # token se dekoduje i vraca userID
+    keycloakUserID = TokenData(token).decode()
 
-    return {"Image uploaded": data}
+    # asinhrono slanje requesta, kreiramo sessino
+    async with asyncRequests.Session() as session:  # saljemo async Request session
+
+        # saljemo parametre i dobijamo corutine
+        job = SendRequest.userServiceUpdate(data["secure_url"], keycloakUserID, session)   # arguument session
+
+        reqq = await asyncio.gather(*job["Response"]) # uzima corutine, Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
+
+        for resp in reqq:   # respose
+
+            req = resp.json()
+
+    logger.info([keycloakUserID, data["secure_url"]])
+
+    return {"Image uploaded": [keycloakUserID, data["secure_url"]]}
 
 
 if __name__ == "__main__":
