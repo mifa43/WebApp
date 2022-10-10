@@ -1,4 +1,4 @@
-FROM python:3.9.2-slim-buster
+FROM python:3.10-slim-buster
 
 ENV POSTGRES_DB: ${POSTGRES_DB_WEBAPP}
 ENV POSTGRES_USER: ${POSTGRES_USER_WEBAPP}
