@@ -1,3 +1,4 @@
+from sqlite3 import connect
 from sqlalchemy.exc import SQLAlchemyError
 from tableModel import *
 import asyncio
@@ -34,7 +35,8 @@ class Postgres():
                 lastName=lastName,
                 mail=mail,
                 phoneNumber=phoneNumber,
-                keycloakUserID=keycloakUserID
+                keycloakUserID=keycloakUserID,
+                imageURL=None
             )
     
 
@@ -53,3 +55,12 @@ class Postgres():
             return {"postgresError": e, "error": True}
 
         return {"UserInserted": name, "tableName": data.__tablename__, "error": False}
+
+    def updateDB(self, data: str,userID: str, db):
+        """ ### Klasa za dinamicno updejtovanje
+        
+        """
+
+        imageUpdate = db.query(User).filter(User.keycloakUserID == userID).update({'imageURL': data}) 
+        db.commit()
+        return imageUpdate
