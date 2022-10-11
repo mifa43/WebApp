@@ -5,6 +5,7 @@ from models import *
 import requests_async as asyncRequests
 from requester import SendRequest
 from tokenEncode import TokenData
+from fastapi_cprofile.profiler import CProfileMiddleware
 
 from cloudinaryDB import ImageDatabase
 # kreiranje logera https://docs.python.org/3/library/logging.html
@@ -25,6 +26,9 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 app = FastAPI()
+
+app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
+
 
 origins = [
     "*",
