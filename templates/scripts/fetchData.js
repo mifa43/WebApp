@@ -12,6 +12,7 @@ async function fetchData(){
     var mail = response.data.data.mail;
     var lastName = response.data.data.lastName;
     var keycloakUserID = response.data.data.keycloakUserID;
+    var userProfileIMG = response.data.data.imageURL;
 
     // upisivanje vrednosti za vlasnika tokena
     document.getElementById("userID").innerText = keycloakUserID;
@@ -19,6 +20,8 @@ async function fetchData(){
     document.getElementById("userPhone").innerText = phoneNumber;
     document.getElementById("userProf").innerText = lastName;    
     document.getElementById("userEmail").innerText = mail;
+    document.getElementById("userProfileIMG").src = userProfileIMG;
+
 
 
     // window.location = 'userProfile.html';
