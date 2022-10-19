@@ -1,5 +1,8 @@
-from keycloakManager.keycloakConnection import Connection
 import asyncio
+
+from keycloakManager.keycloakConnection import Connection
+
+
 class Login(Connection):
     """### Login (saljemo user creaditionale i dobijamo token)
             - `email`

@@ -1,5 +1,9 @@
-import  requests,os, asyncio
+import asyncio
+import os
+
+import requests
 import requests_async as requests
+
 
 class SendRequest():
 

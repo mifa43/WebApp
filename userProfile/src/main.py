@@ -1,13 +1,16 @@
-from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Header
-from fastapi.middleware.cors import CORSMiddleware
-import logging, uvicorn, asyncio
-from models import *
+import asyncio
+import logging
+
 import requests_async as asyncRequests
+import uvicorn
+from cloudinaryDB import ImageDatabase
+from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi_cprofile.profiler import CProfileMiddleware
+from models import *
 from requester import SendRequest
 from tokenEncode import TokenData
-from fastapi_cprofile.profiler import CProfileMiddleware
 
-from cloudinaryDB import ImageDatabase
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -27,7 +30,7 @@ logger.addHandler(ch)
 
 app = FastAPI()
 
-app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
+# app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
 
 
 origins = [

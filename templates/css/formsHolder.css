@@ -6,7 +6,7 @@ a{color:inherit;text-decoration:none}
 @media screen and (max-width: 1450px) {
 
     .login-wrap .login-html{
-        height: 70%;
+        height: 90%;
         width: 50%;
         text-align: center;    
     }
@@ -16,7 +16,7 @@ a{color:inherit;text-decoration:none}
 @media screen and (max-width: 600px) {
 
     .login-wrap .login-html{
-        height: 80%;
+        height: 100%;
         width: 50%;
         text-align: center;    
     }

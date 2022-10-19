@@ -1,12 +1,14 @@
-from fastapi import FastAPI, HTTPException, Depends
-import logging, uvicorn
+import logging
+
+import uvicorn
 from crud import Postgres, asyncio
-from models import *
-from sqlalchemy.orm import Session
 from database import get_db
-from tableModel import User
+from fastapi import Depends, FastAPI, HTTPException
 # from passRestart import RestartPasswordCode
 from fastapi_cprofile.profiler import CProfileMiddleware
+from models import *
+from sqlalchemy.orm import Session
+from tableModel import User
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
@@ -27,7 +29,7 @@ logger.addHandler(ch)
 
 app = FastAPI()
 
-app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
+# app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
 
 
 @app.get("/get-user")
@@ -74,13 +76,19 @@ async def insert_user(model: UserModel, db:Session=Depends(get_db)):
 @app.post("/update-user-image")
 async def update_user(model: UpdateImage, db:Session=Depends(get_db)):
     print(model.imageUrl, model.keycloakUserID)
-    updt = Postgres().updateDB(model.imageUrl, model.keycloakUserID, db)
+    updt = Postgres().updateProfileImage(model.imageUrl, model.keycloakUserID, db)
 
     logger.info({"user updated": updt})
 
     return {"user updated": updt}
 
+
+@app.put("/update-user-profile")
+def update_user_profile(model: UpdateUserProfile):
+
+    logger.info(model.UserFirstName, model.UserLastName, model.UserEmail, model.UserNumber, model.keycloakUserID)
     
+    return {"Health": "OK"}
 # @app.post("/password-restart")
 # def password_restart(model: RestartPasswordModel, db:Session=Depends(get_db)):
 

@@ -1,7 +1,8 @@
+import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import os
+
 
 class EmailToSend():
     """ ### Slanje email poruke na korisnicki zahtev: dobija kod za restartovanje passworda

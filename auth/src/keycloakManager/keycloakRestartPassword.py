@@ -1,5 +1,8 @@
+import asyncio
+import json
+
 from keycloakManager.keycloakConnection import Connection
-import json, asyncio
+
 
 class RestartPasswordKeycloak(Connection):
     """### Ova klasa je child i nasledjuje objekte za konekciju od parnet klase i salje email restart password 

@@ -1,5 +1,7 @@
-import re, random
 import asyncio
+import random
+import re
+
 
 class PasswordIsEqualToPassword(object):
     """### dekorater za proveru passworda

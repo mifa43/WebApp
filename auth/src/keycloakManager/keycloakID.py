@@ -1,5 +1,8 @@
-from keycloakManager.keycloakConnection import Connection
 import asyncio
+
+from keycloakManager.keycloakConnection import Connection
+
+
 class GetKeycloakID(Connection):
     """### Ova klasa je child i nasledjuje objekte za konekciju od parnet klase i vraca keycloak userID 
     ______________________________________________

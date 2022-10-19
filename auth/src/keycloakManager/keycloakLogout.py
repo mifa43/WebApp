@@ -1,5 +1,7 @@
-from keycloakManager.keycloakConnection import Connection
 import asyncio
+
+from keycloakManager.keycloakConnection import Connection
+
 
 class Logout(Connection):
     """### Logout (`refresh_token` zatvaramo session ka keycloak-u token vise nije validan )
