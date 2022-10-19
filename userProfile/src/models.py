@@ -9,3 +9,10 @@ class UserProfile(BaseModel):
 class Token(BaseModel):
     file: bytes = None
     token: str
+
+class UpdateUserProfile(BaseModel):
+    UserFirstName: str
+    UserLastName: str
+    UserEmail: str
+    UserNumber: str
+    keycloakUserID: str
