@@ -103,6 +103,32 @@ async def user_profile_image(file: bytes = File(...), token: str = Header(defaul
 
     return {"Image uploaded": [keycloakUserID, data["secure_url"]]}
 
+@app.put("/update-user-profile")
+async def update_user_profile(model: UpdateUserProfile):
+
+    async with asyncRequests.Session() as session:  # saljemo async Request session 
+
+        # saljemo parametre i dobijamo corutine
+        # updejtujemo samo odredjena polja 
+        job = SendRequest.userServiceUpdateProfile(
+                model.UserFirstName, 
+                model.UserLastName, 
+                model.UserEmail, 
+                model.UserNumber, 
+                model.keycloakUserID, 
+                session
+            )   # arguument session
+
+        reqq = await asyncio.gather(*job["Response"]) # uzima corutine, Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
+        for resp in reqq:   # respose
+
+            req = resp.json()
+         
+
+    logger.info("{Health : OK}, 200")
+
+    return {"Health": "OK"}
+
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
