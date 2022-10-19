@@ -44,7 +44,7 @@ function editProfile(){
 }
 
 
-function save(){
+async function save(){
 
   document.getElementById("userID").classList.remove("hide");
   document.getElementById("userName").classList.remove("hide");
@@ -61,7 +61,26 @@ function save(){
 
 
   document.getElementById("saveBtn").classList.add("hide");
-  document.getElementById("editBtn").classList.remove("hide");
+  
 
+  let user = {
+    UserFirstName: document.getElementById("userNameInput").value,
+    UserLastName: document.getElementById("userProfInput").value,
+    UserEmail: document.getElementById("userEmailInput").value,
+    UserNumber: document.getElementById("userPhoneInput").value,
+    keycloakUserID: document.getElementById("userIDInput").value
+    }
+    const response = await axios.put("http://0.0.0.0:8085/update-user-profile", user);
+    console.log(user);
+  
+
+    
+    console.log(response.data);
+
+    document.getElementById("editBtn").classList.remove("hide");
+    window.location = 'userProfile.html';
  
+
 }
+// pokusaj slanja post requesta. py(try: except:)
+
