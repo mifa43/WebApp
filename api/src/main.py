@@ -1,18 +1,20 @@
-from fastapi import FastAPI, HTTPException, BackgroundTasks
-import logging, uvicorn, datetime, asyncio
-from fastapi.middleware.cors import CORSMiddleware
-from models import *
-from requester import SendRequest
-from helpers import checkNameAndEmail, emailValidation, checkPassword, createUserName
-
-from resend_email_verfy import ResendVerifyEmail 
-from fastapi_cprofile.profiler import CProfileMiddleware
+import asyncio
+import datetime
+import logging
 
 import requests_async as asyncRequests
-
+import uvicorn
+from fastapi import BackgroundTasks, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi_cprofile.profiler import CProfileMiddleware
+from helpers import (checkNameAndEmail, checkPassword, createUserName,
+                     emailValidation)
+from keycloakManager.KeycloakID import GetKeycloakID
 from keycloakManager.keycloakRegister import CreateUser
 from keycloakManager.sendVerification import SendVerification
-from keycloakManager.KeycloakID import GetKeycloakID
+from models import *
+from requester import SendRequest
+from resend_email_verfy import ResendVerifyEmail
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
@@ -182,7 +184,7 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
         logger.error({"500": "Something went wrong"})
 
         raise HTTPException(status_code = 500, detail = "Something went wrong")
-        
+    
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
 

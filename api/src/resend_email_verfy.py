@@ -1,6 +1,7 @@
-from keycloak import KeycloakOpenID
-from keycloak import KeycloakAdmin
 import os
+
+from keycloak import KeycloakAdmin, KeycloakOpenID
+
 
 class ResendVerifyEmail():
     

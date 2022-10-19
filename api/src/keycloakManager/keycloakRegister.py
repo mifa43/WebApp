@@ -1,5 +1,7 @@
-from keycloakManager.keycloakConnection import Connection
 import asyncio
+
+from keycloakManager.keycloakConnection import Connection
+
 
 class CreateUser(Connection):
 

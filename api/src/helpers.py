@@ -1,5 +1,8 @@
 import re
-from decoraters import InputMustBeLower, InputEmailIsEmail, PasswordIsEqualToPassword, CreateUserName
+
+from decoraters import (CreateUserName, InputEmailIsEmail, InputMustBeLower,
+                        PasswordIsEqualToPassword)
+
 
 @InputMustBeLower
 def checkNameAndEmail(name, email):
