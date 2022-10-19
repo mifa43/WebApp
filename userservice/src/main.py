@@ -84,8 +84,15 @@ async def update_user(model: UpdateImage, db:Session=Depends(get_db)):
 
 
 @app.put("/update-user-profile")
-def update_user_profile(model: UpdateUserProfile):
-
+def update_user_profile(model: UpdateUserProfile, db:Session=Depends(get_db)):
+    userProfileUpdate = Postgres().updateUserProfile(
+            model.UserFirstName,
+            model.UserLastName,
+            model.UserEmail,
+            model.UserNumber,
+            model.keycloakUserID,
+            db
+            )
     logger.info(model.UserFirstName, model.UserLastName, model.UserEmail, model.UserNumber, model.keycloakUserID)
     
     return {"Health": "OK"}
