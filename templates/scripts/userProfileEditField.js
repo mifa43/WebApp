@@ -61,7 +61,8 @@ async function save(){
 
 
   document.getElementById("saveBtn").classList.add("hide");
-  
+  document.getElementById("editBtn").classList.remove("hide");
+
 
   let user = {
     UserFirstName: document.getElementById("userNameInput").value,
@@ -77,7 +78,6 @@ async function save(){
     
     console.log(response.data);
 
-    document.getElementById("editBtn").classList.remove("hide");
     window.location = 'userProfile.html';
  
 
