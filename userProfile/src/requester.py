@@ -6,69 +6,55 @@ import requests_async as requests
 
 
 class SendRequest():
+    """ ### Klasa koja sadrzi `POST` `PUT` `GET` METODE
+        -`url`: prihvata svaki url
+        -`session`: objekat koji je obotan async funkcijom
 
-    def userService(keycloakUserID: str, session):
-        """Slanje Requesta na userservice"""
-      
+    """
 
-        #docker container ce biti u env variabli
-        # await asyncio.sleep(0)
-        url = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/get-user'
+    def __init__(self, url, session) -> None:
+          
+          self.url = url
 
-        # request body
+          self.session = session
 
-        data = {
-            "keycloakUserID" : keycloakUserID
-            }
+    def get(self, payload: str):
+        """ ### Slanje GET Requesta na userservice
+        
+            ##### Ovo je malo dinamicnije jer kao parametar uzima
+            -`payload`: u payload moze staviti razliciti formati json body-a
+        """
 
         tasks = [] # lista
 
-        tasks.append(asyncio.create_task(session.get(url, params= data)))   # kreiramo corutine i dodajemo u listu
+        tasks.append(asyncio.create_task(self.session.get(self.url, params = payload)))   # kreiramo corutine i dodajemo u listu
 
-        return {"PostRequestSendOn": url, "Response": tasks}
+        return {"PostRequestSendOn": self.url, "Response": tasks}
 
-    def userServiceUpdate(imageUrl: str, keycloakUserID: str, session):
-            """Slanje Requesta na userservice"""
+    def post(self, payload: str):
+            """ ### Slanje POST Requesta na userservice
         
+            ##### Ovo je malo dinamicnije jer kao parametar uzima
+            -`payload`: u payload moze staviti razliciti formati json body-a
+            """
 
-            #docker container ce biti u env variabli
-            # await asyncio.sleep(0)
-            url = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/update-user-profile'
-
-            # request body
-
-            data = {
-                "imageUrl" : imageUrl,
-                "keycloakUserID" : keycloakUserID
-                }
 
             tasks = [] # lista
 
-            tasks.append(asyncio.create_task(session.post(url, json = data)))   # kreiramo corutine i dodajemo u listu
+            tasks.append(asyncio.create_task(self.session.post(self.url, json = payload)))   # kreiramo corutine i dodajemo u listu
 
-            return {"PostRequestSendOn": url, "Response": tasks}
+            return {"PostRequestSendOn": self.url, "Response": tasks}
 
-    def userServiceUpdateProfile(firstName: str, lastName: str, mail: str, phoneNumber: str, userID: str, session):
-            """Slanje Requesta na userservice"""
+    def put(self, payload: str):
+            """ ### Slanje PUT Requesta na userservice
         
-
-            #docker container ce biti u env variabli
-            # await asyncio.sleep(0)
-            url = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/update-user-profile'
-                  
-
-            # request body
-
-            data = {
-                "UserFirstName": firstName,
-                "UserLastName": lastName,
-                "UserEmail": mail,
-                "UserNumber": phoneNumber,
-                "keycloakUserID": userID
-            }
+            ##### Ovo je malo dinamicnije jer kao parametar uzima
+            -`payload`: u payload moze staviti razliciti formati json body-a
+            """
 
             tasks = [] # lista
 
-            tasks.append(asyncio.create_task(session.put(url, json = data)))   # kreiramo corutine i dodajemo u listu
+            tasks.append(asyncio.create_task(self.session.put(self.url, json = payload)))   # kreiramo corutine i dodajemo u listu
 
-            return {"PostRequestSendOn": url, "Response": tasks}
+            return {"PostRequestSendOn": self.url, "Response": tasks}
+ 
