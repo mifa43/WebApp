@@ -1,10 +1,11 @@
 import asyncio
 import logging
 
+import os
 import requests_async as asyncRequests
 import uvicorn
 from cloudinaryDB import ImageDatabase
-from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cprofile.profiler import CProfileMiddleware
 from models import *
@@ -58,11 +59,20 @@ async def helth_check():
 @app.get("/get-user-profile")
 async def get_user_profile(token: str):
 
+    # putanja do user servisa
+    url = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/get-user'
+
+    # funkcija uzima token te ga dekoduje i vraca keycloak id 
     keycloakUserID = TokenData(token).decode()
+
+    # body saljemo keycloak id
+    payload = {
+        "keycloakUserID" : keycloakUserID
+    }
 
     async with asyncRequests.Session() as session:  # saljemo async Request session
 
-        job = SendRequest.userService(keycloakUserID, session)   # arguument session
+        job = SendRequest(url, session).get(payload)   # arguument session
 
         reqq = await asyncio.gather(*job["Response"]) # uzima corutine, Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
 
@@ -80,6 +90,8 @@ async def user_profile_image(file: bytes = File(...), token: str = Header(defaul
     #1. file mora da bude byte jer ga i js pretvarau byte i salje kao forms data
     #2. importovanje Header-a i setup za prihvatanje header-a u endpointu token: str = Header(default=None))
 
+    url = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/update-user-image'
+
 
     # endpoint je podesen da postuje slike na coludinary
     data = ImageDatabase(file).uploadIMG()
@@ -87,17 +99,18 @@ async def user_profile_image(file: bytes = File(...), token: str = Header(defaul
     # token se dekoduje i vraca userID
     keycloakUserID = TokenData(token).decode()
 
+    payload = {
+        "imageUrl" : data["secure_url"],
+        "keycloakUserID" : keycloakUserID
+        }
+    
     # asinhrono slanje requesta, kreiramo sessino
     async with asyncRequests.Session() as session:  # saljemo async Request session
 
         # saljemo parametre i dobijamo corutine
-        job = SendRequest.userServiceUpdate(data["secure_url"], keycloakUserID, session)   # arguument session
+        job = SendRequest(url, session).post(payload)   # arguument session
 
         reqq = await asyncio.gather(*job["Response"]) # uzima corutine, Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
-
-        for resp in reqq:   # respose
-
-            req = resp.json()
 
     logger.info([keycloakUserID, data["secure_url"]])
 
@@ -106,25 +119,28 @@ async def user_profile_image(file: bytes = File(...), token: str = Header(defaul
 @app.put("/update-user-profile")
 async def update_user_profile(model: UpdateUserProfile):
 
+    url = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/update-user-profile'
+
+    payload = {
+        "UserFirstName": model.UserFirstName,
+        "UserLastName": model.UserLastName,
+        "UserEmail": model.UserEmail,
+        "UserNumber": model.UserNumber,
+        "keycloakUserID": model.keycloakUserID
+    }
+
     async with asyncRequests.Session() as session:  # saljemo async Request session 
 
         # saljemo parametre i dobijamo corutine
         # updejtujemo samo odredjena polja 
-        job = SendRequest.userServiceUpdateProfile(
-                model.UserFirstName, 
-                model.UserLastName, 
-                model.UserEmail, 
-                model.UserNumber, 
-                model.keycloakUserID, 
-                session
-            )   # arguument session
+        job = SendRequest(url, session).put(payload)   # arguument session
 
         reqq = await asyncio.gather(*job["Response"]) # uzima corutine, Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
+        
         for resp in reqq:   # respose
 
             req = resp.json()
          
-
     logger.info("{Health : OK}, 200")
 
     return {"Health": "OK"}
