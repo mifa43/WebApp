@@ -1,4 +1,4 @@
-async function uploadFile() {
+function uploadFile() {
     // polje koje uzima key: value i omogucava laksi rad multipart/form-data
     let formData = new FormData(); 
 
@@ -11,7 +11,7 @@ async function uploadFile() {
         'Content-Type': 'multipart/form-data',
         'token': window.sessionStorage.getItem("access_token")
       }
-    })
+    });
 }
 
 
