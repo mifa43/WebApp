@@ -34,8 +34,27 @@ app = FastAPI()
 
 @app.get("/get-user")
 async def get_user(keycloakUserID: str, db: Session=Depends(get_db)):
-    logger.info(keycloakUserID)
-    return db.query(User).filter(User.keycloakUserID == keycloakUserID).first()
+    
+    query = db.query(User).filter(User.keycloakUserID == keycloakUserID).first()
+    
+    if query == None:
+
+        logger.error({f"404: The user with given ID was not founded or does not exist"})
+
+        raise HTTPException(status_code = 404, detail = "The user with given ID was not founded or does not exist")
+    
+    elif query == str:
+        
+        logger.error({f"200: User founded"})
+
+        return {"query": query}
+    
+    else:
+
+        logger.error({"500": "Something went wrong"})
+
+        raise HTTPException(status_code = 500, detail = "Something went wrong")
+
 
 @app.get("/")
 def helth_check():
