@@ -34,22 +34,26 @@ app = FastAPI()
 
 @app.get("/get-user")
 async def get_user(keycloakUserID: str, db: Session=Depends(get_db)):
+    """ ### Vrati korisnika za dati ID
+        
+        -`keycloakUserID`: unique=True
+    """
+
+    query = db.query(User).filter(User.keycloakUserID == keycloakUserID).first()    # trazimo korisnika za dati keycloakID 
     
-    query = db.query(User).filter(User.keycloakUserID == keycloakUserID).first()
-    
-    if query == None:
+    if query == None:   # ako je Query None znaci da nema vrednosti za dati ID
 
         logger.error({f"404: The user with given ID was not founded or does not exist"})
 
         raise HTTPException(status_code = 404, detail = "The user with given ID was not founded or does not exist")
     
-    elif query == str:
+    elif query == str:  # ako smo dobili tip podatka str znaci da je korisnik pronadjen u bazi
         
         logger.error({f"200: User founded"})
 
         return {"query": query}
     
-    else:
+    else:   # desilo se nesto neocekivano
 
         logger.error({"500": "Something went wrong"})
 
