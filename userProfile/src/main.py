@@ -59,7 +59,8 @@ async def helth_check():
 
 @app.get("/get-user-profile")
 async def get_user_profile(token: str = None):
-    if token:
+
+    if token:   # da li token dosao do api-endpointa ? 
 
         # putanja do user servisa
         url = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/get-user'
@@ -82,22 +83,24 @@ async def get_user_profile(token: str = None):
 
                 req = resp.json()
 
-        if "detail" in req:
+        if "detail" in req: # ako u respounsu vraca detail ciljani api nije pronasao korisnika u bazi 
 
             logger.error({"404": "User does not exist"})
 
-            raise HTTPException(status_code = 404, detail = "User does not exist")
+            raise HTTPException(status_code = 404, detail = "User does not exist")  # Vracamo FE-u 404 
 
-        else:
+        else:   # korisnik je pronadjen
+
             logger.info({"200": "User founded"})
 
             return {"data": req}
     
-    elif token == None: # desilo se nesto neocekivano
+    elif token == None: # token nema vrednost ili je none, dizemo 404
 
         logger.error({"404": "token not founded"})
 
         raise HTTPException(status_code = 404, detail = "Token not founded")
+    
     else: # desilo se nesto neocekivano
 
         logger.error({"500": "Something went wrong"})
