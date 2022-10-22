@@ -147,7 +147,6 @@ async def user_profile_image(file: bytes = File(...), token: str = Header(defaul
 
         # token se dekoduje i vraca userID
         
-
         payload = {
             "imageUrl" : data["secure_url"],
             "keycloakUserID" : keycloakUserID
