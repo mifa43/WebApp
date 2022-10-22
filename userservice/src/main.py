@@ -62,6 +62,9 @@ async def get_user(keycloakUserID: str, db: Session=Depends(get_db)):
 
 @app.get("/")
 def helth_check():
+    """ ### Ovo je test endpoint i koristi se samo za testiranje 
+        `{Health : OK}`
+    """
 
     logger.info("{Health : OK}, 200")
     
@@ -69,9 +72,20 @@ def helth_check():
 
 @app.post("/insert-user")
 async def insert_user(model: UserModel, db:Session=Depends(get_db)):
-    """Hvatanje requesta i slanje u insert funkciju"""
+    """ ### Hvatanje requesta i slanje u insert funkciju
+        -`UserModel`: Ocekivani request body    
+    """
     try:
-        data = await asyncio.create_task(Postgres().insert(model.UserName, model.UserFirstName, model.UserLastName, model.UserEmail, model.UserNumber, model.keycloakUserID, db))     # hvataj request body
+
+        data = await asyncio.create_task(Postgres().insert(
+                model.UserName, 
+                model.UserFirstName, 
+                model.UserLastName, 
+                model.UserEmail, 
+                model.UserNumber, 
+                model.keycloakUserID, 
+                db
+                ))     # hvataj request body
 
         if data["error"] == False:  # postgres je uspesno upisao u bazu
 
