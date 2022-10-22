@@ -12,7 +12,7 @@ from fastapi_cprofile.profiler import CProfileMiddleware
 from models import *
 from requester import SendRequest
 from tokenEncode import TokenData
-
+  
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
 logger.setLevel("DEBUG")
@@ -83,18 +83,24 @@ async def get_user_profile(token: str = None):
 
                 req = resp.json()
 
-        if "detail" in req: # ako u respounsu vraca detail ciljani api nije pronasao korisnika u bazi 
+        if "detail" not in req and req["status"] == True:   # ako se u response objektu nenalazi detail i status je True nema greske i korisnik je nadjen
+
+            logger.info({"200": "User founded"})
+
+            return {"data": req}
+                
+        elif req["detail"] == "Database or table does not exist":  # ako je dbException True baza je digla problem
+
+            logger.error({"404": "Database or table does not exist"})
+
+            raise HTTPException(status_code = 404, detail = "Database or table does not exist")  # Vracamo FE-u 404 
+        
+        elif req["detail"] == "The user with given ID was not founded or does not exist": # ako u respounsu vraca detail ciljani api nije pronasao korisnika u bazi 
 
             logger.error({"404": "User does not exist"})
 
             raise HTTPException(status_code = 404, detail = "User does not exist")  # Vracamo FE-u 404 
 
-        else:   # korisnik je pronadjen
-
-            logger.info({"200": "User founded"})
-
-            return {"data": req}
-    
     elif token == None: # token nema vrednost ili je none, dizemo 404
 
         logger.error({"404": "token not founded"})
@@ -113,32 +119,70 @@ async def user_profile_image(file: bytes = File(...), token: str = Header(defaul
     #1. file mora da bude byte jer ga i js pretvarau byte i salje kao forms data
     #2. importovanje Header-a i setup za prihvatanje header-a u endpointu token: str = Header(default=None))
 
-    url = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/update-user-image'
-
-
-    # endpoint je podesen da postuje slike na coludinary
-    data = ImageDatabase(file).uploadIMG()
-
-    # token se dekoduje i vraca userID
     keycloakUserID = TokenData(token).decode()
 
+    urlForCheckUser = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/get-user'    # provera da li korisnik sa ID postoji pre upload-a
+
     payload = {
-        "imageUrl" : data["secure_url"],
-        "keycloakUserID" : keycloakUserID
-        }
-    
-    # asinhrono slanje requesta, kreiramo sessino
+            "keycloakUserID" : keycloakUserID
+            }
+        # asinhrono slanje requesta, kreiramo sessino
     async with asyncRequests.Session() as session:  # saljemo async Request session
 
         # saljemo parametre i dobijamo corutine
-        job = SendRequest(url, session).post(payload)   # arguument session
+        job = SendRequest(urlForCheckUser, session).get(payload)   # arguument session
 
         reqq = await asyncio.gather(*job["Response"]) # uzima corutine, Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
 
-    logger.info([keycloakUserID, data["secure_url"]])
+        for resp in reqq:   # respose
 
-    return {"Image uploaded": [keycloakUserID, data["secure_url"]]}
+            req = resp.json()
 
+    if "detail" not in req and req["status"] == True: # ako se u response objektu nenalazi detail i status je True nema greske i korisnik je nadjen
+    
+        urlForUpdate = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/update-user-image'  # endpoint za upload image
+
+        # endpoint je podesen da postuje slike na coludinary
+        data = ImageDatabase(file).uploadIMG()
+
+        # token se dekoduje i vraca userID
+        
+
+        payload = {
+            "imageUrl" : data["secure_url"],
+            "keycloakUserID" : keycloakUserID
+            }
+        
+        # asinhrono slanje requesta, kreiramo sessino
+        async with asyncRequests.Session() as session:  # saljemo async Request session
+
+            # saljemo parametre i dobijamo corutine
+            job = SendRequest(urlForUpdate, session).post(payload)   # arguument session
+
+            reqq = await asyncio.gather(*job["Response"]) # uzima corutine, Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
+
+        logger.info([keycloakUserID, data["secure_url"]])
+
+        return {"Image uploaded": [keycloakUserID, data["secure_url"]]}
+
+    elif req["detail"] == "Database or table does not exist":    # ako je detalj jednak tekstu dizemo exceptio
+
+        logger.error({"404": "Database or table does not exist"})
+
+        raise HTTPException(status_code = 404, detail = "Database or table does not exist")  # Vracamo FE-u 404 
+
+    elif req["detail"] == "The user with given ID was not founded or does not exist":   # ako je detalj jednak tekstu dizemo exceptio
+
+        logger.error({f"""404: The user with given ID was not founded or does not exist, image uplouding was canceled"""})
+
+        raise HTTPException(status_code = 404, detail = "The user with given ID was not founded or does not exist, image uplouding was canceled")
+    
+    else: # desilo se nesto neocekivano
+
+        logger.error({"500": "Something went wrong"})
+
+        raise HTTPException(status_code = 500, detail = "Something went wrong")
+    
 @app.put("/update-user-profile")
 async def update_user_profile(model: UpdateUserProfile):
 
