@@ -134,8 +134,8 @@ def update_user_profile(model: UpdateUserProfile, db:Session=Depends(get_db)):
         - `model.UserEmail`
         - `model.UserNumber`
         - `model.keycloakUserID`
-
     """
+    
     userProfileUpdate = Postgres().updateUserProfile(
             model.UserFirstName,
             model.UserLastName,
