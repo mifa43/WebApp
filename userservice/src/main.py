@@ -36,7 +36,7 @@ app = FastAPI()
 async def get_user(keycloakUserID: str, db: Session=Depends(get_db)):
     """ ### Vrati korisnika za dati ID
         
-        -`keycloakUserID`: unique=True
+        - `keycloakUserID`: unique=True
     """
 
     query = db.query(User).filter(User.keycloakUserID == keycloakUserID).first()    # trazimo korisnika za dati keycloakID 
@@ -73,7 +73,7 @@ def helth_check():
 @app.post("/insert-user")
 async def insert_user(model: UserModel, db:Session=Depends(get_db)):
     """ ### Hvatanje requesta i slanje u insert funkciju
-        -`UserModel`: Ocekivani request body    
+        - `UserModel`: Ocekivani request body    
     """
     try:
 
@@ -112,16 +112,30 @@ async def insert_user(model: UserModel, db:Session=Depends(get_db)):
 
 @app.post("/update-user-image")
 async def update_user(model: UpdateImage, db:Session=Depends(get_db)):
-    print(model.imageUrl, model.keycloakUserID)
-    updt = Postgres().updateProfileImage(model.imageUrl, model.keycloakUserID, db)
+    """ ### Ovaj endpoint upisuje url slike koje je vratio Cloudinary 
+        - `model.imageUrl`: source image url 
+        - `model.keycloakUserID`: keycloak id iz baze
+    """
+    print(model.imageUrl, model.keycloakUserID) # test print
+
+    updt = Postgres().updateProfileImage(model.imageUrl, model.keycloakUserID, db)  # klasa za upisivanje image url-a za korisnika kome pripada keycloak id 
 
     logger.info({"user updated": updt})
 
-    return {"user updated": updt}
+    return {"user updated": updt}   # vraca update
 
 
 @app.put("/update-user-profile")
 def update_user_profile(model: UpdateUserProfile, db:Session=Depends(get_db)):
+    """ ### Update user profile endpoint
+        #### **Polja za update su opociona**
+        - `model.UserFirstName`
+        - `model.UserLastName`
+        - `model.UserEmail`
+        - `model.UserNumber`
+        - `model.keycloakUserID`
+
+    """
     userProfileUpdate = Postgres().updateUserProfile(
             model.UserFirstName,
             model.UserLastName,
@@ -129,10 +143,12 @@ def update_user_profile(model: UpdateUserProfile, db:Session=Depends(get_db)):
             model.UserNumber,
             model.keycloakUserID,
             db
-            )
+            )   # klasa za updejtoivanje korisnickog profila
+    
     logger.info(model.UserFirstName, model.UserLastName, model.UserEmail, model.UserNumber, model.keycloakUserID)
     
-    return {"Health": "OK"}
+    return {"Health": "OK"} # response oke
+
 # @app.post("/password-restart")
 # def password_restart(model: RestartPasswordModel, db:Session=Depends(get_db)):
 
