@@ -8,6 +8,7 @@ from fastapi import Depends, FastAPI, HTTPException
 from fastapi_cprofile.profiler import CProfileMiddleware
 from models import *
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
 from tableModel import User
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
@@ -38,27 +39,34 @@ async def get_user(keycloakUserID: str, db: Session=Depends(get_db)):
         
         - `keycloakUserID`: unique=True
     """
+    try:    # pokusavamo da izvvrsimo query ako nece dizem sql error
 
-    query = db.query(User).filter(User.keycloakUserID == keycloakUserID).first()    # trazimo korisnika za dati keycloakID 
-    
-    if query == None:   # ako je Query None znaci da nema vrednosti za dati ID
-
-        logger.error({f"404: The user with given ID was not founded or does not exist"})
-
-        raise HTTPException(status_code = 404, detail = "The user with given ID was not founded or does not exist")
-    
-    elif query == str:  # ako smo dobili tip podatka str znaci da je korisnik pronadjen u bazi
+        query = db.query(User).filter(User.keycloakUserID == keycloakUserID).first()    # trazimo korisnika za dati keycloakID 
         
-        logger.error({f"200: User founded"})
+        if query == None:   # ako je Query None znaci da nema vrednosti za dati ID
 
-        return {"query": query}
-    
-    else:   # desilo se nesto neocekivano
+            logger.error({f"404: The user with given ID was not founded or does not exist"})
 
-        logger.error({"500": "Something went wrong"})
+            raise HTTPException(status_code = 404, detail = "The user with given ID was not founded or does not exist")
+        
+        elif query:  # ako smo dobili tip podatka str znaci da je korisnik pronadjen u bazi
+            
+            logger.error({"200": "User founded"})
 
-        raise HTTPException(status_code = 500, detail = "Something went wrong")
+            return {"query": query, "status": True}   # dbException smo dodali kako bi izbegli keyError
+        
+        else:   # desilo se nesto neocekivano
 
+            logger.error({"500": "Something went wrong"})
+
+            raise HTTPException(status_code = 500, detail = "Something went wrong")
+        
+    except SQLAlchemyError as e:    # ako se digne exception znaci da baza nije pronadjena ili se desilo nesto neockivano zato vracamo e
+
+        logger.error({"dbException": "Database or table does not exist"})
+        
+        raise HTTPException(status_code = 500, detail = "Database or table does not exist")
+        # return {"dbException": True, "reason": e}   # vracamo dbException ako imamo problem sa bazom
 
 @app.get("/")
 def helth_check():
@@ -135,7 +143,7 @@ def update_user_profile(model: UpdateUserProfile, db:Session=Depends(get_db)):
         - `model.UserNumber`
         - `model.keycloakUserID`
     """
-    
+
     userProfileUpdate = Postgres().updateUserProfile(
             model.UserFirstName,
             model.UserLastName,
