@@ -2,6 +2,7 @@ import asyncio
 import logging
 
 import os
+import json
 import requests_async as asyncRequests
 import uvicorn
 from cloudinaryDB import ImageDatabase
@@ -57,32 +58,51 @@ async def helth_check():
     return {"Health": "OK"}
 
 @app.get("/get-user-profile")
-async def get_user_profile(token: str):
+async def get_user_profile(token: str = None):
+    if token:
 
-    # putanja do user servisa
-    url = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/get-user'
+        # putanja do user servisa
+        url = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/get-user'
 
-    # funkcija uzima token te ga dekoduje i vraca keycloak id 
-    keycloakUserID = TokenData(token).decode()
+        # funkcija uzima token te ga dekoduje i vraca keycloak id 
+        keycloakUserID = TokenData(token).decode()
 
-    # body saljemo keycloak id
-    payload = {
-        "keycloakUserID" : keycloakUserID
-    }
+        # body saljemo keycloak id
+        payload = {
+            "keycloakUserID" : keycloakUserID
+        }
 
-    async with asyncRequests.Session() as session:  # saljemo async Request session
+        async with asyncRequests.Session() as session:  # saljemo async Request session
 
-        job = SendRequest(url, session).get(payload)   # arguument session
+            job = SendRequest(url, session).get(payload)   # arguument session
 
-        reqq = await asyncio.gather(*job["Response"]) # uzima corutine, Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
+            reqq = await asyncio.gather(*job["Response"]) # uzima corutine, Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
 
-        for resp in reqq:   # respose
+            for resp in reqq:   # respose
 
-            req = resp.json()
+                req = resp.json()
 
-    logger.info(req)
+        if "detail" in req:
 
-    return {"data": req}
+            logger.error({"404": "User does not exist"})
+
+            raise HTTPException(status_code = 404, detail = "User does not exist")
+
+        else:
+            logger.info({"200": "User founded"})
+
+            return {"data": req}
+    
+    elif token == None: # desilo se nesto neocekivano
+
+        logger.error({"404": "token not founded"})
+
+        raise HTTPException(status_code = 404, detail = "Token not founded")
+    else: # desilo se nesto neocekivano
+
+        logger.error({"500": "Something went wrong"})
+
+        raise HTTPException(status_code = 500, detail = "Something went wrong")
 
 @app.post("/user-profile-image/")
 async def user_profile_image(file: bytes = File(...), token: str = Header(default=None)):
