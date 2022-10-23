@@ -13,14 +13,14 @@ class UserModel(BaseModel):
     keycloakUserID: str
 
 class UpdateImage(BaseModel):
-    imageUrl: str
+    imageURL: str
     keycloakUserID: str
 
 class UpdateUserProfile(BaseModel):
-    UserFirstName: str
-    UserLastName: str
-    UserEmail: str
-    UserNumber: str
+    firstName: str
+    lastName: str
+    mail: str
+    phoneNumber: str
     keycloakUserID: str
 # class RestartPasswordModel(BaseModel):
 #     UserEmail: str
