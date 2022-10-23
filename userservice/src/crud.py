@@ -57,27 +57,18 @@ class Postgres():
             return {"postgresError": e, "error": True}
 
         return {"UserInserted": name, "tableName": data.__tablename__, "error": False}
+    
+    def update(self, body: dict, keycloakID: str, db):
+        """ ### Dinamicna metoda za updejtovanje
+            - `body`: dict koji dolazi kao fastapi model
+            - `keycloakID`: indentifikacija korisnika 
 
-    def updateProfileImage(self, data: str,userID: str, db):
-        """ ### Klasa za updejtovanje
-        
+            #### SQLAlchemy orm update prihvata dict
         """
 
-        imageUpdate = db.query(User).filter(User.keycloakUserID == userID).update({'imageURL': data}) 
-        db.commit()
-        return imageUpdate
+        update = db.query(User).filter(User.keycloakUserID == keycloakID).update(body) 
 
-    def updateUserProfile(self, firstName: str, lastName: str, mail: str, phoneNumber: str, userID: str, db):
-        """ ### Update user profile
-        
-        """
-        upadteProfile = db.query(User).filter(User.keycloakUserID == userID).update({
-                'firstName': firstName,
-                'lastName': lastName,
-                'mail': mail,
-                'phoneNumber': phoneNumber,
-                }) 
-
+        # izvrsna komanda
         db.commit()
 
-        return upadteProfile
+        return update
