@@ -10,6 +10,7 @@ from models import *
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from tableModel import User
+from helpers import modelToDict
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
@@ -32,6 +33,15 @@ app = FastAPI()
 
 # app.add_middleware(CProfileMiddleware, enable=True, print_each_request = True, strip_dirs = False, sort_by='cumulative', filename='/tmp/output.pstats', server_app = app)
 
+@app.get("/")
+def helth_check():
+    """ ### Ovo je test endpoint i koristi se samo za testiranje 
+        `{Health : OK}`
+    """
+
+    logger.info("{Health : OK}, 200")
+    
+    return {"Health": "OK"}
 
 @app.get("/get-user")
 async def get_user(keycloakUserID: str, db: Session=Depends(get_db)):
@@ -67,16 +77,6 @@ async def get_user(keycloakUserID: str, db: Session=Depends(get_db)):
         
         raise HTTPException(status_code = 500, detail = "Database or table does not exist")
         # return {"dbException": True, "reason": e}   # vracamo dbException ako imamo problem sa bazom
-
-@app.get("/")
-def helth_check():
-    """ ### Ovo je test endpoint i koristi se samo za testiranje 
-        `{Health : OK}`
-    """
-
-    logger.info("{Health : OK}, 200")
-    
-    return {"Health": "OK"}
 
 @app.post("/insert-user")
 async def insert_user(model: UserModel, db:Session=Depends(get_db)):
@@ -124,13 +124,14 @@ async def update_user(model: UpdateImage, db:Session=Depends(get_db)):
         - `model.imageUrl`: source image url 
         - `model.keycloakUserID`: keycloak id iz baze
     """
-    print(model.imageUrl, model.keycloakUserID) # test print
+    
+    dic = modelToDict(model)    # Konvertovanje modela u dict za update
 
-    updt = Postgres().updateProfileImage(model.imageUrl, model.keycloakUserID, db)  # klasa za upisivanje image url-a za korisnika kome pripada keycloak id 
+    update = Postgres().update(dic, model.keycloakUserID, db)   # update klasa
 
-    logger.info({"user updated": updt})
+    logger.info({"user updated": update})
 
-    return {"user updated": updt}   # vraca update
+    return {"user updated": update}   # vraca update
 
 
 @app.put("/update-user-profile")
@@ -144,18 +145,13 @@ def update_user_profile(model: UpdateUserProfile, db:Session=Depends(get_db)):
         - `model.keycloakUserID`
     """
 
-    userProfileUpdate = Postgres().updateUserProfile(
-            model.UserFirstName,
-            model.UserLastName,
-            model.UserEmail,
-            model.UserNumber,
-            model.keycloakUserID,
-            db
-            )   # klasa za updejtoivanje korisnickog profila
+    dic = modelToDict(model)
+
+    update = Postgres().update(dic, model.keycloakUserID, db)
+
+    logger.info(update)
     
-    logger.info(model.UserFirstName, model.UserLastName, model.UserEmail, model.UserNumber, model.keycloakUserID)
-    
-    return {"Health": "OK"} # response oke
+    return {"Health": update} # response oke
 
 # @app.post("/password-restart")
 # def password_restart(model: RestartPasswordModel, db:Session=Depends(get_db)):
