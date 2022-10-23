@@ -148,7 +148,7 @@ async def user_profile_image(file: bytes = File(...), token: str = Header(defaul
         # token se dekoduje i vraca userID
         
         payload = {
-            "imageUrl" : data["secure_url"],
+            "imageURL" : data["secure_url"],
             "keycloakUserID" : keycloakUserID
             }
         
@@ -188,10 +188,10 @@ async def update_user_profile(model: UpdateUserProfile):
     url = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/update-user-profile'
 
     payload = {
-        "UserFirstName": model.UserFirstName,
-        "UserLastName": model.UserLastName,
-        "UserEmail": model.UserEmail,
-        "UserNumber": model.UserNumber,
+        "firstName": model.UserFirstName,
+        "lastName": model.UserLastName,
+        "mail": model.UserEmail,
+        "phoneNumber": model.UserNumber,
         "keycloakUserID": model.keycloakUserID
     }
 
