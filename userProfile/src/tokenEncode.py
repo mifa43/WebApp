@@ -16,6 +16,4 @@ class TokenData():
 
         decoded = jwt.decode(self.token, options={"verify_signature": False})        
 
-        print(decoded["sub"])
-
         return decoded["sub"]
