@@ -1,4 +1,5 @@
 import cloudinary, cloudinary.uploader
+import os
 
 class ImageDatabase():
     """ ### Klasa za uploudovanje slika na cloudinary
@@ -13,9 +14,9 @@ class ImageDatabase():
 
         # konfiguracija
         cloudinary.config( 
-        cloud_name = "dt5xxftc5", 
-        api_key = "513357577797212", 
-        api_secret = "rgAb0XMNQuJ6rW-INee5F9apAZ4" 
+        cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"), 
+        api_key = os.getenv("CLOUDINARY_API_KEY"), 
+        api_secret = os.getenv("CLOUDINARY_API_SECRET")
         )
 
     def uploadIMG(self):
@@ -26,5 +27,3 @@ class ImageDatabase():
         response = cloudinary.uploader.upload(self.file, folder="webApp/")
         
         return response
-
-
