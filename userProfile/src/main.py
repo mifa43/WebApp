@@ -3,6 +3,7 @@ import logging
 
 import os
 import json
+import re
 import requests_async as asyncRequests
 import uvicorn
 from cloudinaryDB import ImageDatabase
@@ -206,10 +207,31 @@ async def update_user_profile(model: UpdateUserProfile):
         for resp in reqq:   # respose
 
             req = resp.json()
-         
-    logger.info("{Health : OK}, 200")
 
-    return {"Health": "OK"}
+    if req["detail"] == False:
+
+        #  req["update"] == "OK" and 
+        logger.info({"update": "User profile updated"})
+
+        return {"update": "User profile updated"}
+    
+    elif req["detail"] == "The user with given ID was not founded or does not exist":
+
+        logger.error({"404": req["detail"]})
+
+        raise HTTPException(status_code = 404, detail = req["detail"])
+    
+    elif req["detail"] == "Database or table does not exist":
+
+        logger.error({"404": req["detail"]})
+
+        raise HTTPException(status_code = 404, detail = req["detail"])
+    
+    else: # desilo se nesto neocekivano
+
+        logger.error({"500": "Something went wrong"})
+
+        raise HTTPException(status_code = 500, detail = "Something went wrong")
 
 
 if __name__ == "__main__":
