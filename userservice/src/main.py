@@ -119,7 +119,7 @@ async def insert_user(model: UserModel, db:Session=Depends(get_db)):
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
 @app.post("/update-user-image")
-async def update_user(model: UpdateImage, db:Session=Depends(get_db)):
+async def update_user_image(model: UpdateImage, db:Session=Depends(get_db)):
     """ ### Ovaj endpoint upisuje url slike koje je vratio Cloudinary 
         - `model.imageUrl`: source image url 
         - `model.keycloakUserID`: keycloak id iz baze
@@ -129,9 +129,9 @@ async def update_user(model: UpdateImage, db:Session=Depends(get_db)):
 
     update = Postgres().update(dic, model.keycloakUserID, db)   # update klasa
 
-    logger.info({"user updated": update})
+    logger.info({"user updated": update["update"]})
 
-    return {"user updated": update}   # vraca update
+    return {"user updated": update["update"]}   # vraca update
 
 
 @app.put("/update-user-profile")
@@ -149,9 +149,36 @@ def update_user_profile(model: UpdateUserProfile, db:Session=Depends(get_db)):
 
     update = Postgres().update(dic, model.keycloakUserID, db)
 
-    logger.info(update)
+    if update["error"] == False:    # try blok je izvrsen bez problema 
+
+        if update["update"] == 1:   # ako je update: 1 znaci da je uspesno updejtovan korisnik
+
+
+            logger.info(update)
+        
+            return {"update": "OK", "detail": False} # response oke
+        
+        else:   # ako je update: 0 znaci da koriosnik nije updejtovan
+
+            logger.error({"404": "The user with given ID was not founded or does not exist"})
+
+            raise HTTPException(status_code = 404, detail = "The user with given ID was not founded or does not exist")
+
+
     
-    return {"Health": update} # response oke
+    elif update["error"] == True:   # podignut SQLAlchemy exception; vracamo error: ture
+
+        logger.error({"404": "Database or table does not exist"})
+
+        raise HTTPException(status_code = 404, detail = "Database or table does not exist")
+
+    else:   # desilo se nesto neocekivano
+
+        logger.error({"500": "Something went wrong"})
+
+        raise HTTPException(status_code = 500, detail = "Something went wrong")
+
+
 
 # @app.post("/password-restart")
 # def password_restart(model: RestartPasswordModel, db:Session=Depends(get_db)):
