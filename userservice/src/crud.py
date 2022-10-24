@@ -65,10 +65,15 @@ class Postgres():
 
             #### SQLAlchemy orm update prihvata dict
         """
+        try:
+            
+            update = db.query(User).filter(User.keycloakUserID == keycloakID).update(body) 
 
-        update = db.query(User).filter(User.keycloakUserID == keycloakID).update(body) 
+            # izvrsna komanda
+            db.commit()
 
-        # izvrsna komanda
-        db.commit()
+            return {"update": update, "error": False}
 
-        return update
+        except SQLAlchemyError as e:
+
+            return {"postgresError": e, "error": True, "updateError": "update error raised"}
