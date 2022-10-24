@@ -125,14 +125,35 @@ async def update_user_image(model: UpdateImage, db:Session=Depends(get_db)):
         - `model.keycloakUserID`: keycloak id iz baze
     """
     
-    dic = modelToDict(model)    # Konvertovanje modela u dict za update
+    dic = modelToDict(model)
 
-    update = Postgres().update(dic, model.keycloakUserID, db)   # update klasa
+    update = Postgres().update(dic, model.keycloakUserID, db)
 
-    logger.info({"user updated": update["update"]})
+    if update["error"] == False:    # try blok je izvrsen bez problema 
 
-    return {"user updated": update["update"]}   # vraca update
+        if update["update"] == 1:   # ako je update: 1 znaci da je uspesno updejtovan korisnik
 
+            logger.info(update)
+        
+            return {"update": "OK", "detail": False} # response oke
+        
+        else:   # ako je update: 0 znaci da koriosnik nije updejtovan
+
+            logger.error({"404": "The user with given ID was not founded or does not exist"})
+
+            raise HTTPException(status_code = 404, detail = "The user with given ID was not founded or does not exist")
+
+    elif update["error"] == True:   # podignut SQLAlchemy exception; vracamo error: ture
+
+        logger.error({"404": "Database or table does not exist"})
+
+        raise HTTPException(status_code = 404, detail = "Database or table does not exist")
+
+    else:   # desilo se nesto neocekivano
+
+        logger.error({"500": "Something went wrong"})
+
+        raise HTTPException(status_code = 500, detail = "Something went wrong")
 
 @app.put("/update-user-profile")
 def update_user_profile(model: UpdateUserProfile, db:Session=Depends(get_db)):
@@ -153,7 +174,6 @@ def update_user_profile(model: UpdateUserProfile, db:Session=Depends(get_db)):
 
         if update["update"] == 1:   # ako je update: 1 znaci da je uspesno updejtovan korisnik
 
-
             logger.info(update)
         
             return {"update": "OK", "detail": False} # response oke
@@ -164,8 +184,6 @@ def update_user_profile(model: UpdateUserProfile, db:Session=Depends(get_db)):
 
             raise HTTPException(status_code = 404, detail = "The user with given ID was not founded or does not exist")
 
-
-    
     elif update["error"] == True:   # podignut SQLAlchemy exception; vracamo error: ture
 
         logger.error({"404": "Database or table does not exist"})
@@ -178,7 +196,9 @@ def update_user_profile(model: UpdateUserProfile, db:Session=Depends(get_db)):
 
         raise HTTPException(status_code = 500, detail = "Something went wrong")
 
+if __name__ == "__main__":
 
+    uvicorn.run(app, port=8080, loop="asyncio")
 
 # @app.post("/password-restart")
 # def password_restart(model: RestartPasswordModel, db:Session=Depends(get_db)):
@@ -192,5 +212,3 @@ def update_user_profile(model: UpdateUserProfile, db:Session=Depends(get_db)):
 
 #su - postgres && psql -U mifa43 userservice
 
-if __name__ == "__main__":
-    uvicorn.run(app, port=8080, loop="asyncio")
