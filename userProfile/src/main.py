@@ -120,6 +120,7 @@ async def user_profile_image(file: bytes = File(...), token: str = Header(defaul
     #1. file mora da bude byte jer ga i js pretvarau byte i salje kao forms data
     #2. importovanje Header-a i setup za prihvatanje header-a u endpointu token: str = Header(default=None))
 
+    # token se dekoduje i vraca userID
     keycloakUserID = TokenData(token).decode()
 
     urlForCheckUser = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/get-user'    # provera da li korisnik sa ID postoji pre upload-a
@@ -146,8 +147,6 @@ async def user_profile_image(file: bytes = File(...), token: str = Header(defaul
         # endpoint je podesen da postuje slike na coludinary
         data = ImageDatabase(file).uploadIMG()
 
-        # token se dekoduje i vraca userID
-        
         payload = {
             "imageURL" : data["secure_url"],
             "keycloakUserID" : keycloakUserID
