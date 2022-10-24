@@ -20,7 +20,9 @@ class SendVerification(Connection):
         # self.admin.realm_name = "demo"
         
         sendEmail = self.admin.send_verify_email(user_id=self.keycloak_id)
+
         await asyncio.sleep(0)
+        
         if self.keycloak_id == None:
 
             return {"ID": False}
