@@ -195,13 +195,25 @@ async def update_user_profile(model: UpdateUserProfile):
         "keycloakUserID": model.keycloakUserID
     }
 
+    url1 = f'http://fastapi:8080/update-user'   # url za slanje na keycloak 
+
+    payload1 = {
+        "UserFirstName": model.UserFirstName,
+        "UserLastName": model.UserLastName,
+        "keycloak_id": model.keycloakUserID
+    }   # keycloak api endpoint za user update
+
     async with asyncRequests.Session() as session:  # saljemo async Request session 
 
         # saljemo parametre i dobijamo corutine
         # updejtujemo samo odredjena polja 
-        job = SendRequest(url, session).put(payload)   # arguument session
+        job = SendRequest(url, session).put(payload)   # argument session
+
+        job1 = SendRequest(url1, session).post(payload1) # slanje requesta na keycloak
 
         reqq = await asyncio.gather(*job["Response"]) # uzima corutine, Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
+
+        reqq1 = await asyncio.gather(*job1["Response"]) # slanje requesta na keycloak
         
         for resp in reqq:   # respose
 
@@ -210,9 +222,9 @@ async def update_user_profile(model: UpdateUserProfile):
     if req["detail"] == False:
 
         #  req["update"] == "OK" and 
-        logger.info({"update": "User profile updated"})
+        logger.info({"update": "User profile updated", "keycloakUpdate": [data.json() for data in reqq1]})
 
-        return {"update": "User profile updated"}
+        return {"update": "User profile updated", "keycloakUpdate": [data.json() for data in reqq1]}
     
     elif req["detail"] == "The user with given ID was not founded or does not exist":
 
