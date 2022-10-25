@@ -12,6 +12,7 @@ from helpers import (checkNameAndEmail, checkPassword, createUserName,
 from keycloakManager.KeycloakID import GetKeycloakID
 from keycloakManager.keycloakRegister import CreateUser
 from keycloakManager.sendVerification import SendVerification
+from keycloakManager.keycloakUserUpdate import UpdateUser
 from models import *
 from requester import SendRequest
 from resend_email_verfy import ResendVerifyEmail
@@ -55,10 +56,10 @@ app.add_middleware(
 # https://fastapi.tiangolo.com/tutorial/cors/
 
 @app.get("/")
-def helth_check():
-    logger.info("{Health : OK}, 200")
+async def helth_check():
 
-   
+    logger.info({"Health": "OK"})
+
     return {"Health": "OK"}
 
 @app.post("/resend-email-verification")
@@ -185,6 +186,18 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
         raise HTTPException(status_code = 500, detail = "Something went wrong")
     
+@app.post("/update-user")
+async def update_user(model: UpdateUserModel):
+
+    body = {'firstName': model.UserFirstName, 'lastName': model.UserLastName}
+
+    update = await asyncio.create_task(UpdateUser(model.keycloak_id).send(body))
+
+    logger.info({"userUpdate": update})
+
+    return {"userUpdate": update}
+
+
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
 
