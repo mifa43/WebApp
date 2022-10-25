@@ -51,7 +51,9 @@ class Postgres():
             # db.refresh(a1)
 
             data
+
             await asyncio.sleep(0)
+            
         except SQLAlchemyError as e:
             #hvata exception ako pokusa da se upise korisnik sa istim emailom jer je polje unique
             return {"postgresError": e, "error": True}
