@@ -14,3 +14,8 @@ class RegisterForm(BaseModel):
     
 class Verification(BaseModel):
     UserName: str
+
+class UpdateUserModel(BaseModel):
+    keycloak_id: str
+    UserFirstName: str
+    UserLastName: str
