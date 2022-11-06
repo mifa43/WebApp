@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, ForeignKey, Column
+from sqlalchemy import Integer, String, ForeignKey, Column, Boolean
 from database import Base, engine
 from sqlalchemy.orm import relationship
 
@@ -15,6 +15,13 @@ class User(Base):
     mail = Column("mail",String, unique=True)
     phoneNumber = Column("phonenumber", String)
     keycloakUserID = Column("keycloakUserID", String, unique=True)
+    title = Column("title", String)
+    description = Column("description", String)
+    about = Column("about", String)
+    tags = Column("tags", String)
+    links = Column("links", String)
+    firstStepsComplete = Column("firstStepsComplete", Boolean)
+
     imageURL = Column("imageURL", String)
     # password = Column("password",String)
 
