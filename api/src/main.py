@@ -111,12 +111,13 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
         # slnje rquesrta async
         # SendRequest.userService(userName, model.UserName ,model.UserLastName, lower["email"], model.UserNumber, password["check"])
 
-        kc = await asyncio.create_task(CreateUser(lower["email"], userName, model.UserName, model.UserLastName, password["check"]).new())  # cekaj da se vrati keycloak user id
+        #user name je user emailo jer se samo prijavljujemo emailom jer je na keyclaoku username obavezan, email koristimo za social media auth
+        kc = await asyncio.create_task(CreateUser(lower["email"], lower["email"], model.UserName, model.UserLastName, password["check"]).new())  # cekaj da se vrati keycloak user id
 
 
         async with asyncRequests.Session() as session:  # saljemo async Request session
 
-            job = SendRequest.userService(userName, model.UserName ,model.UserLastName, lower["email"], model.UserNumber, kc["clientID"], session)   # arguument session
+            job = SendRequest.userService(lower["email"], model.UserName ,model.UserLastName, lower["email"], model.UserNumber, kc["clientID"], session)   # arguument session
 
             reqq = await asyncio.gather(*job["Response"]) # uzima corutine, Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
 
@@ -197,6 +198,10 @@ async def update_user(model: UpdateUserModel):
 
     return {"userUpdate": update}
 
+    # treba da se preuredi registracija, kao user lastname i firstname treba da se izbace sa obzirom da je username obavezan,
+    # treba da se doda za username mail kako bi smo izbacili visak koda. email je jedinstven i nece se menjati
+    # takodje treba da se odradi update za bazu
+    # frontend: izbaciti first i last name kao i br telefona, dodati neki korak za popunjavanje nekih osnovnih informacija 
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
