@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Exemple
+        </title>
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <link rel="shortcut icon" href="#">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+        <script src="steps.js"></script>
+        <script src="hashTag.js"></script>
+        <script src="updateBaseUserInfo.js"></script>
+
+        <link rel="stylesheet" href="setupUserProfile.css">
+
+
+    </head>
+    <body onload="stepsForm();">
+        <div id="ac-wrapper" style='display:none'>
+            <div id="popup">
+                <div class="holder" id="holder" style="width:70%; height: 70%; margin: 0px auto; ">
+                    <div>
+                        <h1>Complete the following steps to set up your basic profile information.</h1>
+                        <div id="multi-step-form-container">
+                            <!-- Form Steps / Progress Bar -->
+                            <ul class="form-stepper form-stepper-horizontal text-center mx-auto pl-0">
+                                <!-- Step 1 -->
+                                <li class="form-stepper-active text-center form-stepper-list" step="1">
+                                    <a class="mx-2">
+                                        <span class="form-stepper-circle">
+                                            <span>1</span>
+                                        </span>
+                                        <div class="label">Account Basic Details</div>
+                                    </a>
+                                </li>
+                                <!-- Step 2 -->
+                                <li class="form-stepper-unfinished text-center form-stepper-list" step="2">
+                                    <a class="mx-2">
+                                        <span class="form-stepper-circle text-muted">
+                                            <span>2</span>
+                                        </span>
+                                        <div class="label text-muted">Social Profiles</div>
+                                    </a>
+                                </li>
+                                <!-- Step 3 -->
+                                <li class="form-stepper-unfinished text-center form-stepper-list" step="3">
+                                    <a class="mx-2">
+                                        <span class="form-stepper-circle text-muted">
+                                            <span>3</span>
+                                        </span>
+                                        <div class="label text-muted">Personal Details</div>
+                                    </a>
+                                </li>
+                            </ul>
+                            <!-- Step Wise Form Content -->
+                            <!-- <form id="userAccountSetupForm" name="userAccountSetupForm" enctype="multipart/form-data" method="POST"> -->
+                                <!-- Step 1 Content -->
+                                <section id="step-1" class="form-step">
+                                    <h2 class="font-normal">Account Basic Details</h2>
+                                    <!-- Step 1 input fields -->
+                                    <div class="mt-3">
+                                        <div class="sep">
+                                            <label for="firstName">First Name<span style="color: red;">*</span></label>
+                                            <input type="text" id="firstName" class="form-control" placeholder="Enter firstName" oninput="stepsForm();">
+                                        </div>
+                                        <div class="sep">
+                                            <label for="lastName">Last Name<span style="color: red;">*</span></label>
+                                            <input type="text" id="lastName" class="form-control" placeholder="Enter lastName">
+                                        </div>
+                                        <div class="sep">
+                                            <label for="phone">Phone<span style="color: red;">*</span></label>
+                                            <input type="text" id="phone" class="form-control" placeholder="Enter phone">
+                                        </div>
+                                        <div class="sep">
+                                            <label for="firstName">Title</label>
+                                            <input type="text" id="title" class="form-control" placeholder="Enter title">
+                                        </div>
+                                        <div class="sep">
+                                            <label for="about">About</label>
+                                            <textarea class="form-control" id="about" placeholder="Enter about your profile"></textarea>
+                                        </div>
+                                        <div class="sep">
+                                            <label for="description">Description</label>
+                                            <textarea class="form-control" id="description" placeholder="Enter profile description"></textarea>
+                                        </div>
+                                     
+                                    </div>
+                                    <div class="mt-3">
+                                        <button class="button btn-navigate-form-step" type="button" step_number="2">Next</button>
+                                    </div>
+                                </section>
+                                <!-- Step 2 Content, default hidden on page load. -->
+                                <section id="step-2" class="form-step d-none">
+                                    <h2 class="font-normal">Social Profiles</h2>
+                                    <!-- Step 2 input fields -->
+                                    <div class="mt-3">
+                                        <div class="sep">
+                                            <label for="links">Description</label>
+                                            <input type="text" id="links" class="form-control" placeholder="Enter links">
+
+                                        </div>
+                                        <div class="sep">
+                                            <label for="tagInput">Tags:</label>
+                                            <ul id="tagList"></ul>
+                                            <div style="clear:both"></div>
+                                            <input type="hidden" id="tags"/>
+                                            <input type="text" id="tagInput" class="tagInput form-control" oninput="hashTag();" placeholder="Enter tag name then pres space"/>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <button class="button btn-navigate-form-step" type="button" step_number="1">Prev</button>
+                                        <button class="button btn-navigate-form-step" type="button" step_number="3">Next</button>
+                                    </div>
+                                </section>
+                                <!-- Step 3 Content, default hidden on page load. -->
+                                <section id="step-3" class="form-step d-none">
+                                    <h2 class="font-normal">Personal Details</h2>
+                                    <!-- Step 3 input fields -->
+                                    <div class="mt-3">
+                                        Step 3 input fields goes here..
+                                    </div>
+                                    <div class="mt-3">
+                                        <button class="button btn-navigate-form-step" type="button" step_number="2">Prev</button>
+                                        <button class="button submit-btn" type="submit" onclick="postData();">Save</button>
+                                    </div>
+                                </section>
+                            <!-- </form> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        function PopUp(hideOrshow) {
+            if (hideOrshow == 'hide') document.getElementById('ac-wrapper').style.display = "none";
+            else document.getElementById('ac-wrapper').removeAttribute('style');
+        }
+        window.onload = function () {
+            setTimeout(function () {
+                PopUp('show');
+            }, 0);
+        }
+        
+    </script>
+
+</html>
+
