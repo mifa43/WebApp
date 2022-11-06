@@ -33,11 +33,17 @@ class Postgres():
             # kreiranje korisnika
             data = User(
                 name=userName,
-                firstName=name,
-                lastName=lastName,
+                firstName=None,
+                lastName=None,
                 mail=mail,
                 phoneNumber=phoneNumber,
                 keycloakUserID=keycloakUserID,
+                description=None,
+                title=None,
+                about=None,
+                tags=None,
+                links=None,
+                firstStepsComplete=False,
                 imageURL=None
             )
     
