@@ -18,7 +18,7 @@ class User(Base):
     title = Column("title", String)
     description = Column("description", String)
     about = Column("about", String)
-    tags = Column("tags", String)
+    tagInput = Column("tagInput", String)
     links = Column("links", String)
     firstStepsComplete = Column("firstStepsComplete", Boolean)
 
