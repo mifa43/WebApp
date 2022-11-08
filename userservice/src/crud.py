@@ -41,7 +41,7 @@ class Postgres():
                 description=None,
                 title=None,
                 about=None,
-                tags=None,
+                tagInput=None,
                 links=None,
                 firstStepsComplete=False,
                 imageURL=None
