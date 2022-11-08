@@ -8,19 +8,35 @@ async function postData() {
   for (var i = 0; i < myLength; ++i) {
     input = allinputs[i];
     if (input.value) {
-          dict[input.id] = input.value;
+      
+        dict[input.id] = input.value;
+
 
       }
   }
-  console.log(dict)
+  let usr = {
+    // dict[input.id] = input.value;
+    UserFirstName: dict["UserFirstName"],
+    UserLastName: dict["UserLastName"],
+    UserNumber: dict["UserNumber"],
+    token: token,
+
+    title: dict["title"],
+    description: dict["description"],
+    about: dict["about"],
+    tagInput: dict["tagInput"],
+    links: dict["links"],
+    firstStepsComplete: dict["firstStepsComplete"]
+  };
+
+  console.log(usr);
   const resp = await fetch('http://0.0.0.0:8085/update-user-profile', {
       method: 'PUT',
-      mode: 'cors',
       headers: {
           'Content-Type': 'application/json'
       },
-      body: dict
+      body: JSON.stringify(usr)
   });
-
+  window.location = "userProfile.html";
 
 }
