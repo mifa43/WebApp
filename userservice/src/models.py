@@ -19,9 +19,14 @@ class UpdateImage(BaseModel):
 class UpdateUserProfile(BaseModel):
     firstName: str
     lastName: str
-    mail: str
     phoneNumber: str
     keycloakUserID: str
+    title: str
+    description: str
+    about: str
+    tagInput: str
+    links: str
+    firstStepsComplete: bool
 # class RestartPasswordModel(BaseModel):
 #     UserEmail: str
 #     code: str

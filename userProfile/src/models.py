@@ -13,6 +13,12 @@ class Token(BaseModel):
 class UpdateUserProfile(BaseModel):
     UserFirstName: str
     UserLastName: str
-    UserEmail: str
     UserNumber: str
-    keycloakUserID: str
+    token: str
+
+    title: str
+    description: str
+    about: str
+    tagInput: str
+    links: str
+    firstStepsComplete: bool
