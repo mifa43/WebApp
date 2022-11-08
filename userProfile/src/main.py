@@ -48,7 +48,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*","post"],
+    allow_methods=["*","post", "put"],
     allow_headers=["*"],
 )
 
@@ -184,15 +184,21 @@ async def user_profile_image(file: bytes = File(...), token: str = Header(defaul
     
 @app.put("/update-user-profile")
 async def update_user_profile(model: UpdateUserProfile):
-
+    logger.info("model")
     url = f'http://{os.getenv("USERSERVICE_HOST")}:{os.getenv("USERSERVICE_PORT")}/update-user-profile'
+    keycloakUserID = TokenData(model.token).decode()
 
     payload = {
         "firstName": model.UserFirstName,
         "lastName": model.UserLastName,
-        "mail": model.UserEmail,
         "phoneNumber": model.UserNumber,
-        "keycloakUserID": model.keycloakUserID
+        "keycloakUserID": keycloakUserID,
+        "title": model.title,
+        "description": model.description,
+        "about": model.about,
+        "tagInput": model.tagInput,
+        "links": model.links,
+        "firstStepsComplete": model.firstStepsComplete
     }
 
     url1 = f'http://fastapi:8080/update-user'   # url za slanje na keycloak 
@@ -200,7 +206,7 @@ async def update_user_profile(model: UpdateUserProfile):
     payload1 = {
         "UserFirstName": model.UserFirstName,
         "UserLastName": model.UserLastName,
-        "keycloak_id": model.keycloakUserID
+        "keycloak_id": keycloakUserID
     }   # keycloak api endpoint za user update
 
     async with asyncRequests.Session() as session:  # saljemo async Request session 
