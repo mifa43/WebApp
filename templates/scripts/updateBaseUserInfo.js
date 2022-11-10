@@ -1,10 +1,12 @@
 async function postData() {
   var allinputs = document.querySelectorAll('.form-control');
+  var tagList = document.querySelectorAll("#tagValue1");
+
   var token = window.sessionStorage.getItem("access_token");
   var myLength = allinputs.length;
   var input;
   var dict={"firstStepsComplete": true, "token": token};
-
+  var ls = [];
   for (var i = 0; i < myLength; ++i) {
     input = allinputs[i];
     if (input.value) {
@@ -14,6 +16,13 @@ async function postData() {
 
       }
   }
+  const  myNumbersArray = [ 1,2,3,4,5];
+
+  for(let i = 0; i < tagList.length; i++) {
+    ls.push(tagList[i].textContent);
+  }
+  console.log(ls);
+
   let usr = {
     // dict[input.id] = input.value;
     UserFirstName: dict["UserFirstName"],
@@ -24,7 +33,7 @@ async function postData() {
     title: dict["title"],
     description: dict["description"],
     about: dict["about"],
-    tagInput: dict["tagInput"],
+    tagInput: ls,
     links: dict["links"],
     firstStepsComplete: dict["firstStepsComplete"]
   };
@@ -37,6 +46,8 @@ async function postData() {
       },
       body: JSON.stringify(usr)
   });
+  // window.alert(tagList[0].textContent);
+
   window.location = "userProfile.html";
 
 }
