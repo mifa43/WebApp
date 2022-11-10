@@ -11,14 +11,14 @@ class Token(BaseModel):
     token: str
 
 class UpdateUserProfile(BaseModel):
-    UserFirstName: str
-    UserLastName: str
-    UserNumber: str
+    UserFirstName: Optional[str] = None
+    UserLastName: Optional[str] = None
+    UserNumber: Optional[str] = None
     token: str
 
-    title: str
-    description: str
-    about: str
-    tagInput: str
-    links: str
-    firstStepsComplete: bool
+    title: Optional[str] = None
+    description: Optional[str] = None
+    about: Optional[str] = None
+    tagInput: Optional[List] = None
+    links: Optional[str] = None
+    firstStepsComplete: Optional[bool] = None
