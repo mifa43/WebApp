@@ -3,8 +3,9 @@
   .login-wrap .login-html .input-container {
       height: 50px;
       width: 40%;
-      display:inline-block;
-      
+      /* display:inline-block; */
+      margin: auto;
+      margin-top: 25px;
   }
   .login-wrap .login-html .submit{
       width: 80%;
