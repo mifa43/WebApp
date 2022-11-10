@@ -17,16 +17,16 @@ class UpdateImage(BaseModel):
     keycloakUserID: str
 
 class UpdateUserProfile(BaseModel):
-    firstName: str
-    lastName: str
-    phoneNumber: str
+    firstName: Optional[str] = None
+    lastName: Optional[str] = None
+    phoneNumber: Optional[str] = None
     keycloakUserID: str
-    title: str
-    description: str
-    about: str
-    tagInput: str
-    links: str
-    firstStepsComplete: bool
+    title: Optional[str] = None
+    description: Optional[str] = None
+    about: Optional[str] = None
+    tagInput: Optional[List] = None
+    links: Optional[str] = None
+    firstStepsComplete: Optional[bool] = None
 # class RestartPasswordModel(BaseModel):
 #     UserEmail: str
 #     code: str
