@@ -16,7 +16,7 @@ function hashTag(){
       };
       
     function addToHashtagList(tag){
-        $("#tagList").append("<li data-htag='" + tag + "'><a href='#' title='Remove Tag'>#" + tag + "</a></li>");
+        $("#tagList").append("<li data-htag='" + tag + "'><a href='#' title='Remove Tag' id='tagValue1'>#" + tag + "</a></li>");
         if (!generateHiddenInput()){
           alert("Too many. Add whatever logic is needed here, whether toggling of a field validation element, or an alert, etc.");
           $("#tagList").children().last().remove();
