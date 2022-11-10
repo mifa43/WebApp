@@ -73,19 +73,22 @@ async function save(){
   document.getElementById("saveBtn").classList.add("hide");
   document.getElementById("editBtn").classList.remove("hide");
 
+  var token = window.sessionStorage.getItem("access_token");
 
   let user = {
     UserFirstName: document.getElementById("userNameInput").value,
     UserLastName: document.getElementById("userProfInput").value,
     UserEmail: document.getElementById("userEmailInput").value,
     UserNumber: document.getElementById("userPhoneInput").value,
-    keycloakUserID: document.getElementById("userIDInput").value
+    token: token,
+    keycloakUserID: document.getElementById("userIDInput").value,
+    description: document.getElementById("userDescriptionInput").value
+
     }
     const response = await axios.put("http://0.0.0.0:8085/update-user-profile", user);
     console.log(user);
   
 
-    
     console.log(response.data);
 
     window.location = 'userProfile.html';
