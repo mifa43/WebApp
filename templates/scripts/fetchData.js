@@ -31,7 +31,7 @@ async function fetchData(){
       document.getElementById("userPhone").innerText = phoneNumber;
       document.getElementById("userProf").innerText = lastName;    
       document.getElementById("userEmail").innerText = mail;
-
+      document.getElementById("userDescription").innerText = description;
       if(firstStepsComplete==false){window.location = "setupUserProfile.html";};
       if (userProfileIMG === null){
         document.getElementById("userProfileIMG").src = "https://res.cloudinary.com/dt5xxftc5/image/upload/v1666083277/webApp/photo_q4cq9t.png";
