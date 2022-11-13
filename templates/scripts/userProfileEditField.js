@@ -11,6 +11,7 @@ function editProfile(){
   let userPhone = document.getElementById("userPhone");
   let userProf = document.getElementById("userProf");
   let userDescription = document.getElementById("userDescription");
+  let userTitle = document.getElementById("userTitle");
 
   // dodat css style userDescription
   userID.classList.add("hide");
@@ -19,6 +20,7 @@ function editProfile(){
   userPhone.classList.add("hide");
   userProf.classList.add("hide");
   userDescription.classList.add("hide");
+  userTitle.classList.add("hide");
   // dohvati tag izbrisi klasu hide
   
   // dohvati tag
@@ -28,6 +30,7 @@ function editProfile(){
   let userPhoneInput = document.getElementById("userPhoneInput");
   let userProfInput = document.getElementById("userProfInput");
   let userDescriptionInput = document.getElementById("userDescriptionInput");
+  let userTitleInput = document.getElementById("userTitleInput");
 
   // izbrisi klasu hide
   userIDInput.classList.remove("hide");
@@ -36,6 +39,8 @@ function editProfile(){
   userPhoneInput.classList.remove("hide");
   userProfInput.classList.remove("hide");
   userDescriptionInput.classList.remove("hide");
+  userTitleInput.classList.remove("hide");
+
 
     // dodaj vrednost iz p taga
   userIDInput.value = userID.innerText;
@@ -44,6 +49,7 @@ function editProfile(){
   userPhoneInput.value = userPhone.innerText;
   userProfInput.value = userProf.innerText;
   userDescriptionInput.value = userDescription.innerText;
+  userTitleInput.value = userTitle.innerText;
 
   
 
@@ -60,6 +66,9 @@ async function save(){
   document.getElementById("userPhone").classList.remove("hide");
   document.getElementById("userProf").classList.remove("hide");
   document.getElementById("userDescription").classList.remove("hide");
+  document.getElementById("userDescription").classList.remove("hide");
+  document.getElementById("userTitle").classList.remove("hide");
+
 
 
   document.getElementById("userIDInput").classList.add("hide");
@@ -68,6 +77,8 @@ async function save(){
   document.getElementById("userPhoneInput").classList.add("hide");
   document.getElementById("userProfInput").classList.add("hide");
   document.getElementById("userDescriptionInput").classList.add("hide");
+  document.getElementById("userTitleInput").classList.remove("hide");
+
 
 
   document.getElementById("saveBtn").classList.add("hide");
@@ -82,7 +93,9 @@ async function save(){
     UserNumber: document.getElementById("userPhoneInput").value,
     token: token,
     keycloakUserID: document.getElementById("userIDInput").value,
-    description: document.getElementById("userDescriptionInput").value
+    description: document.getElementById("userDescriptionInput").value,
+    title: document.getElementById("userTitleInput").value,
+
 
     }
     const response = await axios.put("http://0.0.0.0:8085/update-user-profile", user);
