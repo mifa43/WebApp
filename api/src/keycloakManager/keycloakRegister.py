@@ -5,12 +5,9 @@ from keycloakManager.keycloakConnection import Connection
 
 class CreateUser(Connection):
 
-    def __init__(self, email: str, username: str, firstName: str, lastName: str, secret: str) -> None:
+    def __init__(self, email: str, secret: str) -> None:
         
         self.email = email
-        self.username = username
-        self.firstName = firstName
-        self.lastName = lastName
         self.secret = secret
 
         super().__init__()
@@ -19,8 +16,6 @@ class CreateUser(Connection):
         """### Kreiranje korisnika na Keycloak
             - `email`
             - `username`
-            - `firstName`
-            - `lastName` 
             - `secret`
         """
               
@@ -30,10 +25,10 @@ class CreateUser(Connection):
 
             data = self.admin.create_user({
                 "email": self.email,
-                "username": self.username,
+                "username": self.email,
                 "enabled": "True",
-                "firstName": self.firstName,
-                "lastName": self.lastName,
+                "firstName": None,
+                "lastName": None,
                 "credentials": [
                     {
                         "value": self.secret,
@@ -46,7 +41,7 @@ class CreateUser(Connection):
 
             # sendEmail = await self.admin.send_verify_email(user_id=data)
            
-            return {"clientID": data, "userName": self.username, "kcError":  False,"emailStatus": True, "ID": data}
+            return {"clientID": data, "userName": self.email, "kcError":  False,"emailStatus": True, "ID": data}
 
         except:
 
