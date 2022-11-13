@@ -32,15 +32,20 @@ async function fetchData(){
       document.getElementById("userProf").innerText = lastName;    
       document.getElementById("userEmail").innerText = mail;
       document.getElementById("userDescription").innerText = description;
-      if(firstStepsComplete==false){window.location = "setupUserProfile.html";};
-      if (userProfileIMG === null){
-        document.getElementById("userProfileIMG").src = "https://res.cloudinary.com/dt5xxftc5/image/upload/v1666083277/webApp/photo_q4cq9t.png";
-  
-      }
+      document.getElementById("userTitle").innerText = title;
+
+      if(firstStepsComplete==false){window.location = "setupUserProfile.html";}
       else{
-        document.getElementById("userProfileIMG").src = userProfileIMG;
-  
+        if (userProfileIMG === null){
+          document.getElementById("userProfileIMG").src = "https://res.cloudinary.com/dt5xxftc5/image/upload/v1666083277/webApp/photo_q4cq9t.png";
+    
+        }
+        else{
+          document.getElementById("userProfileIMG").src = userProfileIMG;
+    
+        }
       }
+
 
       
     }
