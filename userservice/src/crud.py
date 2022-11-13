@@ -9,14 +9,12 @@ class Postgres():
     def __init__(self):
         pass
         
-    async def insert(self,userName: str, name: str, lastName: str, mail: str, phoneNumber: str, keycloakUserID: str, db) -> dict:
+    async def insert(self, mail: str, keycloakUserID: str, db) -> dict:
         """ ## Insert
             ## Upisivanje korisnika u bazu
-            - ``name``
-            - ``lastName``
+
             - ``mail``
-            - ``phoneNumber``
-            - ``password``
+            - ``keycloakUserID``
             - ``db``
                 - db == FastAPI(Session=Depends(get_db))
                 ##### osluskuje i otvara seassi-u
@@ -32,11 +30,11 @@ class Postgres():
         try:
             # kreiranje korisnika
             data = User(
-                name=userName,
+                name=None,
                 firstName=None,
                 lastName=None,
                 mail=mail,
-                phoneNumber=phoneNumber,
+                phoneNumber=None,
                 keycloakUserID=keycloakUserID,
                 description=None,
                 title=None,
@@ -64,7 +62,7 @@ class Postgres():
             #hvata exception ako pokusa da se upise korisnik sa istim emailom jer je polje unique
             return {"postgresError": e, "error": True}
 
-        return {"UserInserted": name, "tableName": data.__tablename__, "error": False}
+        return {"UserInserted": mail, "tableName": data.__tablename__, "error": False}
     
     def update(self, body: dict, keycloakID: str, db):
         """ ### Dinamicna metoda za updejtovanje
