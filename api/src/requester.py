@@ -7,7 +7,7 @@ import requests_async as requests
 
 class SendRequest():
 
-    def userService(name: str, firstName: str, lastName: str, mail: str, phoneNumber: str, keycloakUserID: str, session):
+    def userService(mail: str, keycloakUserID: str, session):
         """Slanje Requesta na userservice"""
       
 
@@ -18,11 +18,7 @@ class SendRequest():
         # request body
 
         data = {
-            "UserName" : name,
-            "UserFirstName" : firstName,
-            "UserLastName" : lastName,
             "UserEmail" : mail,
-            "UserNumber" : phoneNumber,
             "keycloakUserID" : keycloakUserID
             }
 
