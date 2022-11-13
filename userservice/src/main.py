@@ -86,11 +86,7 @@ async def insert_user(model: UserModel, db:Session=Depends(get_db)):
     try:
 
         data = await asyncio.create_task(Postgres().insert(
-                model.UserName, 
-                model.UserFirstName, 
-                model.UserLastName, 
                 model.UserEmail, 
-                model.UserNumber, 
                 model.keycloakUserID, 
                 db
                 ))     # hvataj request body
