@@ -5,7 +5,7 @@
             "server": "localhost",
             "port": 5000,
             "driver": "PostgreSQL",
-            "name": "appWebDB",
+            "name": "appDB",
             "database": "userservice",
             "username": "postgres",
             "password": "postgres"
