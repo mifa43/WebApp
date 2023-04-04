@@ -12,6 +12,7 @@ function editProfile(){
   let userProf = document.getElementById("userProf");
   let userDescription = document.getElementById("userDescription");
   let userTitle = document.getElementById("userTitle");
+  let userAbout = document.getElementById("userAbout");
 
   // dodat css style userDescription
   userID.classList.add("hide");
@@ -21,6 +22,7 @@ function editProfile(){
   userProf.classList.add("hide");
   userDescription.classList.add("hide");
   userTitle.classList.add("hide");
+  userAbout.classList.add("hide");
   // dohvati tag izbrisi klasu hide
   
   // dohvati tag
@@ -31,6 +33,7 @@ function editProfile(){
   let userProfInput = document.getElementById("userProfInput");
   let userDescriptionInput = document.getElementById("userDescriptionInput");
   let userTitleInput = document.getElementById("userTitleInput");
+  let userAboutInput = document.getElementById("userAboutInput");
 
   // izbrisi klasu hide
   userIDInput.classList.remove("hide");
@@ -40,7 +43,7 @@ function editProfile(){
   userProfInput.classList.remove("hide");
   userDescriptionInput.classList.remove("hide");
   userTitleInput.classList.remove("hide");
-
+  userAboutInput.classList.remove("hide");
 
     // dodaj vrednost iz p taga
   userIDInput.value = userID.innerText;
@@ -50,7 +53,7 @@ function editProfile(){
   userProfInput.value = userProf.innerText;
   userDescriptionInput.value = userDescription.innerText;
   userTitleInput.value = userTitle.innerText;
-
+  userAboutInput.value = userAbout.innerText;
   
 
 }
@@ -68,7 +71,7 @@ async function save(){
   document.getElementById("userDescription").classList.remove("hide");
   document.getElementById("userDescription").classList.remove("hide");
   document.getElementById("userTitle").classList.remove("hide");
-
+  document.getElementById("userAbout").classList.remove("hide");
 
 
   document.getElementById("userIDInput").classList.add("hide");
@@ -78,7 +81,7 @@ async function save(){
   document.getElementById("userProfInput").classList.add("hide");
   document.getElementById("userDescriptionInput").classList.add("hide");
   document.getElementById("userTitleInput").classList.remove("hide");
-
+  document.getElementById("userAboutInput").classList.remove("hide");
 
 
   document.getElementById("saveBtn").classList.add("hide");
@@ -95,6 +98,7 @@ async function save(){
     keycloakUserID: document.getElementById("userIDInput").value,
     description: document.getElementById("userDescriptionInput").value,
     title: document.getElementById("userTitleInput").value,
+    about: document.getElementById("userAboutInput").value,
 
 
     }

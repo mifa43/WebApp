@@ -33,6 +33,7 @@ async function fetchData(){
       document.getElementById("userEmail").innerText = mail;
       document.getElementById("userDescription").innerText = description;
       document.getElementById("userTitle").innerText = title;
+      document.getElementById("userAbout").innerText = about;
 
       if(firstStepsComplete==false){window.location = "setupUserProfile.html";}
       else{
