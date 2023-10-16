@@ -15,11 +15,11 @@ class SendVerification(Connection):
         """### Slanje email verifikacije nakon registracije
             - `keycloak_id`
         """
-        self.admin.realm_name = "demo"
+        self.keycloak_admin.realm_name = "demo"
         
         # self.admin.realm_name = "demo"
         
-        sendEmail = self.admin.send_verify_email(user_id=self.keycloak_id)
+        sendEmail = self.keycloak_admin.send_verify_email(user_id=self.keycloak_id)
 
         await asyncio.sleep(0)
         
