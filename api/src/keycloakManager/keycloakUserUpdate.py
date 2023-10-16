@@ -15,11 +15,11 @@ class UpdateUser(Connection):
         """### Slanje email verifikacije nakon registracije
             - `keycloak_id`
         """
-        self.admin.realm_name = "demo"
+        self.keycloak_admin.realm_name = "demo"
         
         # self.admin.realm_name = "demo"
         
-        response = self.admin.update_user(
+        response = self.keycloak_admin.update_user(
                 user_id=self.keycloak_id,
                 payload=payload)
 
