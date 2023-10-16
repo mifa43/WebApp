@@ -20,10 +20,10 @@ class CreateUser(Connection):
         """
               
         # Ulazimo u realm demo kao admin
- 
+        print(self.email, self.secret)
         try:
-
-            data = self.admin.create_user({
+            self.keycloak_admin.realm_name = "demo"
+            data = self.keycloak_admin.create_user({
                 "email": self.email,
                 "username": self.email,
                 "enabled": "True",
@@ -40,7 +40,7 @@ class CreateUser(Connection):
             await asyncio.sleep(0)
 
             # sendEmail = await self.admin.send_verify_email(user_id=data)
-           
+            print(data)
             return {"clientID": data, "userName": self.email, "kcError":  False,"emailStatus": True, "ID": data}
 
         except:
