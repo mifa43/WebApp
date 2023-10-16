@@ -1,35 +1,34 @@
 import os
 
-from keycloak import KeycloakAdmin, KeycloakOpenID
+from keycloak import KeycloakAdmin, KeycloakOpenID, KeycloakOpenIDConnection
 
 
 class ResendVerifyEmail():
     
     def __init__(self):
-        # Kreiranje konekcije ka keycloak servisu
+        # Konektovanje kao admin 
 
-        self.admin = keycloak_admin = KeycloakAdmin(
-            server_url="http://keycloak_keycloak_1:8080/auth/",
-            username = "admin",
-            password = "Pa55w0rd",
-            realm_name = "master",
-            verify = True)
+        self.keycloak_openid = KeycloakOpenID(server_url=f"http://{os.getenv('KEYCLOAK_HOST')}:{os.getenv('KEYCLOAK_PORT')}/",
+                                 client_id=f"{os.getenv('KEYCLOAK_CLIENT_ID')}",
+                                 realm_name="master",
+                                 client_secret_key=f"{os.getenv('KEYCLOAK_CLIENT_SECRET_KEY')}")
 
-        # self.admin = keycloak_admin = KeycloakAdmin(
-        #         server_url= "http://{os.getenv('USERSERVICE_HOST')}:{os.getenv('USERSERVICE_PORT')}/auth/",
-        #         username = "{os.getenv('KEYCLOAK_USER')}",
-        #         password = "{os.getenv('KEYCLOAK_PASSWORD')}",
-        #         realm_name = "master",
-        #         verify = True)
+        # Konektovanje na realm kao klijent
+        # U verziji keycloak 21+ se koristi KeycloakOpenIDConnection sa podatcima za autentifikaciju
+        # Takoje u url path nema vise /auth/
+        # KeycloakAdmin zahteva pristupni kljuc/toekn iz KeycloakOpenIDConnection
+        # NAPOMENA: Keycloak zahteva autentifikaciju za realm master iz kog ulzi u self.keycloak_admin.realm_name = "demo" -
+        #   potrebno je da je admin autorizovan - treba da udjes u realm setings i dodas roole, permisije za admina, user-a realm i client-a.
+        self.keycloak_connection = KeycloakOpenIDConnection(
+                                server_url=f"http://{os.getenv('KEYCLOAK_HOST')}:{os.getenv('KEYCLOAK_PORT')}/",
+                                realm_name="master",
+                                client_id=f"{os.getenv('KEYCLOAK_CLIENT_ID')}",
+                                client_secret_key=f"{os.getenv('KEYCLOAK_CLIENT_SECRET_KEY')}")
 
-        # Konektovanje na realm kao klijent 
+        self.keycloak_admin = KeycloakAdmin(connection=self.keycloak_connection)
 
-        self.openID = openID = KeycloakOpenID(
-                server_url = "http://keycloak_keycloak_1:8080/auth/",
-                client_id = "appuser",
-                realm_name = "demo",
-                client_secret_key = "f550d47f-a4cd-41f3-ab0d-d72936b634af"
-                )
+        # Budi siguran da si uvek na istom realm-u prilikom konektovanja
+        self.keycloak_admin.realm_name = "demo"
 
     def getKeycloakUserID(self, username):
         """
@@ -40,9 +39,9 @@ class ResendVerifyEmail():
             - `user_id_keycloak` -> `username` : bool(True), user_id - ima username
         """
 
-        self.admin.realm_name = "demo"
+        self.keycloak_admin.realm_name = "demo"
 
-        user_id_keycloak = self.admin.get_user_id(username)
+        user_id_keycloak = self.keycloak_admin.get_user_id(username)
 
         if user_id_keycloak == None:
 
@@ -58,6 +57,6 @@ class ResendVerifyEmail():
             - `send_verify_email` -> slanje verifikacije
         """
 
-        self.admin.realm_name = "demo"
+        self.keycloak_admin.realm_name = "demo"
         # user_id_keycloak dobijamo iz prethodne funkcije koju saljemo iz main fajla
-        self.admin.send_verify_email(user_id=user_id_keycloak)
+        self.keycloak_admin.send_verify_email(user_id=user_id_keycloak)
