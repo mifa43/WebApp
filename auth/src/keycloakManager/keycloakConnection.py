@@ -24,7 +24,7 @@ class Connection:
                                  client_id=f"{os.getenv('KEYCLOAK_CLIENT_ID')}",
                                  realm_name="demo",
                                  client_secret_key=f"{os.getenv('KEYCLOAK_CLIENT_SECRET_KEY_REALM_DEMO')}")
-        # CLIENT_SECRET_KEY_REALM_DEMO
+
         # Konektovanje na realm kao klijent
         # U verziji keycloak 21+ se koristi KeycloakOpenIDConnection sa podatcima za autentifikaciju
         # Takoje u url path nema vise /auth/
