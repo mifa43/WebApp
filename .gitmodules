@@ -1,0 +1,3 @@
+[submodule "vite-vuejs"]
+	path = vite-vuejs
+	url = git@github.com:mifa43/vite-vuejs.git
