@@ -22,7 +22,7 @@ async function postAuthData () {
         window.sessionStorage.setItem('access_token', response.data.access_token);
 
 
-        window.location = 'index.html';
+        window.location = 'userProfile.html';
 
 
 

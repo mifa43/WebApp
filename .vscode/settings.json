@@ -5,10 +5,10 @@
             "server": "localhost",
             "port": 5000,
             "driver": "PostgreSQL",
-            "name": "appDB",
+            "name": "appWebDB",
             "database": "userservice",
-            "username": "mifa43",
-            "password": "koliko43"
+            "username": "postgres",
+            "password": "postgres"
         }
     ]
 }

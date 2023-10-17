@@ -1,5 +1,6 @@
-from keycloakManager.keycloakConnection import Connection
 import asyncio
+
+from keycloakManager.keycloakConnection import Connection
 
 
 class GetKeycloakID(Connection):
@@ -19,9 +20,9 @@ class GetKeycloakID(Connection):
             - `user_id_keycloak` -> `username` : bool(True), user_id - ima username
         """
 
-        self.admin.realm_name = "demo"
+        self.keycloak_admin.realm_name = "demo"
 
-        user_id_keycloak = self.admin.get_user_id(self.username)
+        user_id_keycloak = self.keycloak_admin.get_user_id(self.username)
 
         await asyncio.sleep(0)
         

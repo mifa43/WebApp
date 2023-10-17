@@ -1,44 +1,53 @@
-version: '3'
-
-volumes:
-  postgres_data:
-      driver: local
-
+version: "3.7"
+# REFERENCA ZA KC 21+ VERSION
 services:
-  postgres:
-      image: postgres
-      volumes:
-        - postgres_data:/var/lib/postgresql/data
-      environment:
-        POSTGRES_DB: keycloak
-        POSTGRES_USER: keycloak
-        POSTGRES_PASSWORD: password
-      networks:
-        - fastapi_dev
   keycloak:
-      image: quay.io/keycloak/keycloak:legacy
-      environment:
-        DB_VENDOR: POSTGRES
-        DB_ADDR: postgres
-        DB_DATABASE: keycloak
-        DB_USER: keycloak
-        DB_SCHEMA: public
-        DB_PASSWORD: password
-        KEYCLOAK_USER: admin
-        KEYCLOAK_PASSWORD: Pa55w0rd
-        PROXY_ADDRESS_FORWARDING: "true"
-        # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
-        #JDBC_PARAMS: "ssl=true"
-      ports:
-        - 8084:8080
-      depends_on:
-        - postgres
-      networks:
-        - fastapi_dev
+    image: quay.io/keycloak/keycloak:latest 
+    entrypoint: /opt/keycloak/bin/kc.sh start
+    container_name: keycloak_app
+    restart: unless-stopped
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=Pa55w0rd
+      - KC_HOSTNAME_STRICT=false
+      - KC_HOSTNAME_STRICT_HTTPS=false
+      - KC_HTTP_ENABLED=true
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://keycloak-postgres:5432/keycloak
+      - KC_DB_USERNAME=keycloak
+      - KC_DB_PASSWORD=password
+    ports:
+      - 8084:8080
+    depends_on:
+      keycloak-postgres:
+        condition: service_healthy
+    networks:
+      - fastapi_dev
+  keycloak-postgres:
+    container_name: keycloak_postgres
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=keycloak
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_PORT=5432
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U keycloak -d keycloak'"] # User, Database
+      interval: 5s
+      timeout: 30s
+      retries: 3
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fastapi_dev
+
 networks:
   fastapi_dev:
     external:
       name: fastapi_dev
 
+volumes:
+  postgres_data:
 
 # lprnhgvihvhqzzgn

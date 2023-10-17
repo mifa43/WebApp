@@ -1,18 +1,21 @@
-from fastapi import FastAPI, HTTPException, BackgroundTasks
-import logging, uvicorn, datetime, asyncio
-from fastapi.middleware.cors import CORSMiddleware
-from models import *
-from requester import SendRequest
-from helpers import checkNameAndEmail, emailValidation, checkPassword, createUserName
-
-from resend_email_verfy import ResendVerifyEmail 
-from fastapi_cprofile.profiler import CProfileMiddleware
+import asyncio
+import datetime
+import logging
 
 import requests_async as asyncRequests
-
+import uvicorn
+from fastapi import BackgroundTasks, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi_cprofile.profiler import CProfileMiddleware
+from helpers import (checkNameAndEmail, checkPassword, createUserName,
+                     emailValidation)
+from keycloakManager.KeycloakID import GetKeycloakID
 from keycloakManager.keycloakRegister import CreateUser
 from keycloakManager.sendVerification import SendVerification
-from keycloakManager.KeycloakID import GetKeycloakID
+from keycloakManager.keycloakUserUpdate import UpdateUser
+from models import *
+from requester import SendRequest
+from resend_email_verfy import ResendVerifyEmail
 
 # kreiranje logera https://docs.python.org/3/library/logging.html
 logger = logging.getLogger(__name__) 
@@ -53,10 +56,10 @@ app.add_middleware(
 # https://fastapi.tiangolo.com/tutorial/cors/
 
 @app.get("/")
-def helth_check():
-    logger.info("{Health : OK}, 200")
+async def helth_check():
 
-   
+    logger.info({"Health": "OK"})
+
     return {"Health": "OK"}
 
 @app.post("/resend-email-verification")
@@ -98,22 +101,24 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
     password = checkPassword(model.UserPassword, model.UserRePassword)  # da li se passwordi podudaraju ?
 
-    lower = checkNameAndEmail(model.UserName, model.UserEmail)  # vrati email i username malim slovima !
+    # lower = checkNameAndEmail(model.UserEmail)  # vrati email i username malim slovima !
 
     if email["EmailIsValid"] == True and password["passwordIsValid"] == True:   # da li su email i password validni True ?
 
-        userName = createUserName(model.UserName, model.UserLastName)   # username je kombinacija - str ime.prezime
+        # userName = createUserName(model.UserName, model.UserLastName)   # username je kombinacija - str ime.prezime
 
         # kreiraj usera na keycloak-u async
         # slnje rquesrta async
         # SendRequest.userService(userName, model.UserName ,model.UserLastName, lower["email"], model.UserNumber, password["check"])
 
-        kc = await asyncio.create_task(CreateUser(lower["email"], userName, model.UserName, model.UserLastName, password["check"]).new())  # cekaj da se vrati keycloak user id
+        #user name je user emailo jer se samo prijavljujemo emailom jer je na keyclaoku username obavezan, email koristimo za social media auth
+        kc = await asyncio.create_task(CreateUser( model.UserEmail,password["check"]).new())  # cekaj da se vrati keycloak user id
 
+        userID = ResendVerifyEmail().getKeycloakUserID(model.UserEmail)  # da li user id postoji ? ako da, vrati id
 
         async with asyncRequests.Session() as session:  # saljemo async Request session
 
-            job = SendRequest.userService(userName, model.UserName ,model.UserLastName, lower["email"], model.UserNumber, password["check"], session)   # arguument session
+            job = SendRequest.userService(model.UserEmail, userID["user_id_keycloak"], session)   # arguument session
 
             reqq = await asyncio.gather(*job["Response"]) # uzima corutine, Return a future aggregating results from the given coroutines/futures. Ovo je kao u javascriptu promise
 
@@ -127,12 +132,11 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
             logger.info("Email: Send ")
 
             # asyncio.create_task(CreateKeycloakUser().sendVerifyEmail(kc["clientID"]))   # async email verify
-            asyncio.create_task(SendVerification(kc["clientID"]).send())   # async email verify
+            asyncio.create_task(SendVerification(userID["user_id_keycloak"]).send())   # async email verify
 
         handler = req  # email postoji u bazi ? 
 
         if "detail" in handler: # postgres dize error i vraca kao response
-
             logger.error({"409": "Username or email already exists in db"})
 
             raise HTTPException(status_code = 409, detail = "Username or email already exists in db")
@@ -154,14 +158,14 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
 
         logger.info({
             "PostRequestSendOn": [job["PostRequestSendOn"], req], 
-            "keycloak": [kc["clientID"], kc["userName"]],
+            "keycloak": [userID["user_id_keycloak"], kc["userName"]],
             "verifyEmail": kc["ID"]
             })
 
         return {
             "PostRequestSendOn": job["PostRequestSendOn"],
             "Response": req, 
-            "keycloak": [kc["clientID"], kc["userName"]],
+            "keycloak": [userID["user_id_keycloak"], kc["userName"]],
             "verifyEmail": kc["ID"]
             }
 
@@ -182,7 +186,23 @@ async def register_user(model: RegisterForm, background_tasks: BackgroundTasks):
         logger.error({"500": "Something went wrong"})
 
         raise HTTPException(status_code = 500, detail = "Something went wrong")
-        
+    
+@app.post("/update-user")
+async def update_user(model: UpdateUserModel):
+
+    body = {'firstName': model.UserFirstName, 'lastName': model.UserLastName}
+
+    update = await asyncio.create_task(UpdateUser(model.keycloak_id).send(body))
+
+    logger.info({"userUpdate": update})
+
+    return {"userUpdate": update}
+
+    # treba da se preuredi registracija, kao user lastname i firstname treba da se izbace sa obzirom da je username obavezan,
+    # treba da se doda za username mail kako bi smo izbacili visak koda. email je jedinstven i nece se menjati
+    # takodje treba da se odradi update za bazu
+    # frontend: izbaciti first i last name kao i br telefona, dodati neki korak za popunjavanje nekih osnovnih informacija 
+
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, loop="asyncio")
 

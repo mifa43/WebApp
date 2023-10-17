@@ -1,5 +1,7 @@
-from keycloakManager.keycloakConnection import Connection
 import asyncio
+
+from keycloakManager.keycloakConnection import Connection
+
 
 class Logout(Connection):
     """### Logout (`refresh_token` zatvaramo session ka keycloak-u token vise nije validan )
@@ -17,8 +19,9 @@ class Logout(Connection):
             """### Logout (`refresh_token` zatvaramo session ka keycloak-u token vise nije validan )
                 - `token` == `refresh_token`
             """
+            self.keycloak_admin.realm_name = "demo"
             # Ulazimo u realm demo kao admin
             await asyncio.sleep(0)
-            self.openID.logout(self.token)
+            self.keycloak_openid.logout(self.token)
 
             # return {"KeycloakAuthLogout": "The token was successfully submitted and the session was terminated"}

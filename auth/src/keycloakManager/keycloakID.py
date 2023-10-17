@@ -1,5 +1,8 @@
-from keycloakManager.keycloakConnection import Connection
 import asyncio
+
+from keycloakManager.keycloakConnection import Connection
+
+
 class GetKeycloakID(Connection):
     """### Ova klasa je child i nasledjuje objekte za konekciju od parnet klase i vraca keycloak userID 
     ______________________________________________
@@ -14,8 +17,8 @@ class GetKeycloakID(Connection):
     async def user(self):
         """### Uzmi keycloak userID 
         """
-        
-        user_id_keycloak = self.admin.get_users({"email":f"{self.userEmail}"})
+        self.keycloak_admin.realm_name = "demo"
+        user_id_keycloak = self.keycloak_admin.get_users({"email":f"{self.userEmail}"})
 
         await asyncio.sleep(0)
 

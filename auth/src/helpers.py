@@ -1,5 +1,8 @@
-import re, asyncio
+import asyncio
+import re
+
 from decoraters import *
+
 
 @PasswordIsEqualToPassword
 def checkPassword(password1, password2):
