@@ -23,8 +23,8 @@ class Connection:
         self.keycloak_openid = KeycloakOpenID(server_url=f"http://{os.getenv('KEYCLOAK_HOST')}:{os.getenv('KEYCLOAK_PORT')}",
                                  client_id=f"{os.getenv('KEYCLOAK_CLIENT_ID')}",
                                  realm_name="demo",
-                                 client_secret_key=f"iuoMkXB95w4GSuNgIkFGswvpMaxRvkV7")
-
+                                 client_secret_key=f"{os.getenv('KEYCLOAK_CLIENT_SECRET_KEY_REALM_DEMO')}")
+        # CLIENT_SECRET_KEY_REALM_DEMO
         # Konektovanje na realm kao klijent
         # U verziji keycloak 21+ se koristi KeycloakOpenIDConnection sa podatcima za autentifikaciju
         # Takoje u url path nema vise /auth/
