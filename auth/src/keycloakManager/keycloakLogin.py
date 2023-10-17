@@ -23,9 +23,10 @@ class Login(Connection):
             - `email`
             - `secret`
         """
+        self.keycloak_admin.realm_name = "demo"
         # Ulazimo u realm demo kao admin
         await asyncio.sleep(0)
-        token = self.openID.token(self.email, self.secret)
+        token = self.keycloak_openid.token(self.email, self.secret)
 
         return token
 

@@ -17,7 +17,7 @@ class GetKeycloakID(Connection):
     async def user(self):
         """### Uzmi keycloak userID 
         """
-        
+        self.keycloak_admin.realm_name = "demo"
         user_id_keycloak = self.admin.get_users({"email":f"{self.userEmail}"})
 
         await asyncio.sleep(0)
