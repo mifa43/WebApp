@@ -3,5 +3,5 @@ uvicorn==0.13.4
 typing == 3.7.4.3
 pydantic==1.8.2
 requests==2.27.1
-python-keycloak==0.24.0
+python-keycloak==3.3.0
 fastapi-cprofile==0.0.2 
