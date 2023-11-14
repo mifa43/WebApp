@@ -14,5 +14,5 @@ class Verification(BaseModel):
 
 class UpdateUserModel(BaseModel):
     keycloak_id: str
-    UserFirstName: str
-    UserLastName: str
+    UserFirstName: Optional[str] = None
+    UserLastName: Optional[str] = None
